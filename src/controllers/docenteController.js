@@ -1,16 +1,23 @@
 exports.registrarDocente = (req, res) => {
-    const { nombre, email, materia } = req.body;
+    const { nombre, apellido, correo, contraseña } = req.body;
 
-    // Aquí normalmente guardarías el docente en la base de datos
-    // Simulación de registro exitoso
-    res.status(201).json({ mensaje: "Docente registrado exitosamente", docente: { nombre, email, materia } });
+    res.status(201).json({
+        mensaje: "Docente registrado exitosamente",
+        docente: {
+            nombre,
+            apellido,
+            correo,
+            contraseña 
+        }
+    });
 };
 
 exports.obtenerDocentes = (req, res) => {
-    // Simulación de obtener docentes desde la base de datos
     const docentes = [
-        { id: 1, nombre: 'Juan Pérez', email: 'juan.perez@mail.com', materia: 'Matemáticas' },
-        { id: 2, nombre: 'María López', email: 'maria.lopez@mail.com', materia: 'Física' }
+      { id: 1, nombre: 'Juan', apellido: 'Perez', correo: 'juan.perez@umss.edu.bo' },
+      { id: 2, nombre: 'Maria', apellido: 'Garcia', correo: 'maria.garcia@umss.edu.bo' },
+      { id: 3, nombre: 'Carlos', apellido: 'Lopez', correo: 'carlos.lopez@umss.edu.bo' }
     ];
-    res.json(docentes);
-};
+
+    res.status(200).json(docentes);
+  };

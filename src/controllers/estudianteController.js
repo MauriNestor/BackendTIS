@@ -3,18 +3,25 @@ const router = express.Router();
 const estudianteController = require('../controllers/estudianteController');
 
 exports.registrarEstudiante = (req, res) => {
-    const { nombre, email, curso } = req.body;
+    const { codigo_sis, nombres, apellidos, correo, contraseña } = req.body;
 
-    // Aquí es donde normalmente guardarías el estudiante en la base de datos
-    // Simulación de registro exitoso
-    res.status(201).json({ mensaje: "Estudiante registrado exitosamente", estudiante: { nombre, email, curso } });
+    res.status(201).json({
+        mensaje: "Estudiante registrado exitosamente",
+        estudiante: {
+            codigo_sis,
+            nombres,
+            apellidos,
+            correo
+        }
+    });
 };
 
 exports.obtenerEstudiantes = (req, res) => {
-    // Simulación de obtener estudiantes desde la base de datos
     const estudiantes = [
-        { id: 1, nombre: 'Ana García', email: 'ana.garcia@mail.com', curso: 'Matemáticas' },
-        { id: 2, nombre: 'Carlos Ramírez', email: 'carlos.ramirez@mail.com', curso: 'Física' }
+      { id: 1, codigo_sis: '1234567', nombres: 'Ana', apellidos: 'Rojas', correo: 'ana.rojas@umss.ed.bo' },
+      { id: 2, codigo_sis: '2345678', nombres: 'Luis', apellidos: 'Martinez', correo: 'luis.martinez@umss.edu.bo' },
+      { id: 3, codigo_sis: '3456789', nombres: 'Sofia', apellidos: 'Perez', correo: 'sofia.perez@umss.edu.bo' }
     ];
-    res.json(estudiantes);
-};
+  
+    res.status(200).json(estudiantes);
+  };

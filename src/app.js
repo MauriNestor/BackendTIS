@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const pruebaRoutes = require('./routes/healthy');
+const loginRoutes = require('./routes/loginRoute'); 
 const db = require('./config/db');
 
 dotenv.config();
@@ -17,6 +18,7 @@ const estudianteRoutes = require('./routes/estudianteRoutes');
 
 // Rutas
 app.use('/prueba', pruebaRoutes);
+app.use('/login', loginRoutes);
 
 // Manejo de errores 404
 app.use((req, res, next) => {

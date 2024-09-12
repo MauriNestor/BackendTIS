@@ -8,8 +8,12 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+// Middlewares
+app.use(express.json());  // Para que Express pueda parsear JSON
+
+// Importar las rutas
+const docenteRoutes = require('./routes/docenteRoutes');
+const estudianteRoutes = require('./routes/estudianteRoutes');
 
 // Rutas
 app.use('/prueba', pruebaRoutes);

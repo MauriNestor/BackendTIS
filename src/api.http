@@ -26,3 +26,14 @@ Content-Type: application/json
 
 ### get de estudiantes
 GET http://localhost:4000/estudiantes
+
+### post de Docentes
+POST http://localhost:4000/docentes/registro
+Content-Type: application/json
+
+{
+  "nombre": "Ana",
+  "apellido": "Rojas",
+  "correo": "ana.rojas@umss.edu.bo",
+  "contraseña": "Contraseña123"
+}

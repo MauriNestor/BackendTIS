@@ -1,23 +1,59 @@
 const db = require('../config/db');
+const bcrypt = require('bcrypt');
 
 const obtenerDocente = async (correo, password) => {
     try {
-        const query = 'SELECT cod_docente FROM Docente WHERE correo = $1 AND password_docente = $2';
+        const query = 'SELECT cod_docente, password_docente FROM Docente WHERE correo = $1';
+        const result = await db.pool.query(query, [correo]);
 
-        const result = await db.pool.query(query, [correo, password]);
-        const data = result.rows;
-
-        if (data.length === 0) {
-            throw new Error('Correo o contraseña incorrectos.');
+        if (result.rows.length === 0) {
+            throw new Error('Credenciales incorrectas.');
         }
 
-        return data;  
+        const docente = result.rows[0];
+
+        // Comparar la contraseña proporcionada con la contraseña encriptada
+        const isMatch = await bcrypt.compare(password, docente.password_docente);
+
+        if (!isMatch) {
+            throw new Error('Credenciales incorrectas.');
+        }
+
+        // Retornar el cod_docente u otros datos necesarios
+        return { cod_docente: docente.cod_docente };
     } catch (err) {
-        console.error('Error al obtener docente:', err);
-        throw err; 
+        console.error('Error al autenticar docente', err);
+        throw err;
+    }
+};
+
+const obtenerEstudiante = async (codigoSis, password) => {
+    try {
+        const query = 'SELECT codigo_sis, password_estudiante FROM Estudiante WHERE codigo_sis = $1';
+        const result = await db.pool.query(query, [codigoSis]);
+
+        if (result.rows.length === 0) {
+            throw new Error('Credenciales incorrectas.');
+        }
+
+        const estudiante = result.rows[0];
+
+        // Comparar la contraseña proporcionada con la contraseña encriptada
+        const isMatch = await bcrypt.compare(password, estudiante.password_estudiante);
+
+        if (!isMatch) {
+            throw new Error('Credenciales incorrectas.');
+        }
+
+        return { codigoSis: docente.codigo_sis};
+    } catch (err) {
+        console.error('Error al autenticar estudiante', err);
+        throw err;
     }
 };
 
 module.exports = {
     obtenerDocente,
+    obtenerEstudiante,
 };
+

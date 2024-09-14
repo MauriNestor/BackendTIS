@@ -18,9 +18,9 @@ app.use(cors());  // Habilitar CORS si es necesario
 app.use(express.json());  // Para parsear JSON
 
 // Rutas
+app.use('/', pruebaRoutes);     
 app.use('/docentes', docenteRoutes);     
-app.use('/estudiantes', estudianteRoutes);  
-app.use('/prueba', pruebaRoutes);        
+app.use('/estudiantes', estudianteRoutes);     
 app.use('/login', loginRoutes);     
 
 

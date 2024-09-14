@@ -1,10 +1,14 @@
 const {pool} = require('../config/db');
+const bcrypt = require('bcrypt');
 
 const DocentesService = {
     createDocente: async ({nombre, apellido, correo, contraseña}) => {
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
+
         const result = await pool.query(
             'INSERT INTO DOCENTE (nombre_docente, apellido_docente, correo, password_docente) VALUES ($1, $2, $3, $4) RETURNING *',
-            [nombre, apellido,correo, contraseña]            
+            [nombre, apellido,correo, hashedPassword]            
         );
         return result.rows[0];
     },

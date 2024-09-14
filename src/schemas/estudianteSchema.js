@@ -2,7 +2,7 @@ const { z } = require('zod');
 
 // Definir esquema con Zod
 const estudianteSchema = z.object({
-  codigo_sis: z.string().length(7, 'El código SIS debe tener 7 caracteres').regex(/^\d+$/, 'El código SIS debe ser numérico'),
+  codigo_sis: z.string().min(7, 'El código SIS debe tener al menos 7 caracteres').regex(/^\d+$/, 'El código SIS debe ser numérico'),
   nombres: z.string().min(1, 'Los nombres son obligatorios').regex(/^[a-zA-Z\s]+$/, 'Los nombres solo deben contener letras'),
   apellidos: z.string().min(1, 'Los apellidos son obligatorios').regex(/^[a-zA-Z\s]+$/, 'Los apellidos solo deben contener letras'),
   correo: z.string().email('Debe ser un correo válido').endsWith('@umss.edu.bo', 'El correo debe ser institucional (@umss.edu.bo)'),

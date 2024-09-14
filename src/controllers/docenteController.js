@@ -1,23 +1,31 @@
-exports.registrarDocente = (req, res) => {
+const DocenteService = require('../services/docenteService');
+
+exports.registrarDocente = async (req, res) => {
     const { nombre, apellido, correo, contraseña } = req.body;
-
-    res.status(201).json({
-        mensaje: "Docente registrado exitosamente",
-        docente: {
-            nombre,
-            apellido,
-            correo,
-            contraseña 
-        }
-    });
-};
-
-exports.obtenerDocentes = (req, res) => {
-    const docentes = [
-      { id: 1, nombre: 'Juan', apellido: 'Perez', correo: 'juan.perez@umss.edu.bo' },
-      { id: 2, nombre: 'Maria', apellido: 'Garcia', correo: 'maria.garcia@umss.edu.bo' },
-      { id: 3, nombre: 'Carlos', apellido: 'Lopez', correo: 'carlos.lopez@umss.edu.bo' }
-    ];
-
-    res.status(200).json(docentes);
+ 
+    try {
+      const nuevoDocente = await DocenteService.createDocente({ nombre, apellido, correo, contraseña });
+      res.status(201).json({
+        mensaje: 'Docente registrado exitosamente',
+        docente: nuevoDocente
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: 'Error al registrar docente',
+        detalle: error.message
+      });
+    }
   };
+
+exports.obtenerDocentes = async (req, res) => {
+    try {
+        const docentes = await DocenteService.getAllDocentes();
+        res.status(200).json(docentes);
+    }
+    catch (error) {
+        res.status(500).json({
+            error: 'Error al obtener los docentes',
+            detalle: error.message
+        });
+    }
+}

@@ -6,10 +6,10 @@ POST http://localhost:3000/docentes/registro
 Content-Type: application/json
 
 {
-  "nombre": "Juan",
-  "apellido": "Perez",
-  "correo": "juan.perez@umss.edu.bo",
-  "contraseña": "Contraseña123"
+  "nombre": "JUlios",
+  "apellido": "Araonsa",
+  "correo": "gg@umss.ed.bo",
+  "contraseña": ""
 }
 
 ### post de estudiantes
@@ -17,7 +17,7 @@ POST http://localhost:3000/estudiantes/registro
 Content-Type: application/json
 
 {
-  "codigo_sis": "1234567",
+  "codigo_sis": "202101249",
   "nombres": "Ana",
   "apellidos": "Rojas",
   "correo": "ana.rojas@umss.edu.bo",

@@ -20,10 +20,10 @@ const autenticarDocente = async (req, res) => {
 };
 
 const autenticarEstudiante = async (req, res) => {
-    const { codigoSis, password } = req.body;
+    const { codigoSis, password, correo } = req.body;
 
     try {
-        const estudiante = await obtenerEstudiante(codigoSis, password);
+        const estudiante = await obtenerEstudiante(codigoSis, password, correo);
         console.log("Autenticación exitosa.", estudiante)
         return res.status(200).json({
             message: 'Autenticación exitosa.',

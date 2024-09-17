@@ -27,13 +27,13 @@ const obtenerDocente = async (correo, password) => {
     }
 };
 
-const obtenerEstudiante = async (codigoSis, password) => {
+const obtenerEstudiante = async (codigoSis, password, correo) => {
     try {
-        const query = 'SELECT codigo_sis, password_estudiante FROM Estudiante WHERE codigo_sis = $1';
-        const result = await db.pool.query(query, [codigoSis]);
+        const query = 'SELECT codigo_sis, password_estudiante FROM Estudiante WHERE codigo_sis = $1 AND correo_estudiante = $2';
+        const result = await db.pool.query(query, [codigoSis, correo]);
 
         if (result.rows.length === 0) {
-            throw new Error('Credenciales incorrectas.');
+            throw new Error('Credenciales incorrectas.', err);
         }
 
         const estudiante = result.rows[0];
@@ -42,10 +42,10 @@ const obtenerEstudiante = async (codigoSis, password) => {
         const isMatch = await bcrypt.compare(password, estudiante.password_estudiante);
 
         if (!isMatch) {
-            throw new Error('Credenciales incorrectas.');
+            throw new Error('Credenciales incorrectas.', err);
         }
 
-        return { codigoSis: docente.codigo_sis};
+        return { codigoSis: estudiante.codigo_sis};
     } catch (err) {
         console.error('Error al autenticar estudiante', err);
         throw err;

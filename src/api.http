@@ -6,10 +6,10 @@ POST http://localhost:4000/docentes/registro
 Content-Type: application/json
 
 {
-  "nombre": "Leonardo",
-  "apellido": "Araonsa",
-  "correo": "asdagg@umss.edu.bo",
-  "contraseña": "adassad"
+  "nombre": "Juan Pélaes",
+  "apellido": "González López",
+  "correo": "juane.peerez@umss.edu.bo",
+  "contraseña": "Contraseña1"
 }
 
 ### post de estudiantes
@@ -17,23 +17,13 @@ POST http://localhost:4000/estudiantes/registro
 Content-Type: application/json
 
 {
-  "codigo_sis": "202101250",
-  "nombres": "Ana",
+  "codigo_sis": "2021021036",
+  "nombres": "Lola",
   "apellidos": "Rojas",
-  "correo": "ana.rojas@umss.edu.bo",
+  "correo": "ll11@umss.edu.bo",
   "contraseña": "Contraseña123"
 }
 
-### get de estudiantes
+### get de estudliantes
 GET http://localhost:4000/estudiantes
 
-### post de Docentes
-POST http://localhost:4000/docentes/registro
-Content-Type: application/json
-
-{
-  "nombre": "Ana",
-  "apellido": "Rojas",
-  "correo": "ana.rojas@umss.edu.bo",
-  "contraseña": "Contraseña123"
-}

@@ -17,10 +17,10 @@ POST http://localhost:4000/estudiantes/registro
 Content-Type: application/json
 
 {
-  "codigo_sis": "2021021036",
+  "codigo_sis": "20211036",
   "nombres": "Lola",
   "apellidos": "Rojas",
-  "correo": "ll11@umss.edu.bo",
+  "correo": "ll11hhb@umss.edu.bo",
   "contraseña": "Contraseña123"
 }
 

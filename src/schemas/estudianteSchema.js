@@ -14,7 +14,7 @@ const estudianteSchema = z.object({
     .regex(/^[a-zA-Z\s]+$/, 'Los apellidos solo deben contener letras'),
   correo: z.string()
     .email('Debe ser un correo válido')
-    .endsWith('@umss.edu.bo', 'El correo debe ser institucional (@umss.edu.bo)'),
+    .endsWith('@est.umss.edu', 'El correo debe ser institucional (@est.umss.edu)'),
   contraseña: z.string()
     .min(8, 'La contraseña debe tener al menos 8 caracteres')
     .regex(/[A-Z]/, 'La contraseña debe contener al menos una letra mayúscula')

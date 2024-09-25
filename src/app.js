@@ -14,7 +14,9 @@ dotenv.config();
 const app = express();
 
 // Middlewares
-app.use(cors());  // Habilitar CORS si es necesario
+app.use(cors({
+  origin: 'http://localhost:5173' 
+}));
 app.use(express.json());  // Para parsear JSON
 
 // Rutas

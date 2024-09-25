@@ -29,7 +29,7 @@ const EstudianteService = {
             );
             return { success: true, message: 'Contraseña actualizada con éxito.' };
         } catch {
-            console.error('Error al cambiar la contraseña del docente', err);
+            console.error('Error al cambiar la contraseña del estudiante', err);
             throw err;
         }
     }

@@ -4,7 +4,7 @@ const { autenticarEstudiante } = require('../controllers/loginController');
 const router = express.Router();
 
 // Definir la ruta para la autenticación del docente
-router.get('/docente', autenticarDocente);
-router.get('/estudiante', autenticarEstudiante);
+router.post('/docente', autenticarDocente);
+router.post('/estudiante', autenticarEstudiante);
 
 module.exports = router;

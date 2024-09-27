@@ -1,5 +1,10 @@
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const generarToken = (payload) => {
+    return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '1h' }); // El token expirará en 1 hora
+};
 
 const obtenerDocente = async (correo, password) => {
     try {
@@ -18,9 +23,10 @@ const obtenerDocente = async (correo, password) => {
         if (!isMatch) {
             throw new Error('Credenciales incorrectas.');
         }
+        const token = generarToken({ cod_docente: docente.cod_docente });
 
         // Retornar el cod_docente u otros datos necesarios
-        return { cod_docente: docente.cod_docente };
+        return {token};
     } catch (err) {
         console.error('Error al autenticar docente', err);
         throw err;
@@ -44,8 +50,9 @@ const obtenerEstudiante = async (codigoSis, password, correo) => {
         if (!isMatch) {
             throw new Error('Credenciales incorrectas.', err);
         }
+        const token = generarToken({ codigoSis: estudiante.codigo_sis });
 
-        return { codigoSis: estudiante.codigo_sis};
+        return {token};
     } catch (err) {
         console.error('Error al autenticar estudiante', err);
         throw err;

@@ -3,7 +3,7 @@ const router = express.Router();
 const planificacionController = require('../controllers/planificacionController');
 
 // Ruta para registrar la planificación (product backlog)
-router.post('/planificacion', planificacionController.registrarPlanificacion);
+router.post('/productbacklog', planificacionController.registrarPlanificacion);
 
 // Ruta para registrar los requerimientos
 router.post('/requerimientos', planificacionController.registrarRequerimientos);

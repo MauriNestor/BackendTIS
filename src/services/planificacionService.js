@@ -33,17 +33,33 @@ const registrarRequerimientos = async (codigoProduct, requerimientos) => {
     }
 };
 
-const registrarSprint = async (sprint, fechaInicio, fechaFin, objetivo, requerimientos) => {
+const registrarSprint = async (codigoProduct, sprint, fechaInicio, fechaFin, objetivo, requerimientos) => {
     try {
+        console.log(typeof codigoProduct, typeof sprint); // Esto debería mostrar "number"
+
+        // Validar que los datos son del tipo correcto
+        if (typeof codigoProduct !== 'number' || typeof sprint !== 'number') {
+            throw new Error('codigoProduct y sprint deben ser números.');
+        }
+        if (!fechaInicio || !fechaFin) {
+            throw new Error('fechaInicio y fechaFin son obligatorios.');
+        }
+
+        // Imprimir para depuración
+        console.log(`Insertando sprint: ${codigoProduct}, ${sprint}, ${fechaInicio}, ${fechaFin}, ${objetivo}`);
+
         const result = await pool.query(
-            'INSERT INTO sprint (sprint, fecha_inicio_sprint, fecha_fin_sprint, objetivo_sprint) VALUES ($1, $2, $3, $4) RETURNING *',
-            [sprint, fechaInicio, fechaFin, objetivo]
+            'INSERT INTO sprint (cod_product, sprint, fecha_inicio_sprint, fecha_fin_sprint, objetivo_sprint) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            [codigoProduct, sprint, fechaInicio, fechaFin, objetivo]
         );
+
         const codSprint = result.rows[0].cod_sprint;
+
+        // Actualizar requerimientos
         for (const requerimiento of requerimientos) {
-            const result = await pool.query(
-                'UPDATE requermiento SET cod_sprint = $1 WHERE cod_requerimiento = $2',
-                [codSprint, requerimiento.codRequermiento]
+            const updateResult = await pool.query(
+                'UPDATE requerimiento SET cod_sprint = $1 WHERE cod_requerimiento = $2',
+                [codSprint, requerimiento.codRequerimiento]
             );
         }
     } catch (err) {

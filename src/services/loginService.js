@@ -23,7 +23,7 @@ const obtenerDocente = async (correo, password) => {
         if (!isMatch) {
             throw new Error('Credenciales incorrectas.');
         }
-        const token = generarToken({ cod_docente: docente.cod_docente });
+        const token = generarToken({ cod_docente: docente.cod_docente, role: 'docente' });
 
         // Retornar el cod_docente u otros datos necesarios
         return {token};
@@ -50,7 +50,7 @@ const obtenerEstudiante = async (codigoSis, password, correo) => {
         if (!isMatch) {
             throw new Error('Credenciales incorrectas.', err);
         }
-        const token = generarToken({ codigoSis: estudiante.codigo_sis });
+        const token = generarToken({ codigoSis: estudiante.codigo_sis, role: 'estudiante' });
 
         return {token};
     } catch (err) {

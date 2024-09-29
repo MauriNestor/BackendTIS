@@ -1,23 +1,21 @@
 const ClaseService = require('../services/claseService');
 
+const generarCodigoClase = () => {
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+}
+
 exports.crearClase = async (req, res) => {
-  const { cod_clase, cod_gestion, codigo, nombre_clase } = req.body;
-  const cod_docente = req.docenteId; 
-
-  if (!cod_docente) {
-    return res.status(400).json({ error: 'El ID del docente es obligatorio' });
+  const { nombreClase, codGestion } = req.body;
+  
+  if(req.user.role !== 'docente'){
+    return res.status(403).json({ error: 'Acceso denegado' });
   }
-
   try {
-    const nuevaClase = await ClaseService.crearClase({ cod_docente, cod_clase, cod_gestion, codigo, nombre_clase });
-    res.status(201).json({
-      mensaje: 'Clase creada exitosamente',
-      clase: nuevaClase
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: 'Error al crear la clase',
-      detalle: error.message
-    });
+      const codClase = generarCodigoClase();
+      const codDocente = req.user.cod_docente;
+      const nuevaClase = await ClaseService.crearClase(codDocente, codClase, codGestion, nombreClase);
+      res.status(201).json({ mensaje: 'Clase creada exitosamente', clase: nuevaClase });
+  }catch (error) {
+    res.status(500).json({ error: 'Error al crear la clase', detalle: error.message });
   }
-};
+}

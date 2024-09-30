@@ -20,10 +20,10 @@ app.use(
     origin: "http://localhost:5173",
   })
 );
-app.use(express.json()); // Para parsear JSON
 
-// Hacer pública la carpeta 'uploads/logos' para que se pueda acceder a los logotipos
-app.use("/uploads/logos", express.static("uploads/logos")); // Esto permitirá acceder a las imágenes subidas desde el navegador
+// Aumentar el límite de tamaño de la carga a 10MB
+app.use(express.json({ limit: "10mb" })); // Para parsear JSON con límite
+app.use(express.urlencoded({ limit: "10mb", extended: true })); // Para parsear URL-encoded con límite
 
 // Rutas
 app.use("/", pruebaRoutes);

@@ -20,3 +20,15 @@ exports.createGrupoEmpresa = async (data) => {
     throw error;
   }
 };
+
+exports.getAllGruposEmpresa = async () => {
+  const query =
+    "SELECT nombre_largo, nombre_corto, logotipo FROM grupo_empresa";
+
+  try {
+    const { rows } = await pool.query(query);
+    return rows; // Devuelve todos los registros
+  } catch (error) {
+    throw new Error("Error al obtener los datos de los grupos empresa.");
+  }
+};

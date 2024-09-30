@@ -47,7 +47,7 @@ exports.registrarGrupo = async (req, res) => {
       await rolEstudianteService.createRolEstudiante({
         codigo_sis,
         cod_rol,
-        cod_gestion: 1, // Ajusta según tu lógica
+        cod_gestion: 2, // Ajusta según tu lógica
       });
     }
 
@@ -58,5 +58,23 @@ exports.registrarGrupo = async (req, res) => {
       message: "Error al registrar el grupo.",
       error: error.message,
     });
+  }
+};
+exports.getAllGruposEmpresa = async (req, res) => {
+  try {
+    const gruposEmpresa = await grupoEmpresaService.getAllGruposEmpresa();
+
+    // Convertir los logos en base64 si están almacenados como Buffer
+    const gruposConLogoBase64 = gruposEmpresa.map((grupo) => ({
+      ...grupo,
+      logotipo: grupo.logotipo ? grupo.logotipo.toString("base64") : null,
+    }));
+
+    res.status(200).json(gruposConLogoBase64);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener los datos de los grupos empresa" });
   }
 };

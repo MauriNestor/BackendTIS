@@ -7,6 +7,7 @@ const pruebaRoutes = require('./routes/healthy');
 const loginRoutes = require('./routes/loginRoute'); 
 const planificacionRoutes = require('./routes/planificacionRoute'); 
 const claseRoutes = require('./routes/claseRoutes');
+const emailRoutes = require('./routes/emailRoute');
 
 const db = require('./config/db');
 
@@ -30,6 +31,7 @@ app.use('/estudiantes', estudianteRoutes);
 app.use('/login', loginRoutes);     
 app.use('/planificacion', planificacionRoutes); 
 app.use('/clases', claseRoutes);
+app.use('/email', emailRoutes);
 
 
 

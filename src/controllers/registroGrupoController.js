@@ -4,32 +4,42 @@ const rolEstudianteService = require("../services/rolEstudianteService");
 
 exports.registrarGrupo = async (req, res) => {
   try {
-    const { cod_docente, cod_clase, nombreLargo, nombreCorto, integrantes } =
-      req.body;
-    console.log("Integrantes recibidos:", integrantes);
+    const {
+      cod_docente,
+      cod_clase,
+      nombreLargo,
+      nombreCorto,
+      integrantes,
+      logo, // Cambiar logotipo a logo aquí
+    } = req.body;
+
+    // Decodificar el logo base64 (si es necesario)
+    console.log("logo antes : ", logo); // Cambiar el mensaje para que sea más claro
+    const logotipoBuffer = logo ? Buffer.from(logo, "base64") : null;
+    console.log("logo buffer después : ", logotipoBuffer); // Cambiar el mensaje aquí también
+
     const parsedIntegrantes =
       typeof integrantes === "string" ? JSON.parse(integrantes) : integrantes;
-    const logotipo = req.file ? req.file.filename : null;
-    console.log("Integrantes procesados:", parsedIntegrantes);
+
     // Inserta en la tabla grupo_empresa y obtiene el cod_grupoempresa generado
     const cod_grupoempresa = await grupoEmpresaService.createGrupoEmpresa({
       cod_docente,
       cod_clase,
       nombreLargo,
       nombreCorto,
-      logotipo,
+      logotipo: logotipoBuffer, // Guardar logotipo como un buffer o como string
     });
 
     // Insertar cada integrante en grupo_estudiante y rol_estudiante
     for (const integrante of parsedIntegrantes) {
-      const { codigo_sis, rol, nombre } = integrante; // Extrae el codigo_sis directamente
-      console.log(`Nombre: ${nombre}, Codigo SIS: ${codigo_sis}`);
+      const { codigo_sis, rol } = integrante;
+
       // Insertar en grupo_estudiante
       await grupoEstudianteService.createGrupoEstudiante({
         cod_docente,
         cod_clase,
         cod_grupoempresa,
-        codigo_sis, // Usa el codigo_sis directamente
+        codigo_sis,
       });
 
       // Insertar en rol_estudiante
@@ -41,7 +51,7 @@ exports.registrarGrupo = async (req, res) => {
       });
     }
 
-    res.status(200).json({ message: "Grupo registrado exitosamente." });
+    res.status(201).json({ message: "Grupo registrado exitosamente." });
   } catch (error) {
     console.error(error);
     res.status(500).json({

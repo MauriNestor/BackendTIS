@@ -23,7 +23,7 @@ exports.createGrupoEmpresa = async (data) => {
 
 exports.getAllGruposEmpresa = async () => {
   const query =
-    "SELECT nombre_largo, nombre_corto, logotipo FROM grupo_empresa";
+    "SELECT cod_grupoempresa, nombre_largo, nombre_corto, logotipo FROM grupo_empresa";
 
   try {
     const { rows } = await pool.query(query);

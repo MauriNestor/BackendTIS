@@ -103,6 +103,21 @@ const obtenerSprint = async (codigoGrupo) => {
     }
 };
 
+const obtenerProductBacklog = async (codigoGrupo) => {
+    try {
+        const result = await pool.query(
+            'SELECT * FROM requerimiento as r WHERE r.cod_product = (SELECT pb.cod_product FROM productbacklog as pb WHERE cod_grupoempresa = $1) AND r.cod_sprint IS NULL',
+            [codigoGrupo]
+        );
+        const backlog = result.rows;
+        return backlog;
+
+    }  catch (err) {
+        console.error('Error al obtener productbacklog', err);
+        throw err;
+    }
+};
+
 const getDocente = async (codigoClase) => {
     const result = await pool.query(
         'SELECT cod_docente FROM clase WHERE cod_clase = $1',
@@ -116,4 +131,5 @@ module.exports = {
     registrarRequerimientos,
     registrarSprint,
     obtenerSprint,
+    obtenerProductBacklog,
 };

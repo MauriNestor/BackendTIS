@@ -30,9 +30,15 @@ GET http://localhost:4000/estudiantes
 ### Crear una clase
 POST http://localhost:4000/clases/crear
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6NSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjc1NzA3OTMsImV4cCI6MTcyNzU3NDM5M30.ENHy3lP7D1pE96045AJ-N3B-woM1io1eAcsdn7KSsIs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6NSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjc3MjQzNjcsImV4cCI6MTcyNzcyNzk2N30.Sxr1P0SBUY7wDMJUAwhm1VMGiW_TOv9Sizl2d9PREr8
 
 {
-  "nombreClase": "programacion movil 2",
-  "codGestion": 2024
+  "nombreClase": "costos industriales",
+  "codGestion": 2025
 }
+
+
+### Obtener todas las clases del docente
+GET http://localhost:4000/clases/obtener
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6NSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjc3MjQzNjcsImV4cCI6MTcyNzcyNzk2N30.Sxr1P0SBUY7wDMJUAwhm1VMGiW_TOv9Sizl2d9PREr8
+

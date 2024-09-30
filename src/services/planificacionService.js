@@ -35,8 +35,6 @@ const registrarRequerimientos = async (codigoProduct, requerimientos) => {
 
 const registrarSprint = async (codigoProduct, sprint, fechaInicio, fechaFin, objetivo, requerimientos) => {
     try {
-        console.log(typeof codigoProduct, typeof sprint); // Esto debería mostrar "number"
-
         // Validar que los datos son del tipo correcto
         if (typeof codigoProduct !== 'number' || typeof sprint !== 'number') {
             throw new Error('codigoProduct y sprint deben ser números.');
@@ -46,7 +44,7 @@ const registrarSprint = async (codigoProduct, sprint, fechaInicio, fechaFin, obj
         }
 
         // Imprimir para depuración
-        console.log(`Insertando sprint: ${codigoProduct}, ${sprint}, ${fechaInicio}, ${fechaFin}, ${objetivo}`);
+        // console.log(`Insertando sprint: ${codigoProduct}, ${sprint}, ${fechaInicio}, ${fechaFin}, ${objetivo}`);
 
         const result = await pool.query(
             'INSERT INTO sprint (cod_product, sprint, fecha_inicio_sprint, fecha_fin_sprint, objetivo_sprint) VALUES ($1, $2, $3, $4, $5) RETURNING *',
@@ -68,6 +66,43 @@ const registrarSprint = async (codigoProduct, sprint, fechaInicio, fechaFin, obj
     }
 };
 
+const obtenerSprint = async (codigoGrupo) => {
+    try {
+        const result = await pool.query(
+            'SELECT * FROM sprint as s WHERE s.cod_product = (SELECT pb.cod_product FROM productbacklog as pb WHERE cod_grupoempresa = $1)',
+            [codigoGrupo]
+        );
+
+        const sprints = result.rows;
+        if (sprints.length === 0) {
+            return { message: "No se encontraron sprints para el grupo especificado." };
+        }
+
+        const sprintsConRequerimientos = [];
+
+        // Iterar sobre los sprints obtenidos
+        for (const sprint of sprints) {
+            const codSprint = sprint.cod_sprint;
+
+            const requerimientosXSprint = await pool.query(
+                'SELECT * FROM requerimiento as r WHERE r.cod_sprint = $1',
+                [codSprint]
+            );
+
+            sprintsConRequerimientos.push({
+                sprint: sprint,
+                requerimientos: requerimientosXSprint.rows
+            });
+        }
+
+        return sprintsConRequerimientos;
+
+    } catch (err) {
+        console.error('Error al obtener sprintbacklog', err);
+        throw err;
+    }
+};
+
 const getDocente = async (codigoClase) => {
     const result = await pool.query(
         'SELECT cod_docente FROM clase WHERE cod_clase = $1',
@@ -80,4 +115,5 @@ module.exports = {
     registrarPlanificacion, 
     registrarRequerimientos,
     registrarSprint,
+    obtenerSprint,
 };

@@ -40,9 +40,28 @@ const registrarSprint = async (req, res) => {
     }
 };
 
+const obtenerSprint = async (req, res) => {
+    const { codigoGrupo } = req.params; 
+
+    try {
+        const sprintsConRequerimientos = await planificacionService.obtenerSprint(codigoGrupo);
+
+        if (!sprintsConRequerimientos || sprintsConRequerimientos.length === 0) {
+            return res.status(200).json([]); // Devuelve un arreglo vacío si no hay sprints
+        }
+
+        // Devolver los sprints con sus requerimientos en la respuesta
+        res.status(200).json(sprintsConRequerimientos);
+
+    } catch (error) {
+        console.error('Error al obtener sprintbacklog:', error);
+        res.status(500).json({ error: 'Error al obtener sprintbacklog.' });
+    }
+};
 
 module.exports = {
     registrarPlanificacion,
     registrarRequerimientos,
     registrarSprint,
+    obtenerSprint,
 };

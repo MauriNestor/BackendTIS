@@ -8,6 +8,9 @@ const transporter = nodemailer.createTransport({
         user: 'codecraft.developercompany@gmail.com', // Coloca tu correo
         pass: 'nvtb votd jxwz kigg',        // Coloca tu contraseña
     },
+    tls: {
+        rejectUnauthorized: false // Deshabilitar la verificación estricta del certificado
+    }
 });
 
 // Función para generar y enviar el correo

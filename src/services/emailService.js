@@ -48,7 +48,7 @@ const enviarCorreoRestablecer = async (correo, rol) => {
 
 const verificarCorreo = async (correo, rol) => {
     try {
-        if (correo === "Estudiante") {
+        if (rol === "Estudiante") {
             result = await pool.query(
                 'SELECT CODIGO_SIS FROM Estudiante WHERE correo_estudiante = $1',
                 [correo]

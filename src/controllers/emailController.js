@@ -10,10 +10,15 @@ const enviarCorreoRestablecer = async (req, res) => {
         }
 
         // Llamar al servicio para enviar el correo
-        await emailService.enviarCorreoRestablecer(correo, rol);
+        const result = await emailService.enviarCorreoRestablecer(correo, rol);
         
-        // Responder en caso de éxito
-        return res.status(200).json({ message: 'Correo de restablecimiento enviado exitosamente.' });
+        // Verificar si el correo fue encontrado y enviado
+        if (result.success) {
+            return res.status(200).json({ message: 'Correo de restablecimiento enviado exitosamente.' });
+        } else {
+            return res.status(404).json({ error: result.message }); // Error si el correo no fue encontrado
+        }
+
     } catch (err) {
         // Manejar errores
         console.error('Error al enviar el correo de restablecimiento', err);

@@ -14,7 +14,7 @@ const restablecerPassword = async (newPassword, token) => {
 
         let result;
         
-        if (decoded.usuario === "estudiante") {
+        if (decoded.usuario === "Estudiante") {
             result = await pool.query(
                 'UPDATE Estudiante SET password_estudiante = $1 WHERE correo_estudiante = $2',
                 [hashedPassword, decoded.usuarioCorreo]

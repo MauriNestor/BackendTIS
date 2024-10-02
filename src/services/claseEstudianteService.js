@@ -60,13 +60,6 @@ const verificarClase = async (codigoClase) => {
 
 const verificarClaseEstudiante = async (codigoClase, codigoSis) => {
     try {
-        const decoded = jwt.decode(token);
-        if (!decoded || !decoded.codigoSis) {
-            throw new Error('Token inválido o faltan datos en el token');
-        }
-        // console.log(decoded);
-        codigoSis = decoded.codigoSis;
-
         result = await pool.query(
             'SELECT * FROM Clase_estudiante WHERE cod_clase = $1 AND codigo_sis = $2',
             [codigoClase, codigoSis]

@@ -87,11 +87,8 @@ const verificarClaseEstudiante = async (codigoClase, codigoSis) => {
     }
 };
 
-const obtenerClasesEstudiante = async (token) => {
+const obtenerClasesEstudiante = async (codigoSis) => {
     try {
-        const decoded = jwt.decode(token);
-        const codigoSis = decoded.codigoSis;
-
         const result = await db.pool.query(
             'SELECT cod_clase FROM Clase_estudiante WHERE codigo_sis = $1',
             [codigoSis]

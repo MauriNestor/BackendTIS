@@ -27,25 +27,16 @@ const unirseClase = async (req, res) => {
 };
 
 const obtenerClasesEstudiante = async (req, res) => {
-    // Obtener el token del header Authorization
-    const authHeader = req.headers['authorization'];
-    
-    // Verificar si el header Authorization está presente y tiene el formato correcto
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(400).json({ error: 'Token es obligatorio y debe estar en el formato Bearer.' });
-    }
-
-    // Extraer el token (después de "Bearer ")
-    const token = authHeader.split(' ')[1];
+    const { codigoSis } = req.query; // Obtener el codigoSis de los query params
 
     try {
-        // Validar que el token fue recibido
-        if (!token) {
-            return res.status(400).json({ error: 'Token es obligatorio.' });
+        // Validar que el codigoSis fue recibido
+        if (!codigoSis) {
+            return res.status(400).json({ error: 'El código SIS es obligatorio.' });
         }
 
         // Llamar al servicio para obtener las clases del estudiante
-        const result = await claseEstudianteService.obtenerClasesEstudiante(token);
+        const result = await claseEstudianteService.obtenerClasesEstudiante(codigoSis);
 
         // Verificar si se encontraron clases
         if (result.clases && result.clases.length > 0) {

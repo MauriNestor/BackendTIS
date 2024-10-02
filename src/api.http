@@ -30,11 +30,11 @@ GET http://localhost:4000/estudiantes
 ### Crear una clase
 POST http://localhost:4000/clases/crear
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6NSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjc3MjQzNjcsImV4cCI6MTcyNzcyNzk2N30.Sxr1P0SBUY7wDMJUAwhm1VMGiW_TOv9Sizl2d9PREr8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6NSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjc5MDk4MTcsImV4cCI6MTcyNzkxMzQxN30.TP5sF2BwyfGeXmeObFFHwCIx8WGee8kOn4i0KJeUdlo
 
 {
   "nombreClase": "costos industriales",
-  "codGestion": 2025
+  "codGestion": 1
 }
 
 

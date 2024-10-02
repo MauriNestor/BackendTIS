@@ -27,7 +27,7 @@ const unirseClase = async (req, res) => {
 };
 
 const obtenerClasesEstudiante = async (req, res) => {
-    const { codigoSis } = req.query; // Obtener el codigoSis de los query params
+    const { codigoSis } = req.user; // Obtener el codigoSis de los query params
 
     try {
         // Validar que el codigoSis fue recibido

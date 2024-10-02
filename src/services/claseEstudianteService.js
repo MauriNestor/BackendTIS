@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const pool = db.pool; 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const planificacionService = require('../services/planificacionService');
@@ -10,9 +11,13 @@ const unirseClase = async (token, codigoClase) => {
 
         if (claseValida) {
             const decoded = jwt.decode(token);
-            console.log(decoded);
+            if (!decoded || !decoded.codigoSis) {
+                throw new Error('Token inválido o faltan datos en el token');
+            }
+            // console.log(decoded);
             codigoSis = decoded.codigoSis;
 
+            
             const claseValidaEstudiante = await verificarClaseEstudiante(codigoClase, codigoSis);
             if (claseValidaEstudiante) {
                 const codigoDocente = await planificacionService.getDocente(codigoClase); 

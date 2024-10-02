@@ -9,6 +9,7 @@ const planificacionRoutes = require('./routes/planificacionRoute');
 const claseRoutes = require('./routes/claseRoutes');
 const emailRoutes = require('./routes/emailRoute');
 const resetPasswordRoutes = require('./routes/resetPasswordRoute');
+const claseEstudianteRoutes = require('./routes/claseEstudianteRoute');
 
 const db = require('./config/db');
 
@@ -34,6 +35,7 @@ app.use('/planificacion', planificacionRoutes);
 app.use('/clases', claseRoutes);
 app.use('/email', emailRoutes);
 app.use('/password', resetPasswordRoutes);
+app.use('/clases-estudiante', claseEstudianteRoutes);
 
 
 

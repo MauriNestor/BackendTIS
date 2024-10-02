@@ -3,44 +3,51 @@ const pool = db.pool;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const planificacionService = require('../services/planificacionService');
+const DocenteService = require('../services/docenteService');
 
 const unirseClase = async (token, codigoClase) => {
     try {
-        // Verificar si la clase existe
         const claseValida = await verificarClase(codigoClase);
 
         if (claseValida.existe) {
-            // Decodificar el token y obtener el código de estudiante
             const decoded = jwt.decode(token);
             if (!decoded || !decoded.codigoSis) {
                 throw new Error('Token inválido o faltan datos en el token');
             }
 
             const codigoSis = decoded.codigoSis;
-
-            // Verificar si el estudiante ya está registrado en la clase
             const claseValidaEstudiante = await verificarClaseEstudiante(codigoClase, codigoSis);
-            if (claseValidaEstudiante) {
-                // Obtener el código del docente relacionado con la clase
-                const codigoDocente = await planificacionService.getDocente(codigoClase);
 
-                // Insertar el registro en la tabla Clase_estudiante
+            if (claseValidaEstudiante) {
+                const codigoDocente = await planificacionService.getDocente(codigoClase);
                 const query = 'INSERT INTO Clase_estudiante (cod_docente, cod_clase, codigo_sis) VALUES ($1, $2, $3) RETURNING *';
                 const result = await db.pool.query(query, [codigoDocente, codigoClase, codigoSis]);
 
-                // Retornar la información de la clase
-                const clase = claseValida.clase;
-                console.log(clase);
+                // Obtener directamente la gestión
+                const gestionResult = await getGestion(claseValida.clase.cod_gestion);
+                const gestion = gestionResult[0]?.gestion; // Extraer directamente el valor de gestion
+
+                const docente = await DocenteService.getDocente(codigoDocente);
+                const nombreDocente = docente[0]?.nombre_docente;
+                const apellidoDocente = docente[0]?.apellido_docente;
+
+                // Asignar el valor de gestión y nombre del docente a la clase
+                const clase = {
+                    ...claseValida.clase,
+                    gestion, // Reemplazar el array por el valor directo de gestión
+                    docente: {
+                        nombre: nombreDocente,
+                        apellido: apellidoDocente
+                    }
+                };
 
                 return { success: true, message: 'Estudiante registrado.', clase };
             } else {
                 return { success: false, message: 'Ya se encuentra registrado en esta clase.' };
             }
         } else {
-            console.log('No existe esta clase registrada:', codigoClase);
             return { success: false, message: 'No se encontró una clase con este código.' };
         }
-
     } catch (err) {
         console.error('Error al unirse a clase', err);
         throw err;
@@ -102,17 +109,48 @@ const obtenerClasesEstudiante = async (codigoSis) => {
 
         const clases = [];
         for (const codigoClase of codigosClase) {
+            // Obtener los detalles de la clase
             const claseResult = await db.pool.query(
                 'SELECT * FROM clase WHERE cod_clase = $1',
                 [codigoClase.cod_clase]
             );
-            clases.push(claseResult.rows[0]);
+            
+            // Extraer la clase
+            const clase = claseResult.rows[0];
+
+            // Obtener la gestión asociada a la clase
+            const gestionResult = await getGestion(clase.cod_gestion);
+            const gestion = gestionResult[0]?.gestion; // Extraer directamente el valor de gestion
+
+            // Asignar el valor de gestion a la clase
+            clase.gestion = gestion;
+
+            // Agregar la clase con la gestión a la lista de clases
+            clases.push(clase);
         }
 
         return { success: true, clases };
 
     } catch (err) {
         console.error('Error al buscar clases del estudiante', err);
+        throw err;
+    }
+};
+
+
+const getGestion = async (codGestion) => {
+    try {
+        const result = await db.pool.query(
+            'SELECT gestion FROM Gestion WHERE cod_gestion = $1',
+            [codGestion]
+        );
+        
+        const gestion = result.rows;
+
+        return gestion;
+
+    } catch (err) {
+        console.error('Error al buscar la gestion', err);
         throw err;
     }
 };

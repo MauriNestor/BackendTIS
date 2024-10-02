@@ -125,7 +125,18 @@ const obtenerClasesEstudiante = async (codigoSis) => {
             // Asignar el valor de gestion a la clase
             clase.gestion = gestion;
 
-            // Agregar la clase con la gestión a la lista de clases
+            // Obtener los datos del docente (nombre y apellido)
+            const docenteResult = await DocenteService.getDocente(clase.cod_docente);
+            const nombreDocente = docenteResult[0]?.nombre_docente;
+            const apellidoDocente = docenteResult[0]?.apellido_docente;
+
+            // Asignar el docente a la clase
+            clase.docente = {
+                nombre: nombreDocente,
+                apellido: apellidoDocente
+            };
+
+            // Agregar la clase con la gestión y el docente a la lista de clases
             clases.push(clase);
         }
 
@@ -136,6 +147,7 @@ const obtenerClasesEstudiante = async (codigoSis) => {
         throw err;
     }
 };
+
 
 
 const getGestion = async (codGestion) => {

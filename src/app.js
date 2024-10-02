@@ -5,7 +5,12 @@ const docenteRoutes = require('./routes/docenteRoutes');
 const estudianteRoutes = require('./routes/estudianteRoutes');
 const pruebaRoutes = require('./routes/healthy');
 const loginRoutes = require('./routes/loginRoute'); 
+const planificacionRoutes = require('./routes/planificacionRoute'); 
 const claseRoutes = require('./routes/claseRoutes');
+const emailRoutes = require('./routes/emailRoute');
+const resetPasswordRoutes = require('./routes/resetPasswordRoute');
+const claseEstudianteRoutes = require('./routes/claseEstudianteRoute');
+
 const gestionRoutes = require('./routes/gestionRoutes');
 const db = require('./config/db');
 
@@ -27,7 +32,12 @@ app.use('/', pruebaRoutes);
 app.use('/docentes', docenteRoutes);     
 app.use('/estudiantes', estudianteRoutes);     
 app.use('/login', loginRoutes);     
+app.use('/planificacion', planificacionRoutes); 
 app.use('/clases', claseRoutes);
+app.use('/email', emailRoutes);
+app.use('/password', resetPasswordRoutes);
+app.use('/clases-estudiante', claseEstudianteRoutes);
+
 app.use('/gestiones', gestionRoutes);
 
 

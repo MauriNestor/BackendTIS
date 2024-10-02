@@ -18,4 +18,17 @@ exports.crearClase = async (req, res) => {
   }catch (error) {
     res.status(500).json({ error: 'Error al crear la clase', detalle: error.message });
   }
-}
+};
+exports.obtenerClasesPorDocente = async (req, res) => {
+  if(req.user.role !== 'docente'){
+    return res.status(403).json({ error: 'Acceso denegado' });
+  }
+  try {
+    const codDocente = req.user.cod_docente;
+    const clases = await ClaseService.obtenerClasesPorDocente(codDocente);
+    res.status(200).json({ clases });
+  } catch (error) {
+    console.error('Error al obtener las clases del docente:', error);
+    res.status(500).json({ error: 'Error al obtener las clases del docente', detalle: error.message });
+  }
+};

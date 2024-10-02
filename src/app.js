@@ -6,9 +6,10 @@ const estudianteRoutes = require('./routes/estudianteRoutes');
 const pruebaRoutes = require('./routes/healthy');
 const loginRoutes = require('./routes/loginRoute'); 
 const claseRoutes = require('./routes/claseRoutes');
+const gestionRoutes = require('./routes/gestionRoutes');
 const db = require('./config/db');
 
-// Cargar las variables de entorno
+// Cargar las variables de entorno  
 dotenv.config();
 
 // Inicializar Express
@@ -27,6 +28,7 @@ app.use('/docentes', docenteRoutes);
 app.use('/estudiantes', estudianteRoutes);     
 app.use('/login', loginRoutes);     
 app.use('/clases', claseRoutes);
+app.use('/gestiones', gestionRoutes);
 
 
 app.use((req, res) => {

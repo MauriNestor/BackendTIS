@@ -4,5 +4,6 @@ const claseEstudianteController = require('../controllers/claseEstudianteControl
 
 // Ruta para unirse a una clase
 router.post('/unirse-clase', claseEstudianteController.unirseClase);
+router.get('/obtener-clases', claseEstudianteController.obtenerClasesEstudiante);
 
 module.exports = router;

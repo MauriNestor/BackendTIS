@@ -26,6 +26,32 @@ const unirseClase = async (req, res) => {
     }
 };
 
+const obtenerClasesEstudiante = async (req, res) => {
+    const { token } = req.body; // Obtener el token del cuerpo de la solicitud
+
+    try {
+        // Validar que el token fue recibido
+        if (!token) {
+            return res.status(400).json({ error: 'Token es obligatorio.' });
+        }
+
+        // Llamar al servicio para obtener las clases del estudiante
+        const result = await claseEstudianteService.obtenerClasesEstudiante(token);
+
+        // Verificar si se encontraron clases
+        if (result.clases && result.clases.length > 0) {
+            return res.status(200).json({ clases: result.clases });
+        } else {
+            return res.status(404).json({ message: result.message || 'No se encontraron clases para este estudiante.' });
+        }
+    } catch (err) {
+        // Manejo de errores del servidor
+        console.error('Error al obtener las clases del estudiante', err);
+        return res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+};
+
 module.exports = {
     unirseClase,
+    obtenerClasesEstudiante
 };

@@ -60,6 +60,13 @@ const verificarClase = async (codigoClase) => {
 
 const verificarClaseEstudiante = async (codigoClase, codigoSis) => {
     try {
+        const decoded = jwt.decode(token);
+        if (!decoded || !decoded.codigoSis) {
+            throw new Error('Token inválido o faltan datos en el token');
+        }
+        // console.log(decoded);
+        codigoSis = decoded.codigoSis;
+
         result = await pool.query(
             'SELECT * FROM Clase_estudiante WHERE cod_clase = $1 AND codigo_sis = $2',
             [codigoClase, codigoSis]
@@ -76,7 +83,40 @@ const verificarClaseEstudiante = async (codigoClase, codigoSis) => {
     }
 };
 
+const obtenerClasesEstudiante = async (token) => {
+    try {
+        const decoded = jwt.decode(token);
+        const codigoSis = decoded.codigoSis;
+
+        const result = await db.pool.query(
+            'SELECT cod_clase FROM Clase_estudiante WHERE codigo_sis = $1',
+            [codigoSis]
+        );
+        
+        const codigosClase = result.rows;
+
+        if (codigosClase.length === 0) {
+            return { success: false, message: "No se encontraron clases del estudiante." };
+        }
+
+        const clases = [];
+        for (const codigoClase of codigosClase) {
+            const claseResult = await db.pool.query(
+                'SELECT * FROM clase WHERE cod_clase = $1',
+                [codigoClase.cod_clase]
+            );
+            clases.push(claseResult.rows[0]);
+        }
+
+        return { success: true, clases };
+
+    } catch (err) {
+        console.error('Error al buscar clases del estudiante', err);
+        throw err;
+    }
+};
 module.exports = {
     unirseClase,
+    obtenerClasesEstudiante,
 };
 

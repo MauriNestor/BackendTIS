@@ -4,35 +4,42 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const planificacionService = require('../services/planificacionService');
 
-
 const unirseClase = async (token, codigoClase) => {
     try {
+        // Verificar si la clase existe
         const claseValida = await verificarClase(codigoClase);
 
-        if (claseValida) {
+        if (claseValida.existe) {
+            // Decodificar el token y obtener el código de estudiante
             const decoded = jwt.decode(token);
             if (!decoded || !decoded.codigoSis) {
                 throw new Error('Token inválido o faltan datos en el token');
             }
-            // console.log(decoded);
-            codigoSis = decoded.codigoSis;
 
-            
+            const codigoSis = decoded.codigoSis;
+
+            // Verificar si el estudiante ya está registrado en la clase
             const claseValidaEstudiante = await verificarClaseEstudiante(codigoClase, codigoSis);
             if (claseValidaEstudiante) {
-                const codigoDocente = await planificacionService.getDocente(codigoClase); 
+                // Obtener el código del docente relacionado con la clase
+                const codigoDocente = await planificacionService.getDocente(codigoClase);
 
-                const query = 'INSERT INTO  Clase_estudiante (cod_docente, cod_clase, codigo_sis) VALUES ($1, $2, $3) RETURNING *';
+                // Insertar el registro en la tabla Clase_estudiante
+                const query = 'INSERT INTO Clase_estudiante (cod_docente, cod_clase, codigo_sis) VALUES ($1, $2, $3) RETURNING *';
                 const result = await db.pool.query(query, [codigoDocente, codigoClase, codigoSis]);
 
-                return { success: true, message: 'Estudiante registrado.'};
+                // Retornar la información de la clase
+                const clase = claseValida.clase;
+                console.log(clase);
+
+                return { success: true, message: 'Estudiante registrado.', clase };
             } else {
                 return { success: false, message: 'Ya se encuentra registrado en esta clase.' };
-            };
+            }
         } else {
             console.log('No existe esta clase registrada:', codigoClase);
             return { success: false, message: 'No se encontró una clase con este código.' };
-        };
+        }
 
     } catch (err) {
         console.error('Error al unirse a clase', err);
@@ -42,21 +49,25 @@ const unirseClase = async (token, codigoClase) => {
 
 const verificarClase = async (codigoClase) => {
     try {
-        result = await pool.query(
+        // Realizar la consulta para verificar la existencia de la clase
+        const result = await pool.query(
             'SELECT * FROM Clase WHERE cod_clase = $1',
             [codigoClase]
         );
 
+        // Acceder a los datos de la clase desde result.rows[0]
+        const clase = result.rows[0];
         if (result.rowCount > 0) {
-            return true;
+            return { existe: true, clase };
         } else {
-            return false;
+            return { existe: false };
         }
     } catch (err) {
         console.error('Error al buscar clase', err);
         throw err;
     }
 };
+
 
 const verificarClaseEstudiante = async (codigoClase, codigoSis) => {
     try {
@@ -108,6 +119,7 @@ const obtenerClasesEstudiante = async (token) => {
         throw err;
     }
 };
+
 module.exports = {
     unirseClase,
     obtenerClasesEstudiante,

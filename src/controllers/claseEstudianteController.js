@@ -14,7 +14,7 @@ const unirseClase = async (req, res) => {
 
         // Verificar el resultado del servicio y devolver la respuesta adecuada
         if (result.success) {
-            return res.status(200).json({ message: result.message });
+            return res.status(200).json({  clase: result.clase});
         } else {
             return res.status(400).json({ error: result.message });
         }
@@ -27,7 +27,16 @@ const unirseClase = async (req, res) => {
 };
 
 const obtenerClasesEstudiante = async (req, res) => {
-    const { token } = req.body; // Obtener el token del cuerpo de la solicitud
+    // Obtener el token del header Authorization
+    const authHeader = req.headers['authorization'];
+    
+    // Verificar si el header Authorization está presente y tiene el formato correcto
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(400).json({ error: 'Token es obligatorio y debe estar en el formato Bearer.' });
+    }
+
+    // Extraer el token (después de "Bearer ")
+    const token = authHeader.split(' ')[1];
 
     try {
         // Validar que el token fue recibido

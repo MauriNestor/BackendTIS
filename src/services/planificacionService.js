@@ -132,4 +132,5 @@ module.exports = {
     registrarSprint,
     obtenerSprint,
     obtenerProductBacklog,
+    getDocente,
 };

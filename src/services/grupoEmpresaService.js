@@ -21,12 +21,12 @@ exports.createGrupoEmpresa = async (data) => {
   }
 };
 
-exports.getAllGruposEmpresa = async () => {
+exports.getAllGruposEmpresa = async (codigoClase) => {
   const query =
-    "SELECT cod_grupoempresa, nombre_largo, nombre_corto, logotipo FROM grupo_empresa";
+    "SELECT cod_grupoempresa, nombre_largo, nombre_corto, logotipo FROM grupo_empresa WHERE cod_clase = $1";
 
   try {
-    const { rows } = await pool.query(query);
+    const { rows } = await pool.query(query, [codigoClase]);
     return rows; // Devuelve todos los registros
   } catch (error) {
     throw new Error("Error al obtener los datos de los grupos empresa.");

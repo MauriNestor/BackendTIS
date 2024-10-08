@@ -62,7 +62,8 @@ exports.registrarGrupo = async (req, res) => {
 };
 exports.getAllGruposEmpresa = async (req, res) => {
   try {
-    const gruposEmpresa = await grupoEmpresaService.getAllGruposEmpresa();
+    const { codigoClase } = req.params;
+    const gruposEmpresa = await grupoEmpresaService.getAllGruposEmpresa(codigoClase);
 
     // Convertir los logos en base64 si están almacenados como Buffer
     const gruposConLogoBase64 = gruposEmpresa.map((grupo) => ({

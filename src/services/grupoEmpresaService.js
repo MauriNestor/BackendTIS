@@ -32,3 +32,19 @@ exports.getAllGruposEmpresa = async (codigoClase) => {
     throw new Error("Error al obtener los datos de los grupos empresa.");
   }
 };
+
+const verificarNombreGrupo = async (nombreCorto) => {
+  try {
+      const query = 'SELECT nombre_corto FROM Grupo_empresa WHERE nombre_corto = $1 ';
+      const result = await db.pool.query(query, [nombreCorto]);
+
+      if (result.rows.length === 0) {
+        return true;
+      } else {
+        return false;
+      };
+  } catch (err) {
+      console.error('Error al verificar nombre de grupo', err);
+      throw err;
+  }
+};

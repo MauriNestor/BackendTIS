@@ -42,7 +42,7 @@ const obtenerClasesEstudiante = async (req, res) => {
         if (result.clases && result.clases.length > 0) {
             return res.status(200).json({ clases: result.clases });
         } else {
-            return res.status(404).json({ message: result.message || 'No se encontraron clases para este estudiante.' });
+            return res.status(200).json({ clases: result.clases});
         }
     } catch (err) {
         // Manejo de errores del servidor

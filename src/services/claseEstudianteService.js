@@ -102,12 +102,12 @@ const obtenerClasesEstudiante = async (codigoSis) => {
         );
         
         const codigosClase = result.rows;
-
+        const clases = [];
         if (codigosClase.length === 0) {
-            return { success: false, message: "No se encontraron clases del estudiante." };
+            return { success: false, message: "No se encontraron clases del estudiante.", clases };
         }
 
-        const clases = [];
+        
         for (const codigoClase of codigosClase) {
             // Obtener los detalles de la clase
             const claseResult = await db.pool.query(

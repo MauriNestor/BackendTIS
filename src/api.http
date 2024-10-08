@@ -1,29 +1,47 @@
 ### get de docentes
-GET http://localhost:4000/docentes
+GET http://localhost:3000/docentes
 
 ### post de docentes
-POST http://localhost:4000/docentes/registro
+POST http://localhost:3000/docentes/registro
 Content-Type: application/json
 
 {
-  "nombre": "Juan Pélaes",
-  "apellido": "González López",
-  "correo": "juane.peerez@umss.edu.bo",
+  "nombre": "Fisgon",
+  "apellido": "Rodeores",
+  "correo": "fisgonn@umss.edu.bo",
   "contraseña": "Contraseña1"
 }
 
 ### post de estudiantes
-POST http://localhost:4000/estudiantes/registro
+POST http://localhost:3000/estudiantes/registro
 Content-Type: application/json
 
 {
-  "codigo_sis": "20211036",
-  "nombres": "Lola",
+  "codigo_sis": "202003819",
+  "nombres": "daniela",
   "apellidos": "Rojas",
-  "correo": "ll11hhb@umss.edu.bo",
+  "correo": "202003819@est.umss.edu",
   "contraseña": "Contraseña123"
 }
 
 ### get de estudliantes
-GET http://localhost:4000/estudiantes
+GET http://localhost:3000/estudiantes
+
+### Crear una clase
+POST http://localhost:3000/clases/crear
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6NSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjc5MDk4MTcsImV4cCI6MTcyNzkxMzQxN30.TP5sF2BwyfGeXmeObFFHwCIx8WGee8kOn4i0KJeUdlo
+
+{
+  "nombreClase": "costos industriales",
+  "codGestion": 1
+}
+
+
+### Obtener todas las clases del docente
+GET http://localhost:3000/clases/obtener
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6NSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjc3MjQzNjcsImV4cCI6MTcyNzcyNzk2N30.Sxr1P0SBUY7wDMJUAwhm1VMGiW_TOv9Sizl2d9PREr8
+
+### Obtener gestiones
+GET http://localhost:3000/gestiones
 

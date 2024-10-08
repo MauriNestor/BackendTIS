@@ -16,7 +16,15 @@ const DocentesService = {
     getAllDocentes: async () => {
         const result = await pool.query('SELECT * FROM DOCENTE');
         return result.rows;
-    }
+    },
+
+    getDocente: async (codDocente) => {
+        const result = await pool.query(
+            'SELECT nombre_docente, apellido_docente FROM DOCENTE WHERE cod_docente = $1', 
+            [codDocente]
+        );
+        return result.rows;
+    }    
 };
 module.exports = DocentesService;  
 

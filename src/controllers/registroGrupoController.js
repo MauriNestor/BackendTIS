@@ -10,16 +10,20 @@ exports.registrarGrupo = async (req, res) => {
       nombreLargo,
       nombreCorto,
       integrantes,
-      logo, // Cambiar logotipo a logo aquí
+      cod_gestion,
+      logo,  // Recibe el logotipo
+      cod_horario // Asegúrate de recibir también el cod_horario
     } = req.body;
 
     // Decodificar el logo base64 (si es necesario)
-    console.log("logo antes : ", logo); // Cambiar el mensaje para que sea más claro
+    console.log("Logotipo antes de decodificar:", logo);
     const logotipoBuffer = logo ? Buffer.from(logo, "base64") : null;
-    console.log("logo buffer después : ", logotipoBuffer); // Cambiar el mensaje aquí también
+    console.log("Logotipo después de decodificar:", logotipoBuffer);
 
+    // Parsear los integrantes si es un string JSON
     const parsedIntegrantes =
       typeof integrantes === "string" ? JSON.parse(integrantes) : integrantes;
+
 
     // Inserta en la tabla grupo_empresa y obtiene el cod_grupoempresa generado
     const cod_grupoempresa = await grupoEmpresaService.createGrupoEmpresa({
@@ -27,7 +31,8 @@ exports.registrarGrupo = async (req, res) => {
       cod_clase,
       nombreLargo,
       nombreCorto,
-      logotipo: logotipoBuffer, // Guardar logotipo como un buffer o como string
+      logotipo: logotipoBuffer,  // Se pasa como buffer o null si no existe logo
+      cod_horario, // Se agrega el cod_horario que requiere el servicio
     });
 
     // Insertar cada integrante en grupo_estudiante y rol_estudiante
@@ -40,26 +45,31 @@ exports.registrarGrupo = async (req, res) => {
         cod_clase,
         cod_grupoempresa,
         codigo_sis,
+        cod_horario
       });
 
-      // Insertar en rol_estudiante
+      // Obtener el código de rol a partir del nombre del rol
       const cod_rol = await rolEstudianteService.getCodRolByName(rol);
+
+      // Insertar el rol del estudiante
       await rolEstudianteService.createRolEstudiante({
         codigo_sis,
         cod_rol,
-        cod_gestion: 2, // Ajusta según tu lógica
+        cod_gestion// Ajusta esto según la lógica de gestión de tu aplicación
       });
     }
 
+    // Respuesta exitosa
     res.status(201).json({ message: "Grupo registrado exitosamente." });
   } catch (error) {
-    console.error(error);
+    console.error("Error al registrar el grupo:", error);
     res.status(500).json({
       message: "Error al registrar el grupo.",
       error: error.message,
     });
   }
 };
+
 exports.getAllGruposEmpresa = async (req, res) => {
   try {
     const { codigoClase } = req.params;

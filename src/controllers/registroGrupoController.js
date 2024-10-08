@@ -78,3 +78,23 @@ exports.getAllGruposEmpresa = async (req, res) => {
       .json({ message: "Error al obtener los datos de los grupos empresa" });
   }
 };
+exports.getEstudiantesSinGruposEmpresa = async (req, res) => {
+  try {
+    const { codigoClase } = req.params; // Obtener el código de clase de los parámetros de la solicitud
+
+    // Llamar al servicio para obtener los estudiantes sin grupo
+    const estudiantesSinGrupo = await grupoEstudianteService.getEstudiantesSinGrupo(codigoClase);
+
+    // Verificar si se encontraron estudiantes
+    if (estudiantesSinGrupo.length === 0) {
+      return res.status(404).json({ message: "No se encontraron estudiantes sin grupo para la clase especificada" });
+    }
+
+    res.status(200).json(estudiantesSinGrupo);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener los datos de los estudiantes sin grupo" });
+  }
+};

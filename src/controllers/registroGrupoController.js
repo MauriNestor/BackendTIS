@@ -10,6 +10,7 @@ exports.registrarGrupo = async (req, res) => {
       nombreLargo,
       nombreCorto,
       integrantes,
+      cod_gestion,
       logo, // Cambiar logotipo a logo aquí
     } = req.body;
 
@@ -47,7 +48,7 @@ exports.registrarGrupo = async (req, res) => {
       await rolEstudianteService.createRolEstudiante({
         codigo_sis,
         cod_rol,
-        cod_gestion: 2, // Ajusta según tu lógica
+        cod_gestion, // Ajusta según tu lógica
       });
     }
 
@@ -83,18 +84,22 @@ exports.getEstudiantesSinGruposEmpresa = async (req, res) => {
     const { codigoClase } = req.params; // Obtener el código de clase de los parámetros de la solicitud
 
     // Llamar al servicio para obtener los estudiantes sin grupo
-    const estudiantesSinGrupo = await grupoEstudianteService.getEstudiantesSinGrupo(codigoClase);
+    const estudiantesSinGrupo =
+      await grupoEstudianteService.getEstudiantesSinGrupo(codigoClase);
 
     // Verificar si se encontraron estudiantes
     if (estudiantesSinGrupo.length === 0) {
-      return res.status(404).json({ message: "No se encontraron estudiantes sin grupo para la clase especificada" });
+      return res.status(404).json({
+        message:
+          "No se encontraron estudiantes sin grupo para la clase especificada",
+      });
     }
 
     res.status(200).json(estudiantesSinGrupo);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "Error al obtener los datos de los estudiantes sin grupo" });
+    res.status(500).json({
+      message: "Error al obtener los datos de los estudiantes sin grupo",
+    });
   }
 };

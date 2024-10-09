@@ -47,7 +47,25 @@ obtenerClasesPorDocente: async (codDocente) => {
     console.error('Error en la consulta de obtención de clases por docente:', error);
     throw new Error('Error al obtener las clases del docente en la base de datos');
   }
+}, 
+
+obtenerHorarioDisponible: async (codClase) => {
+  try {
+    const result = await pool.query(
+      `SELECT h.cod_horario, h.dia_horario, h.hora_inicio, h.hora_fin 
+        FROM Horario as h
+        WHERE h.cod_clase = $1 AND h.cod_horario 
+        NOT IN (SELECT gr.cod_horario
+        FROM grupo_empresa as gr)`,
+      [codClase]
+    );
+    return result.rows;
+  } catch (error) {
+    console.error('Error en la consulta de obtención de horarios de clase:', error);
+    throw new Error('Error al obtener horarios de clase en la base de datos');
+  }
 }
+
 };
 
 

@@ -7,4 +7,5 @@ const verificarToken = require('../middlewares/verificarToken');
 router.post('/crear',verificarToken, validarClase, claseController.crearClase);
 
 router.get('/obtener',verificarToken, claseController.obtenerClasesPorDocente);
+router.get('/:codClase/obtener-horarios', claseController.obtenerHorarioDisponible);
 module.exports = router;

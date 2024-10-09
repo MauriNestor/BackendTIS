@@ -52,7 +52,11 @@ obtenerClasesPorDocente: async (codDocente) => {
 obtenerHorarioDisponible: async (codClase) => {
   try {
     const result = await pool.query(
-      'SELECT cod_horario, dia_horario, hora_inicio, hora_fin FROM Horario WHERE cod_clase = $1',
+      `SELECT h.cod_horario, h.dia_horario, h.hora_inicio, h.hora_fin 
+        FROM Horario as h
+        WHERE h.cod_clase = $1 AND h.cod_horario 
+        NOT IN (SELECT gr.cod_horario
+        FROM grupo_empresa as gr)`,
       [codClase]
     );
     return result.rows;

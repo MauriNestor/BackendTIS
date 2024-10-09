@@ -2,7 +2,14 @@
 const { pool } = require("../config/db");
 
 exports.createGrupoEmpresa = async (data) => {
-  const { cod_docente, cod_clase, nombreLargo, nombreCorto, logotipo, cod_horario } = data;
+  const {
+    cod_docente,
+    cod_clase,
+    nombreLargo,
+    nombreCorto,
+    logotipo,
+    cod_horario,
+  } = data;
 
   try {
     const nombreAceptable = await verificarNombreGrupo(nombreCorto);
@@ -17,13 +24,22 @@ exports.createGrupoEmpresa = async (data) => {
       RETURNING cod_grupoempresa;
     `;
 
-    const values = [cod_docente, cod_clase, nombreLargo, nombreCorto, logotipo, cod_horario];
+    const values = [
+      cod_docente,
+      cod_clase,
+      nombreLargo,
+      nombreCorto,
+      logotipo,
+      cod_horario,
+    ];
     const result = await pool.query(query, values);
 
     return result.rows[0].cod_grupoempresa;
   } catch (error) {
     console.error("Error al crear grupo empresa:", error.message);
-    throw new Error("Hubo un error al crear el grupo empresa. Inténtalo de nuevo.");
+    throw new Error(
+      "Hubo un error al crear el grupo empresa. Inténtalo de nuevo."
+    );
   }
 };
 
@@ -41,16 +57,17 @@ exports.getAllGruposEmpresa = async (codigoClase) => {
 
 const verificarNombreGrupo = async (nombreCorto) => {
   try {
-      const query = 'SELECT nombre_corto FROM Grupo_empresa WHERE nombre_corto = $1 ';
-      const result = await db.pool.query(query, [nombreCorto]);
+    const query =
+      "SELECT nombre_corto FROM Grupo_empresa WHERE nombre_corto = $1 ";
+    const result = await pool.query(query, [nombreCorto]);
 
-      if (result.rows.length === 0) {
-        return true;
-      } else {
-        return false;
-      };
+    if (result.rows.length === 0) {
+      return true;
+    } else {
+      return false;
+    }
   } catch (err) {
-      console.error('Error al verificar nombre de grupo', err);
-      throw err;
+    console.error("Error al verificar nombre de grupo", err);
+    throw err;
   }
 };

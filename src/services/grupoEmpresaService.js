@@ -1,5 +1,6 @@
 // grupoEmpresaService.js
 const { pool } = require("../config/db");
+const planificacionService = require('../services/planificacionService');
 
 exports.createGrupoEmpresa = async (data) => {
   const {
@@ -33,7 +34,7 @@ exports.createGrupoEmpresa = async (data) => {
       cod_horario,
     ];
     const result = await pool.query(query, values);
-
+    await planificacionService.registrarPlanificacion(cod_clase, result.rows[0].cod_grupoempresa);
     return result.rows[0].cod_grupoempresa;
   } catch (error) {
     console.error("Error al crear grupo empresa:", error.message);

@@ -17,7 +17,21 @@ Este proyecto tiene como objetivo principal proporcionar una solución integral 
 
 - **Backend:** Node.js con Express
 - **Frontend:** React.js
-- **Base de Datos:** MongoDB
+- **Base de Datos:** postegres
 - **Autenticación:** JWT (JSON Web Tokens)
 - **Despliegue:** Docker y Kubernetes
 - **Pruebas:** Jest y Mocha
+
+## Instalación
+
+1. Clona el repositorio:
+
+    ```bash
+    git clone https://github.com/MichelleBarriga/BackendTIS.git
+    ```
+
+2. Instala las dependencias:
+
+    ```bash
+    npm install
+    ```

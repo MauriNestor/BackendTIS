@@ -105,15 +105,16 @@ exports.getEstudiantesSinGruposEmpresa = async (req, res) => {
           message:
             "No se encontraron estudiantes sin grupo para la clase especificada",
         });
+
     }
 
     res.status(200).json(estudiantesSinGrupo);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        message: "Error al obtener los datos de los estudiantes sin grupo",
-      });
+
+    res.status(500).json({
+      message: "Error al obtener los datos de los estudiantes sin grupo",
+    });
+
   }
 };

@@ -35,3 +35,25 @@ Este proyecto tiene como objetivo principal proporcionar una solución integral 
     ```bash
     npm install
     ```
+3. Configura las variables de entorno:
+
+    Crea un archivo `.env` en el directorio raíz del proyecto y define las siguientes variables:
+
+    ```
+    DB_CONNECTION=mongodb://localhost:27017/nombre-db
+    JWT_SECRET=tu_clave_secreta
+    ```
+
+4. Inicia el servidor:
+
+    ```bash
+    npm start
+    ```
+
+## Uso
+
+Una vez que el servidor esté en funcionamiento, puedes acceder a la aplicación a través de `http://localhost:3000`. Asegúrate de tener una cuenta de usuario con los permisos adecuados para acceder a las funcionalidades de gestión y evaluación.
+
+## Contribuciones
+
+Las contribuciones a este proyecto son bienvenidas. Si deseas contribuir, por favor, sigue estos pasos:

@@ -12,3 +12,12 @@ Este proyecto tiene como objetivo principal proporcionar una solución integral 
 - **Simulación de Escenarios:** Funcionalidad para simular escenarios futuros basados en datos históricos y variables ajustables.
 - **Generación de Reportes:** Creación de reportes financieros detallados para cada empresa, exportables en formato PDF o Excel.
 - **Gestión de Usuarios:** Módulo de autenticación y permisos para controlar el acceso a diferentes funcionalidades según el rol del usuario.
+
+## Tecnologías Utilizadas
+
+- **Backend:** Node.js con Express
+- **Frontend:** React.js
+- **Base de Datos:** MongoDB
+- **Autenticación:** JWT (JSON Web Tokens)
+- **Despliegue:** Docker y Kubernetes
+- **Pruebas:** Jest y Mocha

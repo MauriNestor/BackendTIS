@@ -57,3 +57,12 @@ Una vez que el servidor esté en funcionamiento, puedes acceder a la aplicación
 ## Contribuciones
 
 Las contribuciones a este proyecto son bienvenidas. Si deseas contribuir, por favor, sigue estos pasos:
+
+1. Haz un fork del repositorio.
+2. Crea una nueva rama (`git checkout -b nombre-rama`).
+3. Realiza tus cambios y haz commits.
+4. Envía un pull request.
+
+## Licencia
+
+Este proyecto está licenciado bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.

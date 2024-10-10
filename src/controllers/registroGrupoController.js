@@ -98,15 +98,15 @@ exports.getEstudiantesSinGruposEmpresa = async (req, res) => {
       await grupoEstudianteService.getEstudiantesSinGrupo(codigoClase);
 
     // Verificar si se encontraron estudiantes
-    if (estudiantesSinGrupo.length === 0) {
-      return res
-        .status(404)
-        .json({
-          message:
-            "No se encontraron estudiantes sin grupo para la clase especificada",
-        });
+    // if (estudiantesSinGrupo.length === 0) {
+    //   return res
+    //     .status(404)
+    //     .json({
+    //       message:
+    //         "No se encontraron estudiantes sin grupo para la clase especificada",
+    //     });
 
-    }
+    // }
 
     res.status(200).json(estudiantesSinGrupo);
   } catch (error) {

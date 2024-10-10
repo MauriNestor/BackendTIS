@@ -10,8 +10,9 @@ const claseRoutes = require('./routes/claseRoutes');
 const emailRoutes = require('./routes/emailRoute');
 const resetPasswordRoutes = require('./routes/resetPasswordRoute');
 const claseEstudianteRoutes = require('./routes/claseEstudianteRoute');
-
 const gestionRoutes = require('./routes/gestionRoutes');
+const evaluacionRoutes = require('./routes/evaluacionRoutes');
+
 const db = require('./config/db');
 
 // Cargar las variables de entorno  
@@ -37,8 +38,8 @@ app.use('/clases', claseRoutes);
 app.use('/email', emailRoutes);
 app.use('/password', resetPasswordRoutes);
 app.use('/clases-estudiante', claseEstudianteRoutes);
-
 app.use('/gestiones', gestionRoutes);
+app.use('/evaluaciones', evaluacionRoutes);
 
 
 app.use((req, res) => {

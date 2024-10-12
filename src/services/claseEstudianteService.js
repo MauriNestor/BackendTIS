@@ -102,12 +102,12 @@ const obtenerClasesEstudiante = async (codigoSis) => {
         );
         
         const codigosClase = result.rows;
-
+        const clases = [];
         if (codigosClase.length === 0) {
-            return { success: false, message: "No se encontraron clases del estudiante." };
+            return { success: false, message: "No se encontraron clases del estudiante.", clases };
         }
 
-        const clases = [];
+        
         for (const codigoClase of codigosClase) {
             // Obtener los detalles de la clase
             const claseResult = await db.pool.query(
@@ -148,8 +148,6 @@ const obtenerClasesEstudiante = async (codigoSis) => {
     }
 };
 
-
-
 const getGestion = async (codGestion) => {
     try {
         const result = await db.pool.query(
@@ -167,8 +165,37 @@ const getGestion = async (codGestion) => {
     }
 };
 
+const getEstudiantesXClase = async (codigoClase) => {
+    try {
+        const result = await db.pool.query(
+            ` SELECT 
+            e.codigo_sis, 
+            e.nombre_estudiante, 
+            e.apellido_estudiante
+        FROM 
+            ESTUDIANTE e
+        WHERE 
+            e.codigo_sis IN (
+                SELECT ce.codigo_sis 
+                FROM CLASE_ESTUDIANTE ce
+                WHERE ce.cod_clase = $1
+            ) `,
+            [codigoClase]
+        );
+        
+        const estudiantes = result.rows;
+
+        return estudiantes;
+
+    } catch (err) {
+        console.error('Error al buscar estudiantes', err);
+        throw err;
+    }
+};
+
 module.exports = {
     unirseClase,
     obtenerClasesEstudiante,
+    getEstudiantesXClase
 };
 

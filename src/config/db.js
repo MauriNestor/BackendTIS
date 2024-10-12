@@ -1,5 +1,5 @@
-require('dotenv').config();
-const { Pool } = require('pg');
+require("dotenv").config();
+const { Pool } = require("pg");
 
 const pool = new Pool({
   user: process.env.DB_USER,
@@ -12,10 +12,10 @@ const pool = new Pool({
 // Conectar a la base de datos
 pool.connect((err) => {
   if (err) {
-    console.error('Error al conectar a la base de datos:', err.stack);
+    console.error("Error al conectar a la base de datos:", err.stack);
   } else {
-    console.log('Conexión a la base de datos exitosa');
+    console.log("Conexión a la base de datos exitosa");
   }
 });
 
-module.exports = { pool }; 
+module.exports = { pool };

@@ -32,3 +32,19 @@ exports.obtenerClasesPorDocente = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener las clases del docente', detalle: error.message });
   }
 };
+exports.obtenerHorarioDisponible = async (req, res) => {
+  try {
+    const { codClase } = req.params; // Verifica que este valor esté definido
+    if (!codClase) {
+      return res.status(400).json({ error: "El parámetro 'codClase' es obligatorio." });
+    }
+    
+    const horarios = await ClaseService.obtenerHorarioDisponible(codClase);
+    res.status(200).json({ horarios });
+  } catch (error) {
+    console.error('Error al obtener los horarios de clase:', error);
+    res.status(500).json({ error: 'Error al obtener los horarios de clase', detalle: error.message });
+  }
+};
+
+

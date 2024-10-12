@@ -42,7 +42,7 @@ const obtenerClasesEstudiante = async (req, res) => {
         if (result.clases && result.clases.length > 0) {
             return res.status(200).json({ clases: result.clases });
         } else {
-            return res.status(404).json({ message: result.message || 'No se encontraron clases para este estudiante.' });
+            return res.status(200).json({ clases: result.clases});
         }
     } catch (err) {
         // Manejo de errores del servidor
@@ -51,7 +51,34 @@ const obtenerClasesEstudiante = async (req, res) => {
     }
 };
 
+const getEstudiantesXClase = async (req, res) => {
+    const { codigoClase } = req.query; // Obtener el codigoSis de los query params
+
+    try {
+        // Validar que el codigoSis fue recibido
+        if (!codigoClase) {
+            return res.status(400).json({ error: 'El código de clase es obligatorio.' });
+        }
+
+        // Llamar al servicio para obtener las clases del estudiante
+        const estudiantes = await claseEstudianteService.getEstudiantesXClase(codigoClase);
+
+        // Verificar si se encontraron clases
+        return res.status(200).json({ estudiantes });
+        // if (result.estudiantes && result.estudiantes.length > 0) {
+        //     return res.status(200).json({ estudiantes: result.estudiantes });
+        // } else {
+        //     return res.status(200).json({ clases: result.clases});
+        // }
+    } catch (err) {
+        // Manejo de errores del servidor
+        console.error('Error al obtener los estudiantes de la clase', err);
+        return res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+};
+
 module.exports = {
     unirseClase,
-    obtenerClasesEstudiante
+    obtenerClasesEstudiante,
+    getEstudiantesXClase
 };

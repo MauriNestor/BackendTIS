@@ -7,7 +7,7 @@ const verificarToken = require('../middlewares/verificarToken'); // Asegúrate d
 
 router.get('/:cod_clase', verificarToken,evaluacionesController.getEvaluacionesByClass);
 
-router.get('/detalles/:cod_evaluacion',validarDocente, evaluacionesController.getEvaluacionById);
+router.get('/detalles/:cod_evaluacion',verificarToken, evaluacionesController.getEvaluacionById);
 
 
 module.exports = router;

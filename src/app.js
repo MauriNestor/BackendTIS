@@ -47,7 +47,6 @@ app.use("/api/grupos", registroGrupoRoutes);
 app.use("/gestiones", gestionRoutes);
 app.use('/evaluaciones', evaluacionRoutes);
 
-
 // Manejo de rutas no encontradas
 app.use((req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });

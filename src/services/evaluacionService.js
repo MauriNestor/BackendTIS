@@ -5,6 +5,7 @@ exports.getEvaluacionesByClass = async (cod_clase) => {
         SELECT t.cod_tema, t.nombre_tema, json_agg(
             json_build_object(
                 'cod_evaluacion', e.cod_evaluacion,
+                'evaluacion', e.evaluacion,
                 'fecha_fin', e.fecha_fin,
                 'fecha_inicio', e.fecha_inicio,
                 'tipo_evaluacion', e.tipo_evaluacion,
@@ -20,10 +21,11 @@ exports.getEvaluacionesByClass = async (cod_clase) => {
 };
 
 
-exports.getEvaluacionesById = async (req, res) => {
+
+exports.getEvaluacionById = async (cod_evaluacion) => {
     const result = await pool.query(
-        'SELECT cod_evaluacion, cod_tema, fecha_fin, fecha_inicio, tipo_evaluacion, descripcion_evaluacion FROM EVALUACION WHERE cod_evaluacion = $1',
-        [req.params.cod_evaluacion]
+        'SELECT cod_evaluacion, cod_tema,evaluacion, fecha_fin, fecha_inicio, tipo_evaluacion, descripcion_evaluacion FROM EVALUACION WHERE cod_evaluacion = $1',
+        [cod_evaluacion]
     );
-    return res.status(200).json(result.rows[0]);
-}
+    return result.rows[0];
+};

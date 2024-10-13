@@ -1,6 +1,7 @@
 // grupoEmpresaService.js
 const { pool } = require("../config/db");
 const planificacionService = require('../services/planificacionService');
+const grupoEstudianteService = require('../services/grupoEstudianteService');
 
 exports.createGrupoEmpresa = async (data) => {
   const {
@@ -55,6 +56,27 @@ exports.getAllGruposEmpresa = async (codigoClase) => {
     throw new Error("Error al obtener los datos de los grupos empresa.");
   }
 };
+
+exports.getGrupoEmpresa = async (codigoGrupo) => {
+  try {
+    const query =
+      "SELECT cod_clase, cod_grupoempresa, nombre_corto, nombre_largo, logotipo, cod_horario FROM grupo_empresa WHERE cod_grupoempresa = $1";
+
+    const result = await pool.query(query, [codigoGrupo]); // Cambié 'rows' a 'result' para evitar confusiones
+    const integrantes = await grupoEstudianteService.getEstudiantes(codigoGrupo);
+
+    if (result.rows.length > 0) {
+      const grupoEmpresa = result.rows[0]; // Accede al primer (y único) resultado de la consulta
+      return { ...grupoEmpresa, integrantes }; // Devuelve los datos de grupo_empresa y los integrantes
+    } else {
+      const message ="No se encontró la grupo-empresa.";
+      return message;
+    }
+  } catch (error) {
+    throw new Error("Error al obtener los datos de grupo empresa.");
+  }
+};
+
 
 const verificarNombreGrupo = async (nombreCorto) => {
   try {

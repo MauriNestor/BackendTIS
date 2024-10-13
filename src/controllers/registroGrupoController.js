@@ -97,23 +97,31 @@ exports.getEstudiantesSinGruposEmpresa = async (req, res) => {
     const estudiantesSinGrupo =
       await grupoEstudianteService.getEstudiantesSinGrupo(codigoClase);
 
-    // Verificar si se encontraron estudiantes
-    // if (estudiantesSinGrupo.length === 0) {
-    //   return res
-    //     .status(404)
-    //     .json({
-    //       message:
-    //         "No se encontraron estudiantes sin grupo para la clase especificada",
-    //     });
-
-    // }
-
     res.status(200).json(estudiantesSinGrupo);
   } catch (error) {
     console.error(error);
 
     res.status(500).json({
       message: "Error al obtener los datos de los estudiantes sin grupo",
+    });
+
+  }
+};
+
+exports.getGrupoEmpresa = async (req, res) => {
+  try {
+    const { codigoGrupo } = req.params; // Obtener el código de clase de los parámetros de la solicitud
+    console.log(codigoGrupo); 
+    // Llamar al servicio para obtener los estudiantes sin grupo
+    const grupo_empresa =
+      await grupoEmpresaService.getGrupoEmpresa(codigoGrupo);
+
+    res.status(200).json(grupo_empresa);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Error al obtener los datos de la grupo empresa",
     });
 
   }

@@ -38,3 +38,28 @@ exports.getEstudiantesSinGrupo = async (codigoClase) => {
       throw new Error("Error al obtener los estudiantes sin grupo.");
   }
 };
+
+exports.getEstudiantes = async (codigoGrupo) => {
+  try {
+    const query = `
+    SELECT 
+        e.codigo_sis, 
+        e.nombre_estudiante, 
+        e.apellido_estudiante
+    FROM 
+        ESTUDIANTE e
+    WHERE 
+        e.codigo_sis IN (
+            SELECT ge.codigo_sis 
+            FROM GRUPO_ESTUDIANTE ge
+            WHERE ge.cod_grupoempresa = $1
+        );
+    `;
+  
+      const { rows } = await pool.query(query, [codigoGrupo]); 
+      console.log(rows);
+      return rows;
+  } catch (error) {
+      throw new Error("Error al obtener los estudiantes sin grupo.");
+  }
+};

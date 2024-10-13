@@ -1,20 +1,26 @@
 const db = require('../config/db');
 const pool = db.pool; 
 
-const registrarPlanificacion = async (codigoClase, codigoGrupo) => {
+const registrarPlanificacion = async (codigoClase, codigoGrupo, client) => {
     try {
-        const codigoDocente = await getDocente(codigoClase); 
-        const result = await pool.query(
+        const codigoDocente = await getDocente(codigoClase);
+        
+        // Usar el cliente de transacción `client` para realizar la consulta
+        const result = await client.query(
             'INSERT INTO productbacklog (cod_docente, cod_clase, cod_grupoempresa) VALUES ($1, $2, $3) RETURNING *',
             [codigoDocente, codigoClase, codigoGrupo]
         );
+
         const codProduct = result.rows[0].cod_product;
+
+        return codProduct;  // Devuelve el código generado si es necesario
        
     } catch (err) {
         console.error('Error al crear product backlog', err);
         throw err;
     }
 };
+
 
 const registrarRequerimientos = async (codigoProduct, requerimientos) => {
     try {

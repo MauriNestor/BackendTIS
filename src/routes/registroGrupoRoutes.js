@@ -6,4 +6,5 @@ const registroGrupoController = require("../controllers/registroGrupoController"
 router.post("/registrarGrupo", registroGrupoController.registrarGrupo);
 router.get("/:codigoClase", registroGrupoController.getAllGruposEmpresa);
 router.get("/:codigoClase/estudiantes-sin-grupo", registroGrupoController.getEstudiantesSinGruposEmpresa);
+router.get("/grupo/:codigoGrupo", registroGrupoController.getGrupoEmpresa);
 module.exports = router;

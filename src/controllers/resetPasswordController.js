@@ -21,6 +21,16 @@ const resetPassword = async (req, res) => {
         }
     } catch (err) {
         console.error('Error en el restablecimiento de contraseña', err);
+
+        // Manejar específicamente el error de la misma contraseña
+        if (err.message === 'No se puede poner la misma contraseña.') {
+            return res.status(400).json({
+                success: false,
+                message: 'La nueva contraseña no puede ser la misma que la actual.',
+            });
+        }
+
+        // Manejar otros errores
         return res.status(500).json({
             success: false,
             message: 'Error interno del servidor',

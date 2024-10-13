@@ -1,14 +1,14 @@
 const { pool } = require("../config/db"); // Asegúrate de importar el pool correctamente
 
-exports.createGrupoEstudiante = async (grupoEstudianteData) => {
-  const { cod_docente, cod_clase, cod_grupoempresa, codigo_sis, cod_horario } =
-    grupoEstudianteData;
+exports.createGrupoEstudiante = async (grupoEstudianteData, client) => {
+  const { cod_docente, cod_clase, cod_grupoempresa, codigo_sis, cod_horario } = grupoEstudianteData;
 
-  await pool.query(
+  await client.query(
     "INSERT INTO grupo_estudiante (cod_docente, cod_clase, cod_grupoempresa, codigo_sis, cod_horario) VALUES ($1, $2, $3, $4, $5)",
     [cod_docente, cod_clase, cod_grupoempresa, codigo_sis, cod_horario]
   );
 };
+
 
 exports.getEstudiantesSinGrupo = async (codigoClase) => {
   const query = `
@@ -34,6 +34,31 @@ exports.getEstudiantesSinGrupo = async (codigoClase) => {
   try {
       const { rows } = await pool.query(query, [codigoClase]); // Pasar 'codigoClase' como array
       return rows; // Devuelve todos los registros
+  } catch (error) {
+      throw new Error("Error al obtener los estudiantes sin grupo.");
+  }
+};
+
+exports.getEstudiantes = async (codigoGrupo) => {
+  try {
+    const query = `
+    SELECT 
+        e.codigo_sis, 
+        e.nombre_estudiante, 
+        e.apellido_estudiante
+    FROM 
+        ESTUDIANTE e
+    WHERE 
+        e.codigo_sis IN (
+            SELECT ge.codigo_sis 
+            FROM GRUPO_ESTUDIANTE ge
+            WHERE ge.cod_grupoempresa = $1
+        );
+    `;
+  
+      const { rows } = await pool.query(query, [codigoGrupo]); 
+      console.log(rows);
+      return rows;
   } catch (error) {
       throw new Error("Error al obtener los estudiantes sin grupo.");
   }

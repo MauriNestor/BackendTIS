@@ -1,14 +1,14 @@
 const { pool } = require("../config/db"); // Asegúrate de importar el pool correctamente
 
-exports.createGrupoEstudiante = async (grupoEstudianteData) => {
-  const { cod_docente, cod_clase, cod_grupoempresa, codigo_sis, cod_horario } =
-    grupoEstudianteData;
+exports.createGrupoEstudiante = async (grupoEstudianteData, client) => {
+  const { cod_docente, cod_clase, cod_grupoempresa, codigo_sis, cod_horario } = grupoEstudianteData;
 
-  await pool.query(
+  await client.query(
     "INSERT INTO grupo_estudiante (cod_docente, cod_clase, cod_grupoempresa, codigo_sis, cod_horario) VALUES ($1, $2, $3, $4, $5)",
     [cod_docente, cod_clase, cod_grupoempresa, codigo_sis, cod_horario]
   );
 };
+
 
 exports.getEstudiantesSinGrupo = async (codigoClase) => {
   const query = `

@@ -1,9 +1,14 @@
+const { pool } = require('../config/db');
 const grupoEmpresaService = require("../services/grupoEmpresaService");
 const grupoEstudianteService = require("../services/grupoEstudianteService");
 const rolEstudianteService = require("../services/rolEstudianteService");
 
 exports.registrarGrupo = async (req, res) => {
+  const client = await pool.connect(); // Obtener el cliente para manejar la transacción
+
   try {
+    await client.query('BEGIN'); // Iniciar transacción
+
     const {
       cod_docente,
       cod_clase,
@@ -11,62 +16,56 @@ exports.registrarGrupo = async (req, res) => {
       nombreCorto,
       integrantes,
       cod_gestion,
-      logo, // Recibe el logotipo
-      cod_horario, // Asegúrate de recibir también el cod_horario
+      logo,
+      cod_horario,
     } = req.body;
 
-    // Decodificar el logo base64 (si es necesario)
-
     const logotipoBuffer = logo ? Buffer.from(logo, "base64") : null;
+    const parsedIntegrantes = typeof integrantes === "string" ? JSON.parse(integrantes) : integrantes;
 
-    // Parsear los integrantes si es un string JSON
-    const parsedIntegrantes =
-      typeof integrantes === "string" ? JSON.parse(integrantes) : integrantes;
-
-    // Inserta en la tabla grupo_empresa y obtiene el cod_grupoempresa generado
     const cod_grupoempresa = await grupoEmpresaService.createGrupoEmpresa({
       cod_docente,
       cod_clase,
       nombreLargo,
       nombreCorto,
-      logotipo: logotipoBuffer, // Se pasa como buffer o null si no existe logo
-      cod_horario, // Se agrega el cod_horario que requiere el servicio
-    });
+      logotipo: logotipoBuffer,
+      cod_horario,
+    }, client);
 
-    // Insertar cada integrante en grupo_estudiante y rol_estudiante
     for (const integrante of parsedIntegrantes) {
       const { codigo_sis, rol } = integrante;
 
-      // Insertar en grupo_estudiante
       await grupoEstudianteService.createGrupoEstudiante({
         cod_docente,
         cod_clase,
         cod_grupoempresa,
         codigo_sis,
         cod_horario,
-      });
+      }, client);
 
-      // Obtener el código de rol a partir del nombre del rol
-      const cod_rol = await rolEstudianteService.getCodRolByName(rol);
+      const cod_rol = await rolEstudianteService.getCodRolByName(rol, client);
 
-      // Insertar el rol del estudiante
       await rolEstudianteService.createRolEstudiante({
         codigo_sis,
         cod_rol,
-        cod_gestion, // Ajusta esto según la lógica de gestión de tu aplicación
-      });
+        cod_gestion,
+      }, client);
     }
 
-    // Respuesta exitosa
+    await client.query('COMMIT'); // Confirmar la transacción
     res.status(201).json({ message: "Grupo registrado exitosamente." });
   } catch (error) {
+    await client.query('ROLLBACK'); // Hacer rollback en caso de error
     console.error("Error al registrar el grupo:", error);
     res.status(500).json({
       message: "Error al registrar el grupo.",
       error: error.message,
     });
+  } finally {
+    client.release(); // Liberar el cliente de la conexión
   }
 };
+
 
 exports.getAllGruposEmpresa = async (req, res) => {
   try {

@@ -65,11 +65,7 @@ const getEstudiantesXClase = async (req, res) => {
 
         // Verificar si se encontraron clases
         return res.status(200).json({ estudiantes });
-        // if (result.estudiantes && result.estudiantes.length > 0) {
-        //     return res.status(200).json({ estudiantes: result.estudiantes });
-        // } else {
-        //     return res.status(200).json({ clases: result.clases});
-        // }
+
     } catch (err) {
         // Manejo de errores del servidor
         console.error('Error al obtener los estudiantes de la clase', err);

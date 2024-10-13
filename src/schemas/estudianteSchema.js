@@ -8,10 +8,10 @@ const estudianteSchema = z.object({
     .regex(/^\d+$/, 'El código SIS debe ser numérico'),
   nombres: z.string()
     .min(1, 'Los nombres son obligatorios')
-    .regex(/^[a-zA-Z\s]+$/, 'Los nombres solo deben contener letras'),
+    .regex(/^[\p{L}\s]+$/u, 'Los nombres solo deben contener letras'),
   apellidos: z.string()
     .min(1, 'Los apellidos son obligatorios')
-    .regex(/^[a-zA-Z\s]+$/, 'Los apellidos solo deben contener letras'),
+    .regex(/^[\p{L}\s]+$/u, 'Los apellidos solo deben contener letras'),
   correo: z.string()
     .email('Debe ser un correo válido')
     .endsWith('@est.umss.edu', 'El correo debe ser institucional (@est.umss.edu)'),
@@ -20,5 +20,6 @@ const estudianteSchema = z.object({
     .regex(/[A-Z]/, 'La contraseña debe contener al menos una letra mayúscula')
     .regex(/\d/, 'La contraseña debe contener al menos un número'),
 });
+
 
 module.exports = estudianteSchema;

@@ -6,9 +6,9 @@ POST http://localhost:3000/docentes/registro
 Content-Type: application/json
 
 {
-  "nombre": "Fisgon",
+  "nombre": "Fisgón",
   "apellido": "Rodeores",
-  "correo": "fisgonn@umss.edu.bo",
+  "correo": "fisgon@umss.edu.bo",
   "contraseña": "Contraseña1"
 }
 
@@ -17,10 +17,10 @@ POST http://localhost:3000/estudiantes/registro
 Content-Type: application/json
 
 {
-  "codigo_sis": "202003819",
-  "nombres": "daniela",
-  "apellidos": "Rojas",
-  "correo": "202003819@est.umss.edu",
+  "codigo_sis": "201103820",
+  "nombres": "Ángel",
+  "apellidos": "García",
+  "correo": "201103820@est.umss.edu",
   "contraseña": "Contraseña123"
 }
 

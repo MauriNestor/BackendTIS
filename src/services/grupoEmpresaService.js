@@ -1,10 +1,17 @@
 // grupoEmpresaService.js
 const { pool } = require("../config/db");
-const planificacionService = require('../services/planificacionService');
-const grupoEstudianteService = require('../services/grupoEstudianteService');
+const planificacionService = require("../services/planificacionService");
+const grupoEstudianteService = require("../services/grupoEstudianteService");
 
 exports.createGrupoEmpresa = async (data, client) => {
-  const { cod_docente, cod_clase, nombreLargo, nombreCorto, logotipo, cod_horario } = data;
+  const {
+    cod_docente,
+    cod_clase,
+    nombreLargo,
+    nombreCorto,
+    logotipo,
+    cod_horario,
+  } = data;
 
   try {
     const nombreAceptable = await verificarNombreGrupo(nombreCorto);
@@ -19,18 +26,30 @@ exports.createGrupoEmpresa = async (data, client) => {
       RETURNING cod_grupoempresa;
     `;
 
-    const values = [cod_docente, cod_clase, nombreLargo, nombreCorto, logotipo, cod_horario];
+    const values = [
+      cod_docente,
+      cod_clase,
+      nombreLargo,
+      nombreCorto,
+      logotipo,
+      cod_horario,
+    ];
 
     const result = await client.query(query, values);
-    await planificacionService.registrarPlanificacion(cod_clase, result.rows[0].cod_grupoempresa, client);
-    
+    await planificacionService.registrarPlanificacion(
+      cod_clase,
+      result.rows[0].cod_grupoempresa,
+      client
+    );
+
     return result.rows[0].cod_grupoempresa;
   } catch (error) {
     console.error("Error al crear grupo empresa:", error.message);
-    throw new Error("Hubo un error al crear el grupo empresa. Inténtalo de nuevo.");
+    throw new Error(
+      "Hubo un error al crear el grupo empresa. Inténtalo de nuevo."
+    );
   }
 };
-
 
 exports.getAllGruposEmpresa = async (codigoClase) => {
   const query =
@@ -49,21 +68,32 @@ exports.getGrupoEmpresa = async (codigoGrupo) => {
     const query =
       "SELECT cod_clase, cod_grupoempresa, nombre_corto, nombre_largo, logotipo, cod_horario FROM grupo_empresa WHERE cod_grupoempresa = $1";
 
-    const result = await pool.query(query, [codigoGrupo]); // Cambié 'rows' a 'result' para evitar confusiones
-    const integrantes = await grupoEstudianteService.getEstudiantes(codigoGrupo);
+    const result = await pool.query(query, [codigoGrupo]); // Consulta del grupo
+    const integrantes = await grupoEstudianteService.getEstudiantes(
+      codigoGrupo
+    ); // Obtener integrantes
 
     if (result.rows.length > 0) {
-      const grupoEmpresa = result.rows[0]; // Accede al primer (y único) resultado de la consulta
-      return { ...grupoEmpresa, integrantes }; // Devuelve los datos de grupo_empresa y los integrantes
+      const grupoEmpresa = result.rows[0];
+
+      // Convertir logotipo (buffer) a base64 si existe
+      const logotipoBase64 = grupoEmpresa.logotipo
+        ? grupoEmpresa.logotipo.toString("base64")
+        : null;
+
+      // Retornar datos del grupo y los integrantes, incluyendo el logotipo convertido a base64
+      return {
+        ...grupoEmpresa,
+        logotipo: logotipoBase64,
+        integrantes,
+      };
     } else {
-      const message ="No se encontró la grupo-empresa.";
-      return message;
+      return { message: "No se encontró la grupo-empresa." };
     }
   } catch (error) {
     throw new Error("Error al obtener los datos de grupo empresa.");
   }
 };
-
 
 const verificarNombreGrupo = async (nombreCorto) => {
   try {

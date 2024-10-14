@@ -40,7 +40,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6N
 
 ### Obtener todas las clases del docente
 GET http://localhost:3000/clases/obtener
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjg3ODg2MzMsImV4cCI6MTcyODc5MjIzM30.Xnzw4iPtzyLIKM5IsRByJ90vyitH7CFx-pgdpgai__s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjg4MzM3OTEsImV4cCI6MTcyODgzNzM5MX0.5nC3f3BBW6fPg5WFVK9kWG9yVFY2dJnMeSJdPlJ6O_0
 
 ### Obtener gestiones
 GET http://localhost:3000/gestiones

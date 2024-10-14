@@ -29,12 +29,8 @@ crearClase: async (codDocente, codClase, codGestion, nombreClase) => {
 
 obtenerClasesPorDocente: async (codDocente) => {
   try {
-    const result = await pool.query(
-      `SELECT c.cod_clase, c.nombre_clase, g.*
-       FROM clase c
-       JOIN gestion g ON c.cod_gestion = g.cod_gestion
-       WHERE c.cod_docente = $1
-       ORDER BY c.fecha_creacion DESC`,
+    const result = await pool.query( 
+           'SELECT cod_clase, nombre_clase, cod_gestion FROM clase WHERE cod_docente = $1',
       [codDocente]
     );
 

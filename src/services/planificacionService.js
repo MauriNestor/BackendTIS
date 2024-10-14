@@ -22,10 +22,10 @@ const registrarPlanificacion = async (codigoClase, codigoGrupo, client) => {
 };
 
 
-const registrarRequerimientos = async (codigoProduct, requerimientos) => {
+const registrarRequerimientos = async (codigoGrupo, requerimientos) => {
     try {
         const estado = "Pendiente";
-       
+        const codigoProduct = await obtenerCodProductBacklog(codigoGrupo);
         for (const requerimiento of requerimientos) {
             
             const result = await pool.query(
@@ -120,6 +120,21 @@ const obtenerProductBacklog = async (codigoGrupo) => {
 
     }  catch (err) {
         console.error('Error al obtener productbacklog', err);
+        throw err;
+    }
+};
+
+const obtenerCodProductBacklog = async (codigoGrupo) => {
+    try {
+        const result = await pool.query(
+            'SELECT cod_product FROM productbacklog WHERE cod_grupoempresa = $1',
+            [codigoGrupo]
+        );
+        const codProduct = result.rows;
+        return codProduct;
+
+    }  catch (err) {
+        console.error('Error al obtener codigo de productbacklog', err);
         throw err;
     }
 };

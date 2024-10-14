@@ -43,17 +43,23 @@ exports.getEstudiantes = async (codigoGrupo) => {
   try {
     const query = `
     SELECT 
-        e.codigo_sis, 
-        e.nombre_estudiante, 
-        e.apellido_estudiante
+    e.codigo_sis, 
+    e.nombre_estudiante, 
+    e.apellido_estudiante,
+    r.rol
     FROM 
         ESTUDIANTE e
+    JOIN 
+        GRUPO_ESTUDIANTE ge ON e.codigo_sis = ge.codigo_sis
+    JOIN 
+        ROL_ESTUDIANTE re ON e.codigo_sis = re.codigo_sis
+    JOIN 
+        ROL r ON r.cod_rol = re.cod_rol
     WHERE 
-        e.codigo_sis IN (
-            SELECT ge.codigo_sis 
-            FROM GRUPO_ESTUDIANTE ge
-            WHERE ge.cod_grupoempresa = $1
-        );
+    ge.cod_grupoempresa = $1
+    AND re.cod_gestion = (SELECT c.cod_gestion 
+							FROM clase c
+							WHERE c.cod_clase = ge.cod_clase)
     `;
   
       const { rows } = await pool.query(query, [codigoGrupo]); 

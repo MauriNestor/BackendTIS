@@ -2,6 +2,7 @@
 const { pool } = require("../config/db");
 const planificacionService = require('../services/planificacionService');
 const grupoEstudianteService = require('../services/grupoEstudianteService');
+const horarioService = require('../services/horarioService');
 
 exports.createGrupoEmpresa = async (data, client) => {
   const { cod_docente, cod_clase, nombreLargo, nombreCorto, logotipo, cod_horario } = data;
@@ -54,7 +55,8 @@ exports.getGrupoEmpresa = async (codigoGrupo) => {
 
     if (result.rows.length > 0) {
       const grupoEmpresa = result.rows[0]; // Accede al primer (y único) resultado de la consulta
-      return { ...grupoEmpresa, integrantes }; // Devuelve los datos de grupo_empresa y los integrantes
+      const horario = await horarioService.getHorario(grupoEmpresa.cod_horario);
+      return { ...grupoEmpresa, horario, integrantes }; // Devuelve los datos de grupo_empresa y los integrantes
     } else {
       const message ="No se encontró la grupo-empresa.";
       return message;

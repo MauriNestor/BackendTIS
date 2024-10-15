@@ -29,3 +29,35 @@ exports.getEvaluacionById = async (cod_evaluacion) => {
     );
     return result.rows[0];
 };
+
+exports.obtenerEstadoEntregas = async (codDocente, codEvaluacion) => {
+    try {
+        const query = `
+        SELECT
+            ge.cod_grupoempresa,
+            ge.nombre_corto,
+            ge.nombre_largo,
+            CASE WHEN ent.archivo_grupo IS NOT NULL THEN TRUE ELSE FALSE END AS ha_entregado
+        FROM
+            evaluacion ev
+        INNER JOIN
+            clase c ON ev.cod_clase = c.cod_clase
+        INNER JOIN
+            grupo_empresa ge ON ge.cod_clase = c.cod_clase
+        LEFT JOIN
+            entregable ent ON ge.cod_grupoempresa = ent.cod_grupoempresa AND ent.cod_evaluacion = ev.cod_evaluacion
+        WHERE
+            ev.cod_evaluacion = $1
+            AND c.cod_docente = $2
+        ORDER BY
+            ge.nombre_corto;
+        `;
+        const values = [codEvaluacion, codDocente];
+        
+        const result = await pool.query(query, values);
+        return result.rows;
+    } catch (error) {
+        console.error('Error al obtener las entregas', error);
+        throw error;
+    }
+};

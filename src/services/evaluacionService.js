@@ -1,4 +1,6 @@
 const { pool } = require('../config/db');
+const planificacionService = require('../services/planificacionService');
+const temaService = require('../services/temaService');
 
 exports.getEvaluacionesByClass = async (cod_clase) => {
     const result = await pool.query(`
@@ -20,12 +22,29 @@ exports.getEvaluacionesByClass = async (cod_clase) => {
     return result.rows;
 };
 
-
-
 exports.getEvaluacionById = async (cod_evaluacion) => {
     const result = await pool.query(
         'SELECT cod_evaluacion, cod_tema,evaluacion, fecha_fin, fecha_inicio, tipo_evaluacion, descripcion_evaluacion FROM EVALUACION WHERE cod_evaluacion = $1',
         [cod_evaluacion]
     );
     return result.rows[0];
+};
+
+exports.registrarEvaluacion = async (codClase, tema, nombreEvaluacion, tipoEvaluacion, fechaEntrega, archivo, descripcion ) => {
+    try {
+        const codDocente = await planificacionService.getDocente(codClase);
+        const codTema = await temaService.registrarTema(tema);
+        const fechaInicio = new Date().toISOString().split('T')[0]; 
+        const result = await pool.query(
+            `INSERT INTO Evaluacion (cod_docente, cod_clase, cod_tema, evaluacion, tipo_evaluacion, fecha_inicio, fecha_fin, archivo_evaluacion, descripcion_evaluacion) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;`,
+            [codDocente, codClase, codTema, nombreEvaluacion, tipoEvaluacion, fechaInicio, fechaEntrega, archivo, descripcion ]
+        );
+        codTema = result.rows[0];
+        return codTema;
+
+    }  catch (err) {
+        console.error('Error al registrar tema', err);
+        throw err;
+    }
 };

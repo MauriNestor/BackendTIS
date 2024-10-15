@@ -1,6 +1,6 @@
 const { pool } = require('../config/db');
 
-const registrarTema = async (tema, codClase) => {
+const registrarTema = async (tema, codClase, codDocente) => {
     try {
 
         const temaAceptado = await verificarTema(tema, codClase);
@@ -45,6 +45,23 @@ const verificarTema = async (tema, codClase) => {
     }
 };
 
+const getTema = async (codClase) => {
+    try {
+        const result = await pool.query(
+            'SELECT nombre_tema FROM Tema  WHERE  cod_clase = $1',
+            [codClase]
+        );
+
+        const temas = result.rows;
+        return temas;
+    }  catch (err) {
+        console.error('Error al registrar tema', err);
+        throw err;
+    }
+};
+
 module.exports = {
     registrarTema,
+    getTema,
+    
 };

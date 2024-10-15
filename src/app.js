@@ -13,6 +13,7 @@ const claseEstudianteRoutes = require("./routes/claseEstudianteRoute");
 const gestionRoutes = require("./routes/gestionRoutes");
 const registroGrupoRoutes = require("./routes/registroGrupoRoutes");
 const evaluacionRoutes = require('./routes/evaluacionRoutes');
+const temaRoutes = require('./routes/temaRoute');
 
 const db = require("./config/db");
 
@@ -46,6 +47,7 @@ app.use("/clases-estudiante", claseEstudianteRoutes);
 app.use("/api/grupos", registroGrupoRoutes);
 app.use("/gestiones", gestionRoutes);
 app.use('/evaluaciones', evaluacionRoutes);
+app.use('/temas', temaRoutes);
 
 // Manejo de rutas no encontradas
 app.use((req, res) => {

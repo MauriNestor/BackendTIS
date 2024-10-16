@@ -125,3 +125,63 @@ exports.getGrupoEmpresa = async (req, res) => {
 
   }
 };
+
+exports.getGrupoConRubricas = async (req, res) => {
+  const { codGrupo, codEvaluacion } = req.params;
+
+  if (!codGrupo || isNaN(codGrupo) || parseInt(codGrupo) <= 0 || 
+      !codEvaluacion || isNaN(codEvaluacion) || parseInt(codEvaluacion) <= 0) {
+    return res.status(400).json({ error: 'El código del grupo y el código de evaluación deben ser números válidos' });
+  }
+
+  try {
+    const result = await grupoEmpresaService.getGrupoEmpresaConRubricas(parseInt(codGrupo), parseInt(codEvaluacion));
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: 'Error al obtener el grupo y las rúbricas',
+      detalle: error.message,
+    });
+  }
+};
+
+exports.getEstudiantesDeGrupo = async (req, res) => {
+  const { codGrupo } = req.params;
+
+  // Validar que codGrupo sea un número entero válido
+  if (!codGrupo || isNaN(codGrupo) || parseInt(codGrupo) <= 0) {
+    return res.status(400).json({ error: 'El código del grupo debe ser un número válido' });
+  }
+
+  try {
+    const grupoEmpresa = await grupoEmpresaService.getGrupoEmpresa(parseInt(codGrupo));
+    res.status(200).json(grupoEmpresa.integrantes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: 'Error al obtener los estudiantes del grupo',
+      detalle: error.message,
+    });
+  }
+};
+
+exports.getRubricasDeEvaluacion = async (req, res) => {
+  const { codEvaluacion } = req.params;
+
+  // Validar que codEvaluacion sea un número entero válido
+  if (!codEvaluacion || isNaN(codEvaluacion) || parseInt(codEvaluacion) <= 0) {
+    return res.status(400).json({ error: 'El código de evaluación debe ser un número válido' });
+  }
+
+  try {
+    const rubricas = await grupoEmpresaService.getRubricasByEvaluacion(parseInt(codEvaluacion));
+    res.status(200).json(rubricas);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: 'Error al obtener las rúbricas de la evaluación',
+      detalle: error.message,
+    });
+  }
+};

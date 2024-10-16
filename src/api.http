@@ -53,5 +53,13 @@ GET http://localhost:3000/evaluaciones/detalles/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjg5NDQ1OTksImV4cCI6MTcyODk0ODE5OX0.a0GeG8m-3ZNufrnDYVL1idBZta_PFs6tU0UT4zAwlj8
 
 ### ver Grupos que entrega una evaluacion o no 
-GET http://localhost:3000/evaluaciones/6/entregas
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjg5NTUwNDIsImV4cCI6MTcyODk1ODY0Mn0.Yg3XP1R3T5iAluy7xqNuqn5RcKLdSv0UqmTZje1kVX0
+GET http://localhost:3000/evaluaciones/4/entregas
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkwNDkxMzgsImV4cCI6MTcyOTA1MjczOH0.mf5PJ8P48mnhIgZixnEg_v63NbhVRfqvWTTTIesDb4o
+
+### Obtener Estudiantes de un Grupo
+GET http://localhost:3000/api/grupos/5/estudiantes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkwNDkxMzgsImV4cCI6MTcyOTA1MjczOH0.mf5PJ8P48mnhIgZixnEg_v63NbhVRfqvWTTTIesDb4o
+
+### Obtener Rúbricas de una Evaluación
+GET http://localhost:3000/api/grupos/evaluaciones/4/rubricas
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkwNDkxMzgsImV4cCI6MTcyOTA1MjczOH0.mf5PJ8P48mnhIgZixnEg_v63NbhVRfqvWTTTIesDb4o

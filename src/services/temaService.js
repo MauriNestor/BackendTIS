@@ -10,14 +10,14 @@ const registrarTema = async (tema, codClase, codDocente) => {
                 'INSERT INTO Tema (cod_docente, cod_clase, nombre_tema) VALUES ($1, $2, $3) RETURNING *;',
                 [codDocente, codClase, tema]
             );
-            codTema = result.rows[0];
+            codTema = codTema = result.rows[0].cod_tema;
             return codTema;
         } else {
             const result = await pool.query(
-                'SELECT cod_tema FROM Tema WHERE  tema = $1 AND cod_clase = $2',
+                'SELECT cod_tema FROM Tema WHERE nombre_tema = $1 AND cod_clase = $2',
                 [tema, codClase]
             );
-            codTema = result.rows[0];
+            codTema = codTema = result.rows[0].cod_tema;
             return codTema;
         }; 
 
@@ -30,9 +30,9 @@ const registrarTema = async (tema, codClase, codDocente) => {
 const verificarTema = async (tema, codClase) => {
     try {
         const result = await pool.query(
-            'SELECT * FROM Tema  WHERE tema = $1 AND cod_clase = $2',
+            'SELECT * FROM Tema WHERE nombre_tema = $1 AND cod_clase = $2',
             [tema, codClase]
-        );
+        );        
 
         if (result.rows.length === 0) {
             return true;

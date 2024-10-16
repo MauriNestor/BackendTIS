@@ -33,15 +33,17 @@ exports.getEvaluacionById = async (cod_evaluacion) => {
 exports.registrarEvaluacion = async (codClase, tema, nombreEvaluacion, tipoEvaluacion, fechaEntrega, archivo, descripcion ) => {
     try {
         const codDocente = await planificacionService.getDocente(codClase);
-        const codTema = await temaService.registrarTema(tema);
+        console.log(codDocente);
+        const codTema = await temaService.registrarTema(tema, codClase, codDocente);
+        console.log(codTema);
         const fechaInicio = new Date().toISOString().split('T')[0]; 
         const result = await pool.query(
             `INSERT INTO Evaluacion (cod_docente, cod_clase, cod_tema, evaluacion, tipo_evaluacion, fecha_inicio, fecha_fin, archivo_evaluacion, descripcion_evaluacion) 
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;`,
             [codDocente, codClase, codTema, nombreEvaluacion, tipoEvaluacion, fechaInicio, fechaEntrega, archivo, descripcion ]
         );
-        codTema = result.rows[0];
-        return codTema;
+        codEvaluacion = result.rows[0].cod_evaluacion;
+        return codEvaluacion;
 
     }  catch (err) {
         console.error('Error al registrar tema', err);

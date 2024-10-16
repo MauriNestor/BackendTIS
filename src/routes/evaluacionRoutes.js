@@ -9,6 +9,6 @@ router.get('/:cod_clase', verificarToken,evaluacionesController.getEvaluacionesB
 
 router.get('/detalles/:cod_evaluacion',verificarToken, evaluacionesController.getEvaluacionById);
 
-router.post('/registrar-evaluacion', verificarToken, evaluacionController.registrarEvaluacion);
+router.post('/registrar-evaluacion', verificarToken, evaluacionesController.registrarEvaluacion);
 
 module.exports = router;

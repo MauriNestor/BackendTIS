@@ -53,7 +53,7 @@ exports.registrarEvaluacion = async (req, res) => {
         const descripcionEvaluacion = descripcion || '';  // Si la descripción no está presente, se asigna un string vacío
 
         // Llamada al método del servicio para registrar la evaluación
-        const evaluacion = await evaluacionService.registrarEvaluacion(
+        const evaluacion = await evaluacionesService.registrarEvaluacion(
             codClase, tema, nombreEvaluacion, tipoEvaluacion, fechaEntrega, archivoBuffer, descripcionEvaluacion
         );
 

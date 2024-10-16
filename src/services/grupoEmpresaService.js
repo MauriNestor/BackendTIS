@@ -111,3 +111,36 @@ const verificarNombreGrupo = async (nombreCorto) => {
     throw err;
   }
 };
+
+exports.getRubricasByEvaluacion = async (codEvaluacion) => {
+  const query = `
+    SELECT r.cod_rubrica, r.nombre_rubrica, r.descripcion_rubrica, r.peso,
+           dr.cod_detalle, dr.descripcion AS descripcion_detalle, dr.peso_rubrica, dr.clasificacion_rubrica
+    FROM rubrica r
+    INNER JOIN detalle_rubrica dr ON r.cod_rubrica = dr.cod_rubrica
+    WHERE r.cod_evaluacion = $1
+  `;
+  try {
+    const { rows } = await pool.query(query, [codEvaluacion]);
+    return rows;
+  } catch (error) {
+    console.error('Error al obtener rúbricas:', error);
+    throw new Error('Error al obtener las rúbricas de la evaluación.');
+  }
+};
+
+exports.getGrupoEmpresaConRubricas = async (codigoGrupo, codEvaluacion) => {
+  try {
+    const grupoEmpresa = await this.getGrupoEmpresa(codigoGrupo);
+
+    const rubricas = await this.getRubricasByEvaluacion(codEvaluacion);
+
+    return {
+      grupo: grupoEmpresa,
+      rubricas,
+    };
+  } catch (error) {
+    console.error('Error al obtener datos del grupo y rúbricas:', error);
+    throw new Error('Error al obtener los datos del grupo y las rúbricas.');
+  }
+};

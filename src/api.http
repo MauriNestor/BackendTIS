@@ -9,7 +9,7 @@ Content-Type: application/json
   "nombre": "Fisgón",
   "apellido": "Rodeores",
   "correo": "fisgon@umss.edu.bo",
-  "contraseña": " "
+  "contraseña": "Contraseña1"
 }
 
 ### post de estudiantes
@@ -50,7 +50,7 @@ GET http://localhost:3000/evaluaciones/PRUEBA
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjg5NDQ1OTksImV4cCI6MTcyODk0ODE5OX0.a0GeG8m-3ZNufrnDYVL1idBZta_PFs6tU0UT4zAwlj8
 ### Obtener evaluaciones por id de evaluacion
 GET http://localhost:3000/evaluaciones/detalles/4
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkxMjI0NzksImV4cCI6MTcyOTEyNjA3OX0.zAPM1Ygk_BWp_ARx7Hk4YWvupMEMbjRnloeAuMR4WgI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkxMzA2ODAsImV4cCI6MTcyOTEzNDI4MH0.h4DlRdV7dv5pxnfl1_eOp198jhTI8NKouRWPnmJCnhg
 
 ### ver Grupos que entrega una evaluacion o no 
 GET http://localhost:3000/evaluaciones/4/entregas

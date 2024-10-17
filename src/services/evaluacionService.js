@@ -30,9 +30,12 @@ exports.getEvaluacionById = async (cod_evaluacion) => {
     if (result.rows.length > 0) {
         const evaluacion = result.rows[0];
 
+        const mimeType = evaluacion.archivo_evaluacion ? 'application/pdf' : null;
+
         return {
             ...evaluacion,
-            archivo_evaluacion: evaluacion.archivo_evaluacion ? evaluacion.archivo_evaluacion.toString('base64') : null
+            archivo_evaluacion: evaluacion.archivo_evaluacion ? evaluacion.archivo_evaluacion.toString('base64') : null,
+            mime_type: mimeType
         };
     } else {
         return null;

@@ -50,6 +50,7 @@ exports.obtenerEstadoEntregas = async (codDocente, codEvaluacion) => {
             ge.cod_grupoempresa,
             ge.nombre_corto,
             ge.nombre_largo,
+            ge.logotipo,
             CASE WHEN ent.archivo_grupo IS NOT NULL THEN TRUE ELSE FALSE END AS ha_entregado
         FROM
             evaluacion ev
@@ -68,7 +69,13 @@ exports.obtenerEstadoEntregas = async (codDocente, codEvaluacion) => {
         const values = [codEvaluacion, codDocente];
         
         const result = await pool.query(query, values);
-        return result.rows;
+        
+        const gruposConLogo = result.rows.map(grupo => ({
+            ...grupo,
+            logotipo: grupo.logotipo ? grupo.logotipo.toString('base64') : null
+        }));
+        
+        return gruposConLogo;
     } catch (error) {
         console.error('Error al obtener las entregas', error);
         throw error;

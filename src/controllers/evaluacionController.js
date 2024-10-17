@@ -45,10 +45,10 @@ exports.obtenerEstadoEntregas = async (req, res) => {
     try {
         const estadoEntregas = await evaluacionesService.obtenerEstadoEntregas(codDocente, parseInt(codEvaluacion));
         res.status(200).json(estadoEntregas);
-      } catch (error) {
+    } catch (error) {
         res.status(500).json({
-          error: 'Error al obtener el estado de las entregas',
-          detalle: error.message,
+            error: 'Error al obtener el estado de las entregas',
+            detalle: error.message,
         });
-      }
-    };
+    }
+};

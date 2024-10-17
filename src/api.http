@@ -50,8 +50,9 @@ GET http://localhost:3000/evaluaciones/PRUEBA
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkxMTk2MjgsImV4cCI6MTcyOTEyMzIyOH0.w7eUZNuQ3kOw9MUf98SIIz4PqReQF1LErhpsi-NOEX4
 
 ### Obtener evaluaciones por id de evaluacion
-GET http://localhost:3000/evaluaciones/detalles/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkxMTk2MjgsImV4cCI6MTcyOTEyMzIyOH0.w7eUZNuQ3kOw9MUf98SIIz4PqReQF1LErhpsi-NOEX4
+GET http://localhost:3000/evaluaciones/detalles/4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkxMzA2ODAsImV4cCI6MTcyOTEzNDI4MH0.h4DlRdV7dv5pxnfl1_eOp198jhTI8NKouRWPnmJCnhg
+
 
 ### ver Grupos que entrega una evaluacion o no 
 GET http://localhost:3000/evaluaciones/4/entregas

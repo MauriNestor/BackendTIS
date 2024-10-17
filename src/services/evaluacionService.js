@@ -24,11 +24,24 @@ exports.getEvaluacionesByClass = async (cod_clase) => {
 
 exports.getEvaluacionById = async (cod_evaluacion) => {
     const result = await pool.query(
-        'SELECT cod_evaluacion, cod_tema,evaluacion, fecha_fin, fecha_inicio, tipo_evaluacion, descripcion_evaluacion FROM EVALUACION WHERE cod_evaluacion = $1',
+        'SELECT cod_evaluacion, cod_tema, evaluacion, fecha_fin, fecha_inicio, tipo_evaluacion, descripcion_evaluacion, archivo_evaluacion FROM EVALUACION WHERE cod_evaluacion = $1',
         [cod_evaluacion]
     );
-    return result.rows[0];
+    if (result.rows.length > 0) {
+        const evaluacion = result.rows[0];
+
+        const mimeType = evaluacion.archivo_evaluacion ? 'application/pdf' : null;
+
+        return {
+            ...evaluacion,
+            archivo_evaluacion: evaluacion.archivo_evaluacion ? evaluacion.archivo_evaluacion.toString('base64') : null,
+            mime_type: mimeType
+        };
+    } else {
+        return null;
+    }
 };
+
 
 exports.obtenerEstadoEntregas = async (codDocente, codEvaluacion) => {
     try {

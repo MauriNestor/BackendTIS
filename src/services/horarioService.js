@@ -15,6 +15,22 @@ const getHorario = async (codigoHorario) => {
     }
 };
 
+const getCodHorario = async (codigoGrupo) => {
+    try {
+        const result = await pool.query(
+            'SELECT cod_horario FROM grupo_empresa  WHERE cod_grupoempresa = $1',
+            [codigoGrupo]
+        );
+        const codHorario = result.rows[0].cod_horario;
+        return codHorario;
+
+    }  catch (err) {
+        console.error('Error al obtener el codigo del horario horario', err);
+        throw err;
+    }
+};
+
 module.exports = {
     getHorario,
+    getCodHorario,  // Verifica que esté correctamente exportada
 };

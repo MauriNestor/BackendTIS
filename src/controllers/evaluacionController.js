@@ -37,10 +37,12 @@ exports.getEvaluacionById = async (req, res) => {
 };
 
 exports.registrarEvaluacion = async (req, res) => {
-    const { codClase, tema, nombreEvaluacion, tipoEvaluacion, fechaEntrega, archivo, descripcion } = req.body;
+    const { codClase, tema, nombreEvaluacion, tipoEvaluacion, fechaEntrega, archivo, descripcion, codigosGrupos } = req.body;
 
     let archivoBuffer = null;
-    if(req.user.role !== 'docente'){
+
+    // Verificación del rol del usuario
+    if (req.user.role !== 'docente') {
         return res.status(403).json({ error: 'Acceso denegado' });
     }
 
@@ -52,15 +54,17 @@ exports.registrarEvaluacion = async (req, res) => {
 
         const descripcionEvaluacion = descripcion || '';  // Si la descripción no está presente, se asigna un string vacío
 
-        // Llamada al método del servicio para registrar la evaluación
+        // Llamada al método del servicio para registrar la evaluación, incluyendo codigosGrupos
         const evaluacion = await evaluacionesService.registrarEvaluacion(
-            codClase, tema, nombreEvaluacion, tipoEvaluacion, fechaEntrega, archivoBuffer, descripcionEvaluacion
+            codClase, tema, nombreEvaluacion, tipoEvaluacion, fechaEntrega, archivoBuffer, descripcionEvaluacion, codigosGrupos
         );
 
         // Responder con la evaluación registrada
         res.status(200).json(evaluacion);
+
     } catch (error) {
         console.error('Error al registrar la evaluación:', error);
         res.status(500).json({ error: 'Error al registrar la evaluación.' });
     }
 };
+

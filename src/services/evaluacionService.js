@@ -1,6 +1,7 @@
 const { pool } = require('../config/db');
 const planificacionService = require('../services/planificacionService');
 const temaService = require('../services/temaService');
+const entregableService = require('../services/entregableService');
 
 exports.getEvaluacionesByClass = async (cod_clase) => {
     const result = await pool.query(`
@@ -30,7 +31,7 @@ exports.getEvaluacionById = async (cod_evaluacion) => {
     return result.rows[0];
 };
 
-exports.registrarEvaluacion = async (codClase, tema, nombreEvaluacion, tipoEvaluacion, fechaEntrega, archivo, descripcion ) => {
+exports.registrarEvaluacion = async (codClase, tema, nombreEvaluacion, tipoEvaluacion, fechaEntrega, archivo, descripcion, codigosGrupos) => {
     try {
         const codDocente = await planificacionService.getDocente(codClase);
         console.log(codDocente);
@@ -43,8 +44,20 @@ exports.registrarEvaluacion = async (codClase, tema, nombreEvaluacion, tipoEvalu
             [codDocente, codClase, codTema, nombreEvaluacion, tipoEvaluacion, fechaInicio, fechaEntrega, archivo, descripcion ]
         );
         codEvaluacion = result.rows[0].cod_evaluacion;
-        return codEvaluacion;
-
+        // Verifica si se enviaron `codigosGrupos`
+        if (codigosGrupos && codigosGrupos.length > 0) {
+            // Realiza la asignación de evaluación
+            const asignacionExitosa = await entregableService.asignarEvaluacion(codDocente, codClase, codEvaluacion, codigosGrupos);
+            
+            if (asignacionExitosa) {
+                return codEvaluacion; // Retorna el código de la evaluación si la asignación fue exitosa
+            } else {
+                throw new Error('Error en la asignación de evaluación'); // Lanza un error si la asignación falla
+            }
+        } else {
+            // Si no hay `codigosGrupos`, simplemente retorna el código de la evaluación
+            return codEvaluacion;
+        }
     }  catch (err) {
         console.error('Error al registrar tema', err);
         throw err;

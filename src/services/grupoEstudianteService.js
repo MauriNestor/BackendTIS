@@ -62,9 +62,8 @@ exports.getEstudiantes = async (codigoGrupo) => {
 							WHERE c.cod_clase = ge.cod_clase)
     `;
   
-      const { rows } = await pool.query(query, [codigoGrupo]); 
-      console.log(rows);
-      return rows;
+    const result = await pool.query(query, [codigoGrupo]);
+    return result.rows;
   } catch (error) {
       throw new Error("Error al obtener los estudiantes sin grupo.");
   }

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const evaluacionesController = require('../controllers/evaluacionController');
-const verificarToken = require('../middlewares/verificarToken'); // Asegúrate de importar el middleware
+const verificarToken = require('../middlewares/verificarToken'); 
 const EvaluacionController = require('../controllers/evaluacionController');
 
 
@@ -14,5 +14,6 @@ router.post('/registrar-evaluacion', verificarToken, evaluacionesController.regi
 
 router.get('/:codEvaluacion/entregas',verificarToken ,EvaluacionController.obtenerEstadoEntregas);
 
+router.post('/:codGrupo/entregables', verificarToken, EvaluacionController.subirEntregable);
 
 module.exports = router;

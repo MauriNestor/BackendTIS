@@ -1,5 +1,7 @@
 const evaluacionesService = require('../services/evaluacionService');
 const fs = require('fs');
+const { pool } = require('../config/db');
+
 
 exports.getEvaluacionesByClass = async (req, res) => {
     const { cod_clase } = req.params;
@@ -88,3 +90,29 @@ exports.obtenerEstadoEntregas = async (req, res) => {
     }
 };
 
+exports.subirEntregable = async (req, res) => {
+    const { codGrupo } = req.params;
+    const {cod_evaluacion, cod_horario, observaciones_entregable, archivo_grupo, cod_clase} = req.body;
+    const codDocente = req.user.cod_docente;
+
+    if (!cod_evaluacion || !cod_horario || !archivo_grupo || !cod_clase) {
+        return res.status(400).json({ error: 'falta informacion necesaria' });
+    }
+    try {
+        const result = await evaluacionesService.subirEntregable(
+            cod_horario, 
+            cod_evaluacion, 
+            codDocente, 
+            observaciones_entregable, 
+            cod_clase, 
+            archivo_grupo, 
+            codGrupo
+        );
+        res.status(201).json(result);
+    } catch (error) {
+        res.status(500).json({
+            error: 'Error al subir el entregable',
+            detalle: error.message,
+        });
+    }
+};

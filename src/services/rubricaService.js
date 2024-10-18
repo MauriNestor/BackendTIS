@@ -1,6 +1,6 @@
 const { pool } = require('../config/db');
 
-exports.getRubricasByEvaluacion = async (codEvaluacion) => {
+const getRubricasByEvaluacion = async (codEvaluacion) => {
     const query = `
       SELECT r.cod_rubrica, r.nombre_rubrica, r.descripcion_rubrica, r.peso,
              dr.cod_detalle, dr.descripcion AS descripcion_detalle, dr.peso_rubrica, dr.clasificacion_rubrica
@@ -15,4 +15,7 @@ exports.getRubricasByEvaluacion = async (codEvaluacion) => {
       console.error('Error al obtener rúbricas:', error);
       throw new Error('Error al obtener las rúbricas de la evaluación.');
     }
+};
+module.exports = {
+  getRubricasByEvaluacion,
 };

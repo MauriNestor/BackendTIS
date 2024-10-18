@@ -1,4 +1,4 @@
-rubricaService = require('../services/rubricaService')
+const rubricaService = require('../services/rubricaService');
 
 exports.getRubricasDeEvaluacion = async (req, res) => {
     const { codEvaluacion } = req.params;

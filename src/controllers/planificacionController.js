@@ -30,10 +30,11 @@ const registrarRequerimientos = async (req, res) => {
 // Registrar sprint
 const registrarSprint = async (req, res) => {
     try {
-        const { codigoProduct, sprint, fechaInicio, fechaFin, objetivo, requerimientos } = req.body;
-        const result = await planificacionService.registrarSprint(Number(codigoProduct), Number(sprint), fechaInicio, fechaFin, objetivo, requerimientos);
+        const { codigoProduct, sprint, fechaInicio, fechaFin, objetivo } = req.body;
+        const result = await planificacionService.registrarSprint(Number(codigoProduct), Number(sprint), fechaInicio, fechaFin, objetivo);
         res.status(201).json({
-            message: 'Sprint registrado exitosamente'
+            message: 'Sprint registrado exitosamente',
+            result
         });
     } catch (error) {
         res.status(400).json({ error: error.message });

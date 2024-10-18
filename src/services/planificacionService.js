@@ -21,17 +21,16 @@ const registrarPlanificacion = async (codigoClase, codigoGrupo, client) => {
     }
 };
 
-
 const registrarRequerimientos = async (codigoGrupo, requerimientos) => {
     try {
         const estado = "Pendiente";
-        const codigoProduct = await obtenerCodProductBacklog(codigoGrupo);
-        for (const requerimiento of requerimientos) {
-            
+        const codigoProduct = await obtenerCodProductBacklog(codigoGrupo);  
+        console.log(codigoProduct);
+        for (const requerimiento of requerimientos) { 
             const result = await pool.query(
                 'INSERT INTO requerimiento (cod_product, requerimiento, decripcion_hu, prioridad_hu, estimacion_hu, estado_hu) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-                [codigoProduct, requerimiento.requerimiento, requerimiento.descripcion, requerimiento.prioridad, requerimiento.estimacion, estado] 
-            ); 
+                [codigoProduct, requerimiento.requerimiento, requerimiento.descripcion, parseInt(requerimiento.prioridad), parseInt(requerimiento.estimacion), estado]
+            );
         }
     } catch (err) {
         console.error('Error al crear requerimiento', err);
@@ -39,7 +38,7 @@ const registrarRequerimientos = async (codigoGrupo, requerimientos) => {
     }
 };
 
-const registrarSprint = async (codigoProduct, sprint, fechaInicio, fechaFin, objetivo, requerimientos) => {
+const registrarSprint = async (codigoProduct, sprint, fechaInicio, fechaFin, objetivo) => {
     try {
         // Validar que los datos son del tipo correcto
         if (typeof codigoProduct !== 'number' || typeof sprint !== 'number') {
@@ -48,17 +47,21 @@ const registrarSprint = async (codigoProduct, sprint, fechaInicio, fechaFin, obj
         if (!fechaInicio || !fechaFin) {
             throw new Error('fechaInicio y fechaFin son obligatorios.');
         }
-
-        // Imprimir para depuración
-        // console.log(`Insertando sprint: ${codigoProduct}, ${sprint}, ${fechaInicio}, ${fechaFin}, ${objetivo}`);
-
         const result = await pool.query(
             'INSERT INTO sprint (cod_product, sprint, fecha_inicio_sprint, fecha_fin_sprint, objetivo_sprint) VALUES ($1, $2, $3, $4, $5) RETURNING *',
             [codigoProduct, sprint, fechaInicio, fechaFin, objetivo]
         );
 
         const codSprint = result.rows[0].cod_sprint;
+        return codSprint;
+    } catch (err) {
+        console.error('Error al registrar sprint', err);
+        throw err;
+    }
+};
 
+const registrarRequerimientoASprint = async (codSprint, requerimientos) => {
+    try {
         // Actualizar requerimientos
         for (const requerimiento of requerimientos) {
             const updateResult = await pool.query(
@@ -130,9 +133,13 @@ const obtenerCodProductBacklog = async (codigoGrupo) => {
             'SELECT cod_product FROM productbacklog WHERE cod_grupoempresa = $1',
             [codigoGrupo]
         );
-        const codProduct = result.rows;
+        const codProduct = result.rows[0]?.cod_product;  // Utilizamos optional chaining para evitar errores si no existe
+        
+        if (!codProduct) {
+            throw new Error('Código de product backlog no encontrado para el grupo dado');
+        }
+        
         return codProduct;
-
     }  catch (err) {
         console.error('Error al obtener codigo de productbacklog', err);
         throw err;
@@ -154,4 +161,5 @@ module.exports = {
     obtenerSprint,
     obtenerProductBacklog,
     getDocente,
+    registrarRequerimientoASprint,
 };

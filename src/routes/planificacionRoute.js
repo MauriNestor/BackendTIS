@@ -9,7 +9,9 @@ router.post('/productbacklog', planificacionController.registrarPlanificacion);
 router.post('/requerimientos', planificacionController.registrarRequerimientos);
 
 // Ruta para registrar el sprint
-router.post('/sprint', planificacionController.registrarSprint);
+router.post('/registrar-sprint', planificacionController.registrarSprint);
+// Ruta para registrar una liusta de requerimientos a un sprint
+router.put('/requerimientos/registrar-sprint', planificacionController.registrarRequerimientoASprint);
 
 // Ruta para obtener los sprints y sus requerimientos correspondientes
 router.get('/sprints/:codigoGrupo', planificacionController.obtenerSprint);

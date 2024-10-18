@@ -29,8 +29,8 @@ crearClase: async (codDocente, codClase, codGestion, nombreClase) => {
 
 obtenerClasesPorDocente: async (codDocente) => {
   try {
-    const result = await pool.query(
-      'SELECT cod_clase, nombre_clase, cod_gestion FROM clase WHERE cod_docente = $1',
+    const result = await pool.query( 
+           'SELECT cod_clase, nombre_clase, cod_gestion FROM clase WHERE cod_docente = $1',
       [codDocente]
     );
 

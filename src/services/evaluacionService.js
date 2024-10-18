@@ -25,10 +25,22 @@ exports.getEvaluacionesByClass = async (cod_clase) => {
 
 exports.getEvaluacionById = async (cod_evaluacion) => {
     const result = await pool.query(
-        'SELECT cod_evaluacion, cod_tema,evaluacion, fecha_fin, fecha_inicio, tipo_evaluacion, descripcion_evaluacion FROM EVALUACION WHERE cod_evaluacion = $1',
+        'SELECT cod_evaluacion, cod_tema, evaluacion, fecha_fin, fecha_inicio, tipo_evaluacion, descripcion_evaluacion, archivo_evaluacion FROM EVALUACION WHERE cod_evaluacion = $1',
         [cod_evaluacion]
     );
-    return result.rows[0];
+   if (result.rows.length > 0) {
+        const evaluacion = result.rows[0];
+
+        const mimeType = evaluacion.archivo_evaluacion ? 'application/pdf' : null;
+
+        return {
+            ...evaluacion,
+            archivo_evaluacion: evaluacion.archivo_evaluacion ? evaluacion.archivo_evaluacion.toString('base64') : null,
+            mime_type: mimeType
+        };
+    } else {
+        return null;
+    }
 };
 
 exports.registrarEvaluacion = async (codClase, tema, nombreEvaluacion, tipoEvaluacion, fechaEntrega, archivo, descripcion, codigosGrupos) => {
@@ -63,3 +75,44 @@ exports.registrarEvaluacion = async (codClase, tema, nombreEvaluacion, tipoEvalu
         throw err;
     }
 };
+
+
+exports.obtenerEstadoEntregas = async (codDocente, codEvaluacion) => {
+    try {
+        const query = `
+        SELECT
+            ge.cod_grupoempresa,
+            ge.nombre_corto,
+            ge.nombre_largo,
+            ge.logotipo,
+            CASE WHEN ent.archivo_grupo IS NOT NULL THEN TRUE ELSE FALSE END AS ha_entregado
+        FROM
+            evaluacion ev
+        INNER JOIN
+            clase c ON ev.cod_clase = c.cod_clase
+        INNER JOIN
+            grupo_empresa ge ON ge.cod_clase = c.cod_clase
+        LEFT JOIN
+            entregable ent ON ge.cod_grupoempresa = ent.cod_grupoempresa AND ent.cod_evaluacion = ev.cod_evaluacion
+        WHERE
+            ev.cod_evaluacion = $1
+            AND c.cod_docente = $2
+        ORDER BY
+            ge.nombre_corto;
+        `;
+        const values = [codEvaluacion, codDocente];
+        
+        const result = await pool.query(query, values);
+        
+        const gruposConLogo = result.rows.map(grupo => ({
+            ...grupo,
+            logotipo: grupo.logotipo ? grupo.logotipo.toString('base64') : null
+        }));
+        
+        return gruposConLogo;
+    } catch (error) {
+        console.error('Error al obtener las entregas', error);
+        throw error;
+    }
+};
+

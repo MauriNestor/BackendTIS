@@ -36,6 +36,7 @@ exports.getEvaluacionById = async (req, res) => {
     }
 };
 
+
 exports.registrarEvaluacion = async (req, res) => {
     const { codClase, tema, nombreEvaluacion, tipoEvaluacion, fechaEntrega, archivo, descripcion, codigosGrupos } = req.body;
 
@@ -65,6 +66,25 @@ exports.registrarEvaluacion = async (req, res) => {
     } catch (error) {
         console.error('Error al registrar la evaluación:', error);
         res.status(500).json({ error: 'Error al registrar la evaluación.' });
+    }
+};
+
+
+exports.obtenerEstadoEntregas = async (req, res) => {
+    const { codEvaluacion } = req.params;
+    const codDocente = req.user.cod_docente; 
+    if (!codEvaluacion || isNaN(codEvaluacion) || parseInt(codEvaluacion) <= 0) {
+      return res.status(400).json({ error: 'El código de evaluación es inválido' });
+    }
+  
+    try {
+        const estadoEntregas = await evaluacionesService.obtenerEstadoEntregas(codDocente, parseInt(codEvaluacion));
+        res.status(200).json(estadoEntregas);
+    } catch (error) {
+        res.status(500).json({
+            error: 'Error al obtener el estado de las entregas',
+            detalle: error.message,
+        });
     }
 };
 

@@ -64,4 +64,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6M
 
 ### Obtener Rúbricas de una Evaluación
 GET http://localhost:3000/rubricas/4
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkyODIxNjEsImV4cCI6MTcyOTI4NTc2MX0.BgvkXfFOFd9upiIR64ZUZnsSvKwm8HaMaU5kgRh6th0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkyODU4NTgsImV4cCI6MTcyOTI4OTQ1OH0.n7JPKhdKXztDz3FT4ey5LoGsnuv6jrwYzytfV8pTbMk
+
+### Subir Entregable### Subir Entregable
+POST http://localhost:3000/evaluaciones/4/entregables
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkyODU4NTgsImV4cCI6MTcyOTI4OTQ1OH0.n7JPKhdKXztDz3FT4ey5LoGsnuv6jrwYzytfV8pTbMk
+Content-Type: application/json
+  
+  {
+    "cod_evaluacion": 4,
+    "cod_horario": 7,
+    "observaciones_entregable": "entrega endpoint evaluacion 4 pdf",
+   "archivo_grupo": "JVBERi0xLjQKJSBUaGlzIGlzIGEgZmFrZSBQREYgZmlsZSBjb250ZW50IGZvciB0ZXN0aW5nIHB1cnBvc2VzLgo=",
+    "cod_clase": "IVT8VE"
+  }

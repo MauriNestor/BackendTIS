@@ -116,3 +116,24 @@ exports.obtenerEstadoEntregas = async (codDocente, codEvaluacion) => {
     }
 };
 
+exports.subirEntregable = async (cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa) => {
+    try {
+        let archivoBuffer = null;
+
+        if (archivo_grupo) {
+            archivoBuffer = Buffer.from(archivo_grupo, 'base64');
+        }
+
+        const query = `
+        INSERT INTO entregable (cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        `;
+        const values = [cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivoBuffer, cod_grupoempresa];
+
+        await pool.query(query, values);
+        return { message: 'Entregable subido exitosamente' };
+    } catch (error) {
+        console.error('Error al subir el entregable:', error);
+        throw new Error('Error al subir el entregable');
+    }   
+}

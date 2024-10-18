@@ -21,17 +21,16 @@ const registrarPlanificacion = async (codigoClase, codigoGrupo, client) => {
     }
 };
 
-
 const registrarRequerimientos = async (codigoGrupo, requerimientos) => {
     try {
         const estado = "Pendiente";
-        const codigoProduct = await obtenerCodProductBacklog(codigoGrupo);
-        for (const requerimiento of requerimientos) {
-            
+        const codigoProduct = await obtenerCodProductBacklog(codigoGrupo);  
+        console.log(codigoProduct);
+        for (const requerimiento of requerimientos) { 
             const result = await pool.query(
                 'INSERT INTO requerimiento (cod_product, requerimiento, decripcion_hu, prioridad_hu, estimacion_hu, estado_hu) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-                [codigoProduct, requerimiento.requerimiento, requerimiento.descripcion, requerimiento.prioridad, requerimiento.estimacion, estado] 
-            ); 
+                [codigoProduct, requerimiento.requerimiento, requerimiento.descripcion, parseInt(requerimiento.prioridad), parseInt(requerimiento.estimacion), estado]
+            );
         }
     } catch (err) {
         console.error('Error al crear requerimiento', err);
@@ -134,9 +133,13 @@ const obtenerCodProductBacklog = async (codigoGrupo) => {
             'SELECT cod_product FROM productbacklog WHERE cod_grupoempresa = $1',
             [codigoGrupo]
         );
-        const codProduct = result.rows;
+        const codProduct = result.rows[0]?.cod_product;  // Utilizamos optional chaining para evitar errores si no existe
+        
+        if (!codProduct) {
+            throw new Error('Código de product backlog no encontrado para el grupo dado');
+        }
+        
         return codProduct;
-
     }  catch (err) {
         console.error('Error al obtener codigo de productbacklog', err);
         throw err;

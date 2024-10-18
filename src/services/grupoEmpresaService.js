@@ -1,7 +1,10 @@
 // grupoEmpresaService.js
 const { pool } = require("../config/db");
-const planificacionService = require("../services/planificacionService");
-const grupoEstudianteService = require("../services/grupoEstudianteService");
+
+const planificacionService = require('../services/planificacionService');
+const grupoEstudianteService = require('../services/grupoEstudianteService');
+const horarioService = require('../services/horarioService');
+
 
 exports.createGrupoEmpresa = async (data, client) => {
   const {
@@ -74,19 +77,21 @@ exports.getGrupoEmpresa = async (codigoGrupo) => {
     ); // Obtener integrantes
 
     if (result.rows.length > 0) {
-      const grupoEmpresa = result.rows[0];
 
+      const grupoEmpresa = result.rows[0]; // Accede al primer (y único) resultado de la consulta
+      const horario = await horarioService.getHorario(grupoEmpresa.cod_horario);
       // Convertir logotipo (buffer) a base64 si existe
       const logotipoBase64 = grupoEmpresa.logotipo
         ? grupoEmpresa.logotipo.toString("base64")
         : null;
-
       // Retornar datos del grupo y los integrantes, incluyendo el logotipo convertido a base64
       return {
         ...grupoEmpresa,
         logotipo: logotipoBase64,
+        horario,
         integrantes,
       };
+
     } else {
       return { message: "No se encontró la grupo-empresa." };
     }

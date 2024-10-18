@@ -16,7 +16,7 @@ const registrarPlanificacion = async (req, res) => {
 
 // Registrar requerimientos
 const registrarRequerimientos = async (req, res) => {
-    const { codigoProduct, requerimientos } = req.body;
+    const { codigoGrupo, requerimientos } = req.body;
     try {
         await planificacionService.registrarRequerimientos(codigoProduct, requerimientos);
         res.status(201).json({

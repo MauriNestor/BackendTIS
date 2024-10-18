@@ -9,6 +9,10 @@ router.get('/:cod_clase', verificarToken,evaluacionesController.getEvaluacionesB
 
 router.get('/detalles/:cod_evaluacion',verificarToken, evaluacionesController.getEvaluacionById);
 
+
+router.post('/registrar-evaluacion', verificarToken, evaluacionesController.registrarEvaluacion);
+
 router.get('/:codEvaluacion/entregas',verificarToken ,EvaluacionController.obtenerEstadoEntregas);
+
 
 module.exports = router;

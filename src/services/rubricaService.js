@@ -16,6 +16,28 @@ const getRubricasByEvaluacion = async (codEvaluacion) => {
       throw new Error('Error al obtener las rúbricas de la evaluación.');
     }
 };
+
+const registrarRubrica = async (codEvaluacion, nombrerubrica, descripcionRubrica, pesoRubrica, detallesRubrica) => {
+    try {
+        const result = await pool.query(
+            `INSERT INTO Evaluacion (cod_evaluacion, nombre_rubrica, descripcion_rubrica, peso) 
+            VALUES ($1, $2, $3, $4) RETURNING *;`,
+            [codEvaluacion, nombrerubrica, descripcionRubrica, pesoRubrica]
+        );
+        codRubrica = result.rows[0].cod_rubrica;
+        // Verifica si se enviaron `detallesRubrica`
+        if (detallesRubrica && detallesRubrica.length > 0) {
+            
+        } else {
+            return codRubrica;
+        }
+    }  catch (err) {
+        console.error('Error al registrar tema', err);
+        throw err;
+    }
+};
+
 module.exports = {
   getRubricasByEvaluacion,
+  registrarRubrica,
 };

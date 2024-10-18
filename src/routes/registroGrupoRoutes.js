@@ -12,7 +12,5 @@ router.get("/grupo/:codigoGrupo", registroGrupoController.getGrupoEmpresa);
 // Ruta para obtener los estudiantes de un grupo
 router.get('/:codGrupo/estudiantes', verificarToken, registroGrupoController.getEstudiantesDeGrupo);
 
-// Ruta para obtener las rúbricas de una evaluación
-router.get('/evaluaciones/:codEvaluacion/rubricas', verificarToken, registroGrupoController.getRubricasDeEvaluacion);
 
 module.exports = router;

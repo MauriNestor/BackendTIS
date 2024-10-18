@@ -14,7 +14,7 @@ const gestionRoutes = require("./routes/gestionRoutes");
 const registroGrupoRoutes = require("./routes/registroGrupoRoutes");
 const evaluacionRoutes = require('./routes/evaluacionRoutes');
 const temaRoutes = require('./routes/temaRoute');
-
+const rubricaRoutes = require('./routes/rubricaRoutes');
 const db = require("./config/db");
 
 // Cargar las variables de entorno
@@ -48,7 +48,7 @@ app.use("/api/grupos", registroGrupoRoutes);
 app.use("/gestiones", gestionRoutes);
 app.use('/evaluaciones', evaluacionRoutes);
 app.use('/temas', temaRoutes);
-
+app.use('/rubricas', rubricaRoutes);
 // Manejo de rutas no encontradas
 app.use((req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });

@@ -155,8 +155,8 @@ exports.getEstudiantesDeGrupo = async (req, res) => {
   }
 
   try {
-    const grupoEmpresa = await grupoEmpresaService.getGrupoEmpresa(parseInt(codGrupo));
-    res.status(200).json(grupoEmpresa.integrantes);
+    const estudiantes = await grupoEstudianteService.getEstudiantes(parseInt(codGrupo));
+    res.status(200).json(estudiantes);
   } catch (error) {
     console.error(error);
     res.status(500).json({

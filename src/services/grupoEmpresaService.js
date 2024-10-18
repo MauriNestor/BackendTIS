@@ -133,19 +133,3 @@ exports.getRubricasByEvaluacion = async (codEvaluacion) => {
     throw new Error('Error al obtener las rúbricas de la evaluación.');
   }
 };
-
-exports.getGrupoEmpresaConRubricas = async (codigoGrupo, codEvaluacion) => {
-  try {
-    const grupoEmpresa = await this.getGrupoEmpresa(codigoGrupo);
-
-    const rubricas = await this.getRubricasByEvaluacion(codEvaluacion);
-
-    return {
-      grupo: grupoEmpresa,
-      rubricas,
-    };
-  } catch (error) {
-    console.error('Error al obtener datos del grupo y rúbricas:', error);
-    throw new Error('Error al obtener los datos del grupo y las rúbricas.');
-  }
-};

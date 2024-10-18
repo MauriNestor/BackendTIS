@@ -1,4 +1,5 @@
 const { pool } = require('../config/db');
+const detalleRubricaService = require('../services/detalleRubricaService');
 
 const getRubricasByEvaluacion = async (codEvaluacion) => {
     const query = `
@@ -18,24 +19,36 @@ const getRubricasByEvaluacion = async (codEvaluacion) => {
 };
 
 const registrarRubrica = async (codEvaluacion, nombrerubrica, descripcionRubrica, pesoRubrica, detallesRubrica) => {
+    const client = await pool.connect(); 
     try {
-        const result = await pool.query(
-            `INSERT INTO Evaluacion (cod_evaluacion, nombre_rubrica, descripcion_rubrica, peso) 
+        await client.query('BEGIN'); 
+
+        const result = await client.query(
+            `INSERT INTO Rubrica (cod_evaluacion, nombre_rubrica, descripcion_rubrica, peso) 
             VALUES ($1, $2, $3, $4) RETURNING *;`,
             [codEvaluacion, nombrerubrica, descripcionRubrica, pesoRubrica]
         );
-        codRubrica = result.rows[0].cod_rubrica;
+
+        const codRubrica = result.rows[0].cod_rubrica;
+
         // Verifica si se enviaron `detallesRubrica`
+        let codigosDetalle;
         if (detallesRubrica && detallesRubrica.length > 0) {
-            
-        } else {
-            return codRubrica;
+            codigosDetalle = await detalleRubricaService.registrarDetallesRubrica(client, codEvaluacion, codRubrica, detallesRubrica);
         }
-    }  catch (err) {
-        console.error('Error al registrar tema', err);
-        throw err;
+
+        await client.query('COMMIT');
+        return {codRubrica, codigosDetalle};
+
+    } catch (err) {
+        await client.query('ROLLBACK'); // Revertir la transacción en caso de error
+        console.error('Error al registrar rúbrica', err);
+        throw err; 
+    } finally {
+        client.release(); 
     }
 };
+
 
 module.exports = {
   getRubricasByEvaluacion,

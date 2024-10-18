@@ -1,6 +1,6 @@
 const rubricaService = require('../services/rubricaService');
 
-exports.getRubricasDeEvaluacion = async (req, res) => {
+const getRubricasDeEvaluacion = async (req, res) => {
     const { codEvaluacion } = req.params;
   
     // Validar que codEvaluacion sea un número entero válido
@@ -19,3 +19,43 @@ exports.getRubricasDeEvaluacion = async (req, res) => {
       });
     }
   };
+
+const registrarRubrica = async (req, res) => {
+  const { codEvaluacion, nombreRubrica, descripcionRubrica, pesoRubrica, detallesRubrica } = req.body;
+  // Verificación del rol del usuario
+  if (req.user.role !== 'docente') {
+    return res.status(403).json({ error: 'Acceso denegado' });
+}
+
+   try {
+      if (!codEvaluacion || !nombreRubrica || !pesoRubrica) {
+          return res.status(400).json({
+              message: 'Datos incompletos. Asegúrate de proporcionar codEvaluacion, nombreRubrica y pesoRubrica.'
+          });
+      }
+
+      const result = await rubricaService.registrarRubrica(
+          codEvaluacion, 
+          nombreRubrica, 
+          descripcionRubrica, 
+          pesoRubrica, 
+          detallesRubrica || [] 
+      );
+
+      res.status(201).json({
+          message: 'Rúbrica registrada exitosamente',
+          data: result
+      });
+  } catch (err) {
+      console.error('Error al registrar la rúbrica', err);
+      res.status(500).json({
+          message: 'Error al registrar la rúbrica',
+          error: err.message
+      });
+  }
+};
+
+module.exports = {
+    registrarRubrica,
+    getRubricasDeEvaluacion,
+};

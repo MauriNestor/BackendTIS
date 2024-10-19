@@ -74,3 +74,7 @@ Content-Type: application/json
 {
   "archivo_grupo": "VGhpcyBpcyBhIHRlc3QgZmlsZSBjb250ZW50IGZvciB0aGUgZW50cmVnYWJsZS4="
 }
+
+### Obtener Entregable de una Evaluación
+GET http://localhost:3000/evaluaciones/4/entregado
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MjkzNzYwOTIsImV4cCI6MTcyOTM3OTY5Mn0.hFDvjyhqhPV-d6mNdOg0j-Iczv17_y3PkkjwnI7O1kk

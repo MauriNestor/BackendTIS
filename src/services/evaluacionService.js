@@ -116,11 +116,9 @@ exports.obtenerEstadoEntregas = async (codDocente, codEvaluacion) => {
     }
 };
 
-// const { pool } = require('../config/db');
 
 exports.subirEntregable = async (cod_horario, cod_evaluacion, codigo_sis, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa) => {
     try {
-        // Primero, obtenemos el cod_docente desde la tabla de clase relacionada con el grupo
         const docenteResult = await pool.query(
             `SELECT c.cod_docente
              FROM clase c
@@ -138,7 +136,6 @@ exports.subirEntregable = async (cod_horario, cod_evaluacion, codigo_sis, observ
         // Convertir archivo a buffer (si está presente)
         const archivoBuffer = archivo_grupo ? Buffer.from(archivo_grupo, 'base64') : null;
 
-        // Insertar el entregable en la base de datos
         const query = `
             INSERT INTO entregable (cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa)
             VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -146,7 +143,6 @@ exports.subirEntregable = async (cod_horario, cod_evaluacion, codigo_sis, observ
         const values = [cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivoBuffer, cod_grupoempresa];
 
         await pool.query(query, values);
-
         return { message: 'Entregable subido exitosamente' };
     } catch (error) {
         console.error('Error al subir el entregable:', error);

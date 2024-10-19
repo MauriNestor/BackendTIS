@@ -138,6 +138,12 @@ const obtenerDocenteYClasePorEvaluacion = async (cod_evaluacion) => {
 
 exports.subirEntregable = async (cod_evaluacion, archivo_grupo, codigo_sis) => {
     try {
+        const limiteTamanioArchivo = 10 * 1024 * 1024; 
+        const archivoBuffer = archivo_grupo ? Buffer.from(archivo_grupo, 'base64') : null;
+
+        if (archivoBuffer && archivoBuffer.length > limiteTamanioArchivo) {
+            return res.status(400).json({ error: `El archivo excede el límite de tamaño permitido de ${limiteTamanioArchivo / (1024 * 1024)} MB` });
+        }
         const { cod_docente, cod_clase } = await obtenerDocenteYClasePorEvaluacion(cod_evaluacion);
 
         const { cod_grupoempresa, cod_horario } = await grupoEmpresaService.obtenerGrupoYHorarioDelEstudiante(codigo_sis, cod_clase);
@@ -152,8 +158,6 @@ exports.subirEntregable = async (cod_evaluacion, archivo_grupo, codigo_sis) => {
             return { message: 'Este entregable ya ha sido subido anteriormente' };
         }
         
-        const archivoBuffer = archivo_grupo ? Buffer.from(archivo_grupo, 'base64') : null;
-
         const query = `
             INSERT INTO entregable (cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa)
             VALUES ($1, $2, $3, null, $4, $5, $6)

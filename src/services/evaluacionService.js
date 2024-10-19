@@ -116,24 +116,40 @@ exports.obtenerEstadoEntregas = async (codDocente, codEvaluacion) => {
     }
 };
 
-exports.subirEntregable = async (cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa) => {
-    try {
-        let archivoBuffer = null;
+// const { pool } = require('../config/db');
 
-        if (archivo_grupo) {
-            archivoBuffer = Buffer.from(archivo_grupo, 'base64');
+exports.subirEntregable = async (cod_horario, cod_evaluacion, codigo_sis, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa) => {
+    try {
+        // Primero, obtenemos el cod_docente desde la tabla de clase relacionada con el grupo
+        const docenteResult = await pool.query(
+            `SELECT c.cod_docente
+             FROM clase c
+             INNER JOIN grupo_empresa ge ON ge.cod_clase = c.cod_clase
+             WHERE ge.cod_grupoempresa = $1`,
+            [cod_grupoempresa]
+        );
+
+        if (docenteResult.rows.length === 0) {
+            throw new Error('No se encontró un docente asociado a este grupo o clase');
         }
 
+        const cod_docente = docenteResult.rows[0].cod_docente;
+
+        // Convertir archivo a buffer (si está presente)
+        const archivoBuffer = archivo_grupo ? Buffer.from(archivo_grupo, 'base64') : null;
+
+        // Insertar el entregable en la base de datos
         const query = `
-        INSERT INTO entregable (cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+            INSERT INTO entregable (cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
         `;
         const values = [cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivoBuffer, cod_grupoempresa];
 
         await pool.query(query, values);
+
         return { message: 'Entregable subido exitosamente' };
     } catch (error) {
         console.error('Error al subir el entregable:', error);
         throw new Error('Error al subir el entregable');
-    }   
-}
+    }
+};

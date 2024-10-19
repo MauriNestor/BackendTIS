@@ -93,7 +93,7 @@ exports.obtenerEstadoEntregas = async (req, res) => {
 exports.subirEntregable = async (req, res) => {
     const { codGrupo } = req.params;
     const {cod_evaluacion, cod_horario, observaciones_entregable, archivo_grupo, cod_clase} = req.body;
-    const codDocente = req.user.cod_docente;
+    const codigo_sis = req.user.codigo_sis;
 
     if (!cod_evaluacion || !cod_horario || !archivo_grupo || !cod_clase) {
         return res.status(400).json({ error: 'falta informacion necesaria' });
@@ -102,7 +102,7 @@ exports.subirEntregable = async (req, res) => {
         const result = await evaluacionesService.subirEntregable(
             cod_horario, 
             cod_evaluacion, 
-            codDocente, 
+            codigo_sis, 
             observaciones_entregable, 
             cod_clase, 
             archivo_grupo, 

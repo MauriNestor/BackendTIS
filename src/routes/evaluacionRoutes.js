@@ -3,6 +3,7 @@ const router = express.Router();
 const evaluacionesController = require('../controllers/evaluacionController');
 const verificarToken = require('../middlewares/verificarToken'); 
 const EvaluacionController = require('../controllers/evaluacionController');
+const verificarEstudiante = require('../middlewares/verificarEstudiante');
 
 
 router.get('/:cod_clase', verificarToken,evaluacionesController.getEvaluacionesByClass);
@@ -14,6 +15,6 @@ router.post('/registrar-evaluacion', verificarToken, evaluacionesController.regi
 
 router.get('/:codEvaluacion/entregas',verificarToken ,EvaluacionController.obtenerEstadoEntregas);
 
-router.post('/:codGrupo/entregables', verificarToken, EvaluacionController.subirEntregable);
+router.post('/:codGrupo/entregables', verificarToken, verificarEstudiante, EvaluacionController.subirEntregable);
 
 module.exports = router;

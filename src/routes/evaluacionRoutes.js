@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const evaluacionesController = require('../controllers/evaluacionController');
 const verificarToken = require('../middlewares/verificarToken'); 
-const EvaluacionController = require('../controllers/evaluacionController');
 const verificarEstudiante = require('../middlewares/verificarEstudiante');
 
 
@@ -13,8 +12,8 @@ router.get('/detalles/:cod_evaluacion',verificarToken, evaluacionesController.ge
 
 router.post('/registrar-evaluacion', verificarToken, evaluacionesController.registrarEvaluacion);
 
-router.get('/:codEvaluacion/entregas',verificarToken ,EvaluacionController.obtenerEstadoEntregas);
+router.get('/:codEvaluacion/entregas',verificarToken ,evaluacionesController.obtenerEstadoEntregas);
 
-router.post('/:codGrupo/entregables', verificarToken, verificarEstudiante, EvaluacionController.subirEntregable);
+router.post('/:codEvaluacion/entregables', verificarToken, verificarEstudiante, evaluacionesController.subirEntregable);
 
 module.exports = router;

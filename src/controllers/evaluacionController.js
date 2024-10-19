@@ -91,23 +91,22 @@ exports.obtenerEstadoEntregas = async (req, res) => {
 };
 
 exports.subirEntregable = async (req, res) => {
-    const { codGrupo } = req.params;
-    const {cod_evaluacion, cod_horario, observaciones_entregable, archivo_grupo, cod_clase} = req.body;
-    const codigo_sis = req.user.codigo_sis;
+    const { codEvaluacion } = req.params;
+    const archivo_grupo = req.body.archivo_grupo;
+    const codigo_sis = req.user.codigoSis;  
+    console.log('codigo_sis del estudiante:', codigo_sis);
 
-    if (!cod_evaluacion || !cod_horario || !archivo_grupo || !cod_clase) {
-        return res.status(400).json({ error: 'falta informacion necesaria' });
+    if (!archivo_grupo) {
+        return res.status(400).json({ error: 'El archivo del grupo no está presente' });
     }
+
     try {
         const result = await evaluacionesService.subirEntregable(
-            cod_horario, 
-            cod_evaluacion, 
-            codigo_sis, 
-            observaciones_entregable, 
-            cod_clase, 
-            archivo_grupo, 
-            codGrupo
+            codEvaluacion,
+            archivo_grupo,
+            codigo_sis
         );
+        
         res.status(201).json(result);
     } catch (error) {
         res.status(500).json({

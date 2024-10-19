@@ -2,6 +2,8 @@ const { pool } = require('../config/db');
 const planificacionService = require('../services/planificacionService');
 const temaService = require('../services/temaService');
 const entregableService = require('../services/entregableService');
+const grupoEmpresaService = require('../services/grupoEmpresaService');
+
 
 exports.getEvaluacionesByClass = async (cod_clase) => {
     const result = await pool.query(`
@@ -116,46 +118,42 @@ exports.obtenerEstadoEntregas = async (codDocente, codEvaluacion) => {
     }
 };
 
-
-// const { pool } = require('../config/db');
-
-exports.subirEntregable = async (cod_evaluacion, archivo_grupo, codigo_sis) => {
+const obtenerDocenteYClasePorEvaluacion = async (cod_evaluacion) => {
     try {
-        // Primero, obtenemos el cod_docente y cod_clase desde la evaluación
-        const evaluacionResult = await pool.query(
+        const result = await pool.query(
             `SELECT e.cod_docente, e.cod_clase
              FROM evaluacion e
              WHERE e.cod_evaluacion = $1`,
             [cod_evaluacion]
         );
-
-        if (evaluacionResult.rows.length === 0) {
+        if (result.rows.length === 0) {
             throw new Error('No se encontró la evaluación o los datos relacionados.');
         }
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error al obtener datos del docente y clase por evaluación', error);
+        throw error;
+    }
+};
 
-        const cod_docente = evaluacionResult.rows[0].cod_docente;
-        const cod_clase = evaluacionResult.rows[0].cod_clase;
+exports.subirEntregable = async (cod_evaluacion, archivo_grupo, codigo_sis) => {
+    try {
+        const { cod_docente, cod_clase } = await obtenerDocenteYClasePorEvaluacion(cod_evaluacion);
 
-        // Obtenemos el cod_grupoempresa y cod_horario del grupo empresa del estudiante
-        const grupoResult = await pool.query(
-            `SELECT ge.cod_grupoempresa, ge.cod_horario
-             FROM grupo_empresa ge
-             INNER JOIN grupo_estudiante ge_stu ON ge.cod_grupoempresa = ge_stu.cod_grupoempresa
-             WHERE ge_stu.codigo_sis = $1 AND ge.cod_clase = $2`,
-            [codigo_sis, cod_clase]
+        const { cod_grupoempresa, cod_horario } = await grupoEmpresaService.obtenerGrupoYHorarioDelEstudiante(codigo_sis, cod_clase);
+
+        const entregableExistente = await pool.query(
+            `SELECT * FROM entregable 
+             WHERE cod_evaluacion = $1 AND cod_grupoempresa = $2`,
+            [cod_evaluacion, cod_grupoempresa]
         );
 
-        if (grupoResult.rows.length === 0) {
-            throw new Error('No se encontró el grupo empresa asociado al estudiante.');
+        if (entregableExistente.rows.length > 0) {
+            return { message: 'Este entregable ya ha sido subido anteriormente' };
         }
-
-        const cod_grupoempresa = grupoResult.rows[0].cod_grupoempresa;
-        const cod_horario = grupoResult.rows[0].cod_horario; // Obtenemos el cod_horario aquí
-
-        // Convertir archivo a buffer (si está presente)
+        
         const archivoBuffer = archivo_grupo ? Buffer.from(archivo_grupo, 'base64') : null;
 
-        // Insertar el entregable en la base de datos
         const query = `
             INSERT INTO entregable (cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa)
             VALUES ($1, $2, $3, null, $4, $5, $6)

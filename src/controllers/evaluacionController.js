@@ -93,20 +93,18 @@ exports.obtenerEstadoEntregas = async (req, res) => {
 exports.subirEntregable = async (req, res) => {
     const { codEvaluacion } = req.params;
     const archivo_grupo = req.body.archivo_grupo;
-    const codigo_sis = req.user.codigoSis;  // Cambiado para coincidir con el token ("codigoSis" con "S" mayúscula)
+    const codigo_sis = req.user.codigoSis;  
     console.log('codigo_sis del estudiante:', codigo_sis);
 
-    // Verificar que el archivo esté presente
     if (!archivo_grupo) {
         return res.status(400).json({ error: 'El archivo del grupo no está presente' });
     }
 
     try {
-        // Llamar al servicio para subir el entregable
         const result = await evaluacionesService.subirEntregable(
             codEvaluacion,
             archivo_grupo,
-            codigo_sis  // Pasamos el código del estudiante
+            codigo_sis
         );
         
         res.status(201).json(result);

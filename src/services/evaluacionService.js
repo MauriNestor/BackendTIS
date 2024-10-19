@@ -117,32 +117,53 @@ exports.obtenerEstadoEntregas = async (codDocente, codEvaluacion) => {
 };
 
 
-exports.subirEntregable = async (cod_horario, cod_evaluacion, codigo_sis, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa) => {
+// const { pool } = require('../config/db');
+
+exports.subirEntregable = async (cod_evaluacion, archivo_grupo, codigo_sis) => {
     try {
-        const docenteResult = await pool.query(
-            `SELECT c.cod_docente
-             FROM clase c
-             INNER JOIN grupo_empresa ge ON ge.cod_clase = c.cod_clase
-             WHERE ge.cod_grupoempresa = $1`,
-            [cod_grupoempresa]
+        // Primero, obtenemos el cod_docente y cod_clase desde la evaluación
+        const evaluacionResult = await pool.query(
+            `SELECT e.cod_docente, e.cod_clase
+             FROM evaluacion e
+             WHERE e.cod_evaluacion = $1`,
+            [cod_evaluacion]
         );
 
-        if (docenteResult.rows.length === 0) {
-            throw new Error('No se encontró un docente asociado a este grupo o clase');
+        if (evaluacionResult.rows.length === 0) {
+            throw new Error('No se encontró la evaluación o los datos relacionados.');
         }
 
-        const cod_docente = docenteResult.rows[0].cod_docente;
+        const cod_docente = evaluacionResult.rows[0].cod_docente;
+        const cod_clase = evaluacionResult.rows[0].cod_clase;
+
+        // Obtenemos el cod_grupoempresa y cod_horario del grupo empresa del estudiante
+        const grupoResult = await pool.query(
+            `SELECT ge.cod_grupoempresa, ge.cod_horario
+             FROM grupo_empresa ge
+             INNER JOIN grupo_estudiante ge_stu ON ge.cod_grupoempresa = ge_stu.cod_grupoempresa
+             WHERE ge_stu.codigo_sis = $1 AND ge.cod_clase = $2`,
+            [codigo_sis, cod_clase]
+        );
+
+        if (grupoResult.rows.length === 0) {
+            throw new Error('No se encontró el grupo empresa asociado al estudiante.');
+        }
+
+        const cod_grupoempresa = grupoResult.rows[0].cod_grupoempresa;
+        const cod_horario = grupoResult.rows[0].cod_horario; // Obtenemos el cod_horario aquí
 
         // Convertir archivo a buffer (si está presente)
         const archivoBuffer = archivo_grupo ? Buffer.from(archivo_grupo, 'base64') : null;
 
+        // Insertar el entregable en la base de datos
         const query = `
             INSERT INTO entregable (cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            VALUES ($1, $2, $3, null, $4, $5, $6)
         `;
-        const values = [cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivoBuffer, cod_grupoempresa];
+        const values = [cod_horario, cod_evaluacion, cod_docente, cod_clase, archivoBuffer, cod_grupoempresa];
 
         await pool.query(query, values);
+
         return { message: 'Entregable subido exitosamente' };
     } catch (error) {
         console.error('Error al subir el entregable:', error);

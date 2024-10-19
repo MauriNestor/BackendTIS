@@ -15,6 +15,6 @@ router.post('/registrar-evaluacion', verificarToken, evaluacionesController.regi
 
 router.get('/:codEvaluacion/entregas',verificarToken ,EvaluacionController.obtenerEstadoEntregas);
 
-router.post('/:codGrupo/entregables', verificarToken, verificarEstudiante, EvaluacionController.subirEntregable);
+router.post('/:codEvaluacion/entregables', verificarToken, verificarEstudiante, EvaluacionController.subirEntregable);
 
 module.exports = router;

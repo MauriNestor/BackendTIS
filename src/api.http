@@ -67,14 +67,10 @@ GET http://localhost:3000/rubricas/4
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkyODU4NTgsImV4cCI6MTcyOTI4OTQ1OH0.n7JPKhdKXztDz3FT4ey5LoGsnuv6jrwYzytfV8pTbMk
 
 ### Subir Entregable
-POST http://localhost:3000/evaluaciones/5/entregables
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MjkyOTQ5NDUsImV4cCI6MTcyOTI5ODU0NX0.WbYVN_2u0jW2TnabIRZekB9bjgQKu5MYi5kI4tqAP_c
+POST http://localhost:3000/evaluaciones/4/entregables
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MjkzMDUyNTIsImV4cCI6MTcyOTMwODg1Mn0.DK0hca1APtZZ-5Ri8aB2IHLMOlBEbpplZ8WMfk4B_C0
 Content-Type: application/json
 
 {
-  "cod_evaluacion": 4,
-  "cod_horario": 7,
-  "observaciones_entregable": "Primera entrega del grupo CodeCraft para evaluación 4",
-  "archivo_grupo": "VGhpcyBpcyBhIHRlc3QgZmlsZSBjb250ZW50IGZvciB0aGUgZW50cmVnYWJsZS4=",
-  "cod_clase": "IVT8VE"
+  "archivo_grupo": "VGhpcyBpcyBhIHRlc3QgZmlsZSBjb250ZW50IGZvciB0aGUgZW50cmVnYWJsZS4="
 }

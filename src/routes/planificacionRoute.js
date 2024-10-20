@@ -20,6 +20,6 @@ router.get('/sprints/:codigoGrupo', planificacionController.obtenerSprint);
 router.get('/productbacklog/sin-sprint/:codigoGrupo', planificacionController.obtenerProductBacklog);
 
 // Ruta para obtener el product backlog de un grupo específico
-router.get('/productbacklog/:codigoGrupo', planificacionController.obtenerProductBacklog);
+router.get('/productbacklog/:codigoGrupo', planificacionController.obtenerTodoProductBacklog);
 
 module.exports = router;

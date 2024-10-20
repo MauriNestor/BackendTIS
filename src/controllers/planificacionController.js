@@ -97,11 +97,27 @@ const obtenerProductBacklog = async (req, res) => {
     }
 };
 
+const obtenerTodoProductBacklog = async (req, res) => {
+    const { codigoGrupo } = req.params;
+    
+    try {
+        const backlog = await planificacionService.obtenerTodoProductBacklog(codigoGrupo);
+        if (!backlog || backlog.length === 0) {
+            return res.status(200).json([]); // Devuelve un arreglo vacío si no hay requerimientos
+        }
+        return res.status(200).json(backlog);
+    } catch (err) {
+        console.error('Error al obtener Todo el product backlog', err);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
 module.exports = {
     registrarPlanificacion,
     registrarRequerimientos,
     registrarSprint,
     obtenerSprint,
     obtenerProductBacklog,
-    registrarRequerimientoASprint
+    registrarRequerimientoASprint,
+    obtenerTodoProductBacklog
 };

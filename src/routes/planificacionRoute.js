@@ -17,6 +17,9 @@ router.put('/requerimientos/registrar-sprint', planificacionController.registrar
 router.get('/sprints/:codigoGrupo', planificacionController.obtenerSprint);
 
 // Ruta para obtener el product backlog de un grupo específico
-router.get('/productbacklog/:codigoGrupo', planificacionController.obtenerProductBacklog);
+router.get('/productbacklog/sin-sprint/:codigoGrupo', planificacionController.obtenerProductBacklog);
+
+// Ruta para obtener el product backlog de un grupo específico
+router.get('/productbacklog/:codigoGrupo', planificacionController.obtenerTodoProductBacklog);
 
 module.exports = router;

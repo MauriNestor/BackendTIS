@@ -48,16 +48,13 @@ exports.registrarEvaluacion = async (req, res) => {
     if (req.user.role !== 'docente') {
         return res.status(403).json({ error: 'Acceso denegado' });
     }
-
     try {
-        // Si el archivo está presente en formato base64, conviértelo a buffer
         if (archivo) { 
-            archivoBuffer = Buffer.from(archivo, 'base64');  // Decodificar base64 a buffer
+            archivoBuffer = Buffer.from(archivo, 'base64');  
         }
 
-        const descripcionEvaluacion = descripcion || '';  // Si la descripción no está presente, se asigna un string vacío
+        const descripcionEvaluacion = descripcion || '';  
 
-        // Llamada al método del servicio para registrar la evaluación, incluyendo codigosGrupos
         const evaluacion = await evaluacionesService.registrarEvaluacion(
             codClase, tema, nombreEvaluacion, tipoEvaluacion, fechaEntrega, archivoBuffer, descripcionEvaluacion, codigosGrupos
         );

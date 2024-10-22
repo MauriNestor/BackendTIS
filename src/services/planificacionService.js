@@ -38,15 +38,16 @@ const registrarRequerimientos = async (codigoGrupo, requerimientos) => {
     }
 };
 
-const registrarSprint = async (codigoProduct, sprint, fechaInicio, fechaFin, objetivo) => {
+const registrarSprint = async (codigoGrupo, sprint, fechaInicio, fechaFin, objetivo) => {
     try {
         // Validar que los datos son del tipo correcto
-        if (typeof codigoProduct !== 'number' || typeof sprint !== 'number') {
-            throw new Error('codigoProduct y sprint deben ser números.');
+        if (typeof codigoGrupo !== 'number' || typeof sprint !== 'number') {
+            throw new Error('codigoGrupo y sprint deben ser números.');
         }
         if (!fechaInicio || !fechaFin) {
             throw new Error('fechaInicio y fechaFin son obligatorios.');
-        }
+        };
+        const codigoProduct = await obtenerCodProductBacklog(codigoGrupo); 
         const result = await pool.query(
             'INSERT INTO sprint (cod_product, sprint, fecha_inicio_sprint, fecha_fin_sprint, objetivo_sprint) VALUES ($1, $2, $3, $4, $5) RETURNING *',
             [codigoProduct, sprint, fechaInicio, fechaFin, objetivo]
@@ -127,6 +128,21 @@ const obtenerProductBacklog = async (codigoGrupo) => {
     }
 };
 
+const obtenerTodoProductBacklog = async (codigoGrupo) => {
+    try {
+        const result = await pool.query(
+            'SELECT * FROM requerimiento as r WHERE r.cod_product = (SELECT pb.cod_product FROM productbacklog as pb WHERE cod_grupoempresa = $1)',
+            [codigoGrupo]
+        );
+        const backlog = result.rows;
+        return backlog;
+
+    }  catch (err) {
+        console.error('Error al obtener todo el productbacklog', err);
+        throw err;
+    }
+};
+
 const obtenerCodProductBacklog = async (codigoGrupo) => {
     try {
         const result = await pool.query(
@@ -162,4 +178,5 @@ module.exports = {
     obtenerProductBacklog,
     getDocente,
     registrarRequerimientoASprint,
+    obtenerTodoProductBacklog,
 };

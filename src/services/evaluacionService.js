@@ -170,5 +170,20 @@ exports.subirEntregable = async (cod_evaluacion, archivo_grupo, codigo_sis) => {
     } catch (error) {
         console.error('Error al subir el entregable:', error);
         throw new Error('Error al subir el entregable');
+
+    }
+};
+
+exports.eliminarEvaluacion = async (codEvaluacion) => {
+    try {
+        const result = await pool.query(
+            `DELETE FROM evaluacion WHERE cod_evaluacion = $1`,
+            [codEvaluacion]
+        );
+
+        return { message: 'Evaluacion eliminada exitosamente' };
+    } catch (error) {
+        console.error('Error al subir el entregable:', error);
+        throw new Error('Error al subir el entregable');
     }
 };

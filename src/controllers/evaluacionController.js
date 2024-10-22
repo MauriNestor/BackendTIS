@@ -87,6 +87,7 @@ exports.obtenerEstadoEntregas = async (req, res) => {
     }
 };
 
+//mover desde aqui hasta el final a un nuevo controlador de entregables
 exports.subirEntregable = async (req, res) => {
     const { codEvaluacion } = req.params;
     const archivo_grupo = req.body.archivo_grupo;
@@ -110,5 +111,23 @@ exports.subirEntregable = async (req, res) => {
             error: 'Error al subir el entregable',
             detalle: error.message,
         });
+    }
+};
+exports.obtenerEntregablePorEvaluacion = async (req, res) => {
+    const { codEvaluacion } = req.params;
+    const codigo_sis = req.user.codigoSis;  
+
+    try {
+        const archivoBuffer = await evaluacionesService.obtenerEntregablePorEvaluacionYGrupo(codEvaluacion, codigo_sis);
+
+        if (archivoBuffer) {
+            const archivoBase64 = archivoBuffer.toString('base64');
+            res.status(200).json({ archivo: archivoBase64 });
+        } else {
+            res.status(404).json({ message: 'No se ha subido ningún entregable para esta evaluación' });
+        }
+    } catch (error) {
+        console.error('Error al obtener el entregable:', error);
+        res.status(500).json({ error: 'Error al obtener el entregable', detalle: error.message });
     }
 };

@@ -187,3 +187,25 @@ exports.eliminarEvaluacion = async (codEvaluacion) => {
         throw new Error('Error al subir el entregable');
     }
 };
+
+exports.obtenerEntregablePorEvaluacionYGrupo = async (codEvaluacion, codigoSis) => {
+    try {
+        const { cod_clase } = await obtenerDocenteYClasePorEvaluacion(codEvaluacion);
+
+        const { cod_grupoempresa } = await grupoEmpresaService.obtenerGrupoYHorarioDelEstudiante(codigoSis, cod_clase);
+        const entregableResult = await pool.query(
+            `SELECT archivo_grupo FROM entregable
+             WHERE cod_evaluacion = $1 AND cod_grupoempresa = $2`,
+            [codEvaluacion, cod_grupoempresa]
+        );
+
+        if (entregableResult.rows.length > 0) {
+            return entregableResult.rows[0].archivo_grupo; 
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error('Error en obtenerEntregablePorEvaluacionYGrupo:', error);
+        throw error;
+    }
+};

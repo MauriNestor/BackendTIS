@@ -2,6 +2,8 @@ const { pool } = require('../config/db');
 const planificacionService = require('../services/planificacionService');
 const temaService = require('../services/temaService');
 const entregableService = require('../services/entregableService');
+const grupoEmpresaService = require('../services/grupoEmpresaService');
+
 
 exports.getEvaluacionesByClass = async (cod_clase) => {
     const result = await pool.query(`
@@ -116,27 +118,61 @@ exports.obtenerEstadoEntregas = async (codDocente, codEvaluacion) => {
     }
 };
 
-exports.subirEntregable = async (cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa) => {
+const obtenerDocenteYClasePorEvaluacion = async (cod_evaluacion) => {
     try {
-        let archivoBuffer = null;
-
-        if (archivo_grupo) {
-            archivoBuffer = Buffer.from(archivo_grupo, 'base64');
+        const result = await pool.query(
+            `SELECT e.cod_docente, e.cod_clase
+             FROM evaluacion e
+             WHERE e.cod_evaluacion = $1`,
+            [cod_evaluacion]
+        );
+        if (result.rows.length === 0) {
+            throw new Error('No se encontró la evaluación o los datos relacionados.');
         }
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error al obtener datos del docente y clase por evaluación', error);
+        throw error;
+    }
+};
 
+exports.subirEntregable = async (cod_evaluacion, archivo_grupo, codigo_sis) => {
+    try {
+        const limiteTamanioArchivo = 10 * 1024 * 1024; 
+        const archivoBuffer = archivo_grupo ? Buffer.from(archivo_grupo, 'base64') : null;
+
+        if (archivoBuffer && archivoBuffer.length > limiteTamanioArchivo) {
+            return res.status(400).json({ error: `El archivo excede el límite de tamaño permitido de ${limiteTamanioArchivo / (1024 * 1024)} MB` });
+        }
+        const { cod_docente, cod_clase } = await obtenerDocenteYClasePorEvaluacion(cod_evaluacion);
+
+        const { cod_grupoempresa, cod_horario } = await grupoEmpresaService.obtenerGrupoYHorarioDelEstudiante(codigo_sis, cod_clase);
+
+        const entregableExistente = await pool.query(
+            `SELECT * FROM entregable 
+             WHERE cod_evaluacion = $1 AND cod_grupoempresa = $2`,
+            [cod_evaluacion, cod_grupoempresa]
+        );
+
+        if (entregableExistente.rows.length > 0) {
+            return { message: 'Este entregable ya ha sido subido anteriormente' };
+        }
+        
         const query = `
-        INSERT INTO entregable (cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+            INSERT INTO entregable (cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa)
+            VALUES ($1, $2, $3, null, $4, $5, $6)
         `;
-        const values = [cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivoBuffer, cod_grupoempresa];
+        const values = [cod_horario, cod_evaluacion, cod_docente, cod_clase, archivoBuffer, cod_grupoempresa];
 
         await pool.query(query, values);
+
         return { message: 'Entregable subido exitosamente' };
     } catch (error) {
         console.error('Error al subir el entregable:', error);
         throw new Error('Error al subir el entregable');
-    }   
-}
+
+    }
+};
 
 exports.eliminarEvaluacion = async (codEvaluacion) => {
     try {
@@ -149,5 +185,5 @@ exports.eliminarEvaluacion = async (codEvaluacion) => {
     } catch (error) {
         console.error('Error al subir el entregable:', error);
         throw new Error('Error al subir el entregable');
-    }   
-}
+    }
+};

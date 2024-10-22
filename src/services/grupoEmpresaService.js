@@ -117,4 +117,22 @@ const verificarNombreGrupo = async (nombreCorto) => {
   }
 };
 
+exports.obtenerGrupoYHorarioDelEstudiante = async (codigo_sis, cod_clase) => {
+  try {
+      const result = await pool.query(
+          `SELECT ge.cod_grupoempresa, ge.cod_horario
+           FROM grupo_empresa ge
+           INNER JOIN grupo_estudiante ge_stu ON ge.cod_grupoempresa = ge_stu.cod_grupoempresa
+           WHERE ge_stu.codigo_sis = $1 AND ge.cod_clase = $2`,
+          [codigo_sis, cod_clase]
+      );
+      if (result.rows.length === 0) {
+          throw new Error('No se encontró el grupo empresa asociado al estudiante.');
+      }
+      return result.rows[0];
+  } catch (error) {
+      console.error('Error al obtener el grupo empresa y horario del estudiante', error);
+      throw error;
+  }
+};
 

@@ -1,20 +1,47 @@
 const { pool } = require('../config/db');
 const detalleRubricaService = require('../services/detalleRubricaService');
 
-const getRubricasByEvaluacion = async (codEvaluacion) => {
-    const query = `
-      SELECT r.cod_rubrica, r.nombre_rubrica, r.descripcion_rubrica, r.peso,
-             dr.cod_detalle, dr.descripcion AS descripcion_detalle, dr.peso_rubrica, dr.clasificacion_rubrica
-      FROM rubrica r
-      INNER JOIN detalle_rubrica dr ON r.cod_rubrica = dr.cod_rubrica
-      WHERE r.cod_evaluacion = $1
-    `;
+const obtenerRubricasConDetalles = async (cod_evaluacion, cod_grupoempresa) => {
     try {
-      const { rows } = await pool.query(query, [codEvaluacion]);
-      return rows;
-    } catch (error) {
-      console.error('Error al obtener rúbricas:', error);
-      throw new Error('Error al obtener las rúbricas de la evaluación.');
+        const grupoResult = await pool.query(
+          `SELECT ge.cod_grupoempresa
+             FROM grupo_empresa ge
+             INNER JOIN clase c ON ge.cod_clase = c.cod_clase
+             INNER JOIN evaluacion e ON e.cod_clase = c.cod_clase
+             WHERE e.cod_evaluacion = $1 AND ge.cod_grupoempresa = $2`,
+            [cod_evaluacion, cod_grupoempresa]
+        );
+        if (grupoResult.rows.length === 0) {
+            throw new Error('No se encontró el grupo de empresa');
+        }
+        const rubricasResult = await pool.query(
+            `SELECT r.cod_rubrica, r.nombre_rubrica, r.descripcion_rubrica, r.peso
+             FROM rubrica r
+             WHERE r.cod_evaluacion = $1`,
+            [cod_evaluacion]
+        );
+        if (rubricasResult.rows.length === 0) {
+            throw new Error('No se encontraron rúbricas para la evaluación');
+        }
+        const rubricasConDetalles = await Promise.all(
+          rubricasResult.rows.map(async (rubrica) => {
+              const detallesResult = await pool.query(
+                  `SELECT d.cod_detalle, d.peso_rubrica, d.descripcion, d.clasificacion_rubrica
+                   FROM detalle_rubrica d
+                   WHERE d.cod_rubrica = $1`,
+                  [rubrica.cod_rubrica]
+              );
+
+              return {
+                  ...rubrica,
+                  detalles: detallesResult.rows
+              };
+          })
+      );
+      return rubricasConDetalles;
+      }catch(error){ 
+        console.error('Error al obtener rúbricas con detalles', error);
+        throw new Error('Error al obtener rúbricas con detalles');
     }
 };
 
@@ -52,6 +79,6 @@ const registrarRubrica = async (codEvaluacion, rubricas) => {
 
 
 module.exports = {
-  getRubricasByEvaluacion,
   registrarRubrica,
+  obtenerRubricasConDetalles
 };

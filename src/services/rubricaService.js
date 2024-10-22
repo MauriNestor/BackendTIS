@@ -18,27 +18,28 @@ const getRubricasByEvaluacion = async (codEvaluacion) => {
     }
 };
 
-const registrarRubrica = async (codEvaluacion, nombrerubrica, descripcionRubrica, pesoRubrica, detallesRubrica) => {
+const registrarRubrica = async (codEvaluacion, rubricas) => {
     const client = await pool.connect(); 
     try {
         await client.query('BEGIN'); 
-
-        const result = await client.query(
+        let codRubrica;
+        for (const rubrica of rubricas) { 
+          const result = await client.query(
             `INSERT INTO Rubrica (cod_evaluacion, nombre_rubrica, descripcion_rubrica, peso) 
             VALUES ($1, $2, $3, $4) RETURNING *;`,
-            [codEvaluacion, nombrerubrica, descripcionRubrica, pesoRubrica]
+            [codEvaluacion, rubrica.nombreRubrica, rubrica.descripcionRubrica, rubrica.pesoRubrica]
         );
-
-        const codRubrica = result.rows[0].cod_rubrica;
+        codRubrica = result.rows[0].cod_rubrica;
 
         // Verifica si se enviaron `detallesRubrica`
         let codigosDetalle;
-        if (detallesRubrica && detallesRubrica.length > 0) {
-            codigosDetalle = await detalleRubricaService.registrarDetallesRubrica(client, codEvaluacion, codRubrica, detallesRubrica);
+        if (rubrica.detallesRubrica && rubrica.detallesRubrica.length > 0) {
+            codigosDetalle = await detalleRubricaService.registrarDetallesRubrica(client, codEvaluacion, codRubrica, rubrica.detallesRubrica);
         }
-
-        await client.query('COMMIT');
-        return {codRubrica, codigosDetalle};
+      }
+        
+      await client.query('COMMIT');
+      //return {codRubrica, codigosDetalle};
 
     } catch (err) {
         await client.query('ROLLBACK'); // Revertir la transacción en caso de error

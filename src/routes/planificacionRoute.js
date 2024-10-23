@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const planificacionController = require('../controllers/planificacionController');
 const verificarToken = require('../middlewares/verificarToken');
+const verificarGrupoEstudiante = require('../middlewares/verificarGrupoEstudiante');
 
 // Ruta para registrar la planificación (product backlog)
 router.post('/productbacklog', verificarToken, planificacionController.registrarPlanificacion);
@@ -21,6 +22,6 @@ router.get('/sprints/:codigoGrupo',verificarToken, planificacionController.obten
 router.get('/productbacklog/sin-sprint/:codigoGrupo', verificarToken, planificacionController.obtenerProductBacklog);
 
 // Ruta para obtener el product backlog de un grupo específico
-router.get('/productbacklog/:codigoGrupo', verificarToken, planificacionController.obtenerTodoProductBacklog);
+router.get('/productbacklog/:codigoGrupo', verificarToken, verificarGrupoEstudiante, planificacionController.obtenerTodoProductBacklog);
 
 module.exports = router;

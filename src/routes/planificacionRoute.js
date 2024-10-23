@@ -16,10 +16,10 @@ router.post('/registrar-sprint', verificarToken, planificacionController.registr
 router.put('/requerimientos/registrar-sprint', verificarToken, planificacionController.registrarRequerimientoASprint);
 
 // Ruta para obtener los sprints y sus requerimientos correspondientes
-router.get('/sprints/:codigoGrupo',verificarToken, planificacionController.obtenerSprint);
+router.get('/sprints/:codigoGrupo',verificarToken, verificarGrupoEstudiante, planificacionController.obtenerSprint);
 
 // Ruta para obtener el product backlog de un grupo específico
-router.get('/productbacklog/sin-sprint/:codigoGrupo', verificarToken, planificacionController.obtenerProductBacklog);
+router.get('/productbacklog/sin-sprint/:codigoGrupo', verificarToken, verificarGrupoEstudiante, planificacionController.obtenerProductBacklog);
 
 // Ruta para obtener el product backlog de un grupo específico
 router.get('/productbacklog/:codigoGrupo', verificarToken, verificarGrupoEstudiante, planificacionController.obtenerTodoProductBacklog);

@@ -1,24 +1,26 @@
 const rubricaService = require('../services/rubricaService');
 
-const getRubricasDeEvaluacion = async (req, res) => {
-    const { codEvaluacion } = req.params;
-  
-    // Validar que codEvaluacion sea un número entero válido
-    if (!codEvaluacion || isNaN(codEvaluacion) || parseInt(codEvaluacion) <= 0) {
-      return res.status(400).json({ error: 'El código de evaluación debe ser un número válido' });
-    }
-  
+
+  const obtenerRubricasConDetalles = async (req, res) => {
+    const { codEvaluacion, codGrupo } = req.params;
     try {
-        const rubricas = await rubricaService.getRubricasByEvaluacion(parseInt(codEvaluacion));
-        res.status(200).json(rubricas);
-    } catch (error) {
-      console.error(error);
+      if (!codEvaluacion || !codGrupo) {
+        return res.status(400).json({
+          message: 'Datos incompletos. Asegúrate de proporcionar codEvaluacion y codGrupo.'
+        });
+      }
+  
+      const rubricas = await rubricaService.obtenerRubricasConDetalles(codEvaluacion, codGrupo);
+  
+      res.status(200).json(rubricas);
+    } catch {
+      console.error('Error al obtener las rúbricas con detalles', err);
       res.status(500).json({
-        error: 'Error al obtener las rúbricas de la evaluación',
+        message: 'Error al obtener las rúbricas con detalles',
         detalle: error.message,
       });
     }
-  };
+  }
 
   const registrarRubrica = async (req, res) => {
     const { codEvaluacion, rubricas } = req.body;
@@ -63,5 +65,5 @@ const getRubricasDeEvaluacion = async (req, res) => {
 
 module.exports = {
     registrarRubrica,
-    getRubricasDeEvaluacion,
+    obtenerRubricasConDetalles
 };

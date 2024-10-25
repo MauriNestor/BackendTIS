@@ -27,6 +27,7 @@ const app = express();
 
 app.use(
   cors({
+    origin: "https://mtis.netlify.app",
     origin: "http://localhost:5174",
     origin: "http://localhost:5173",
   })

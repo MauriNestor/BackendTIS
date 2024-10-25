@@ -1,8 +1,8 @@
-// src/routes/healthy.js
 const express = require('express');
 const router = express.Router();
-const { getHealthy } = require('../controllers/healthyController');
+const { getPrueba } = require('../controllers/healthyController');
 
-router.get('/', getHealthy);
+// Cambiar la ruta a "/"
+router.get('/', getPrueba);
 
 module.exports = router;

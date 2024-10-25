@@ -1,4 +1,4 @@
-const getHealthy = (req, res) => {
+const getPrueba = (req, res) => {
     res.status(200).json({
       health: 'live',
       status: 200,
@@ -6,5 +6,5 @@ const getHealthy = (req, res) => {
     });
   };
   
-module.exports = { getHealthy };
+module.exports = { getPrueba };
   

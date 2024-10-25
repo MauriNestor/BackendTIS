@@ -1,0 +1,82 @@
+### get de docentes
+GET http://localhost:3000/docentes
+
+### post de docentes
+POST http://localhost:3000/docentes/registro
+Content-Type: application/json
+
+{
+  "nombre": "Fisgón",
+  "apellido": "Rodeores",
+  "correo": "fisgon@umss.edu.bo",
+  "contraseña": "Contraseña1"
+}
+
+### post de estudiantes
+POST http://localhost:3000/estudiantes/registro
+Content-Type: application/json
+
+{
+  "codigo_sis": "201103820",
+  "nombres": "Ángel",
+  "apellidos": "García",
+  "correo": "201103820@est.umss.edu",
+  "contraseña": "Contraseña123"
+}
+
+### get de estudliantes
+GET http://localhost:3000/estudiantes
+
+### Crear una clase
+POST http://localhost:3000/clases/crear
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6NSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjc5MDk4MTcsImV4cCI6MTcyNzkxMzQxN30.TP5sF2BwyfGeXmeObFFHwCIx8WGee8kOn4i0KJeUdlo
+
+{
+  "nombreClase": "costos industriales",
+  "codGestion": 1
+}
+
+
+### Obtener todas las clases del docente
+GET http://localhost:3000/clases/obtener
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjg5NDQ1OTksImV4cCI6MTcyODk0ODE5OX0.a0GeG8m-3ZNufrnDYVL1idBZta_PFs6tU0UT4zAwlj8
+
+### Obtener gestiones
+GET http://localhost:3000/gestiones
+
+### Obtener evaluaciones por tema
+GET http://localhost:3000/evaluaciones/PRUEBA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkxMTk2MjgsImV4cCI6MTcyOTEyMzIyOH0.w7eUZNuQ3kOw9MUf98SIIz4PqReQF1LErhpsi-NOEX4
+
+### Obtener evaluaciones por id de evaluacion
+GET http://localhost:3000/evaluaciones/detalles/4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkxMzA2ODAsImV4cCI6MTcyOTEzNDI4MH0.h4DlRdV7dv5pxnfl1_eOp198jhTI8NKouRWPnmJCnhg
+
+
+### ver Grupos que entrega una evaluacion o no 
+GET http://localhost:3000/evaluaciones/4/entregas
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkxMTk2MjgsImV4cCI6MTcyOTEyMzIyOH0.w7eUZNuQ3kOw9MUf98SIIz4PqReQF1LErhpsi-NOEX4
+
+### Obtener Estudiantes de un Grupo
+GET http://localhost:3000/api/grupos/5/estudiantes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkyODIxNjEsImV4cCI6MTcyOTI4NTc2MX0.BgvkXfFOFd9upiIR64ZUZnsSvKwm8HaMaU5kgRh6th0
+
+### Obtener Rúbricas y Detalles de una Evaluación para un Grupo
+GET http://localhost:3000/rubricas/9/grupos/3/rubricas
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjk2MjcwNTYsImV4cCI6MTcyOTYzMDY1Nn0.XB9hZddEUBJljfW3qSb4SozZgSgLX0oTAziQ2VmGXxU
+Content-Type: application/json
+
+
+### Subir Entregable
+POST http://localhost:3000/evaluaciones/4/entregables
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MjkzMDUyNTIsImV4cCI6MTcyOTMwODg1Mn0.DK0hca1APtZZ-5Ri8aB2IHLMOlBEbpplZ8WMfk4B_C0
+Content-Type: application/json
+
+{
+  "archivo_grupo": "VGhpcyBpcyBhIHRlc3QgZmlsZSBjb250ZW50IGZvciB0aGUgZW50cmVnYWJsZS4="
+}
+
+### Obtener Entregable de una Evaluación
+GET http://localhost:3000/evaluaciones/4/entregado
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MjkzNzYwOTIsImV4cCI6MTcyOTM3OTY5Mn0.hFDvjyhqhPV-d6mNdOg0j-Iczv17_y3PkkjwnI7O1kk

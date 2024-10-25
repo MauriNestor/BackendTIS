@@ -16,7 +16,6 @@ const registroGrupoRoutes = require("./routes/registroGrupoRoutes");
 const evaluacionRoutes = require('./routes/evaluacionRoutes');
 const temaRoutes = require('./routes/temaRoute');
 const rubricaRoutes = require('./routes/rubricaRoutes');
-const captchaRoutes = require('./routes/verifyCaptchaRoute');
 
 const db = require("./config/db");
 
@@ -52,7 +51,7 @@ app.use("/gestiones", gestionRoutes);
 app.use('/evaluaciones', evaluacionRoutes);
 app.use('/temas', temaRoutes);
 app.use('/rubricas', rubricaRoutes);
-app.use('/captcha', captchaRoutes);
+
 // Manejo de rutas no encontradas
 app.use((req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });

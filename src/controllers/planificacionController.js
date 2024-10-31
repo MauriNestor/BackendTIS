@@ -36,10 +36,10 @@ const registrarRequerimientos = async (req, res) => {
 // Registrar sprint
 const registrarSprint = async (req, res) => {
   try {
-    const { cod_grupoempresa, sprint, fechaInicio, fechaFin, objetivo } =
+    const { codigoGrupo, sprint, fechaInicio, fechaFin, objetivo } =
       req.body;
     const result = await planificacionService.registrarSprint(
-      Number(cod_grupoempresa),
+      Number(codigoGrupo),
       Number(sprint),
       fechaInicio,
       fechaFin,

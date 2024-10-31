@@ -32,7 +32,6 @@ app.use(
     credentials: true
   })
 );
-
 app.use(express.json({ limit: "10mb" })); // Para parsear JSON con límite
 app.use(express.urlencoded({ limit: "10mb", extended: true })); // Para parsear JSON
 

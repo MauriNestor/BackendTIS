@@ -2,7 +2,7 @@ const { pool } = require('../config/db');
 const jwt = require('jsonwebtoken');
 
 const verificarGrupoEstudiante = async (req, res, next) => {
-    const { codigoGrupo } = req.params;
+    const codigoGrupo = req.params.codigoGrupo || req.body.codigoGrupo;
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
@@ -23,7 +23,6 @@ const verificarGrupoEstudiante = async (req, res, next) => {
           }
         }
         
-    
         next();
     } catch (error) {
       res.status(500).json({

@@ -12,14 +12,17 @@ const verificarGrupoEstudiante = async (req, res, next) => {
         // Adjuntar la información del usuario decodificada al objeto 'req'
         req.user = decoded; 
         const codigoSis = req.user.codigoSis;
-        const sisResult = await pool.query('SELECT * FROM grupo_estudiante WHERE CODIGO_SIS = $1 AND COD_GRUPOEMPRESA = $2', [codigoSis, codigoGrupo]);
-        
-        if (sisResult.rows.length === 0) {
-            return res.status(400).json({
-            error: 'El estudiante no se encuentra en este grupo',
-            detalle: 'El estudiante no se encuentra en este grupo'
-            });
+        if(req.user.role !== 'docente'){
+          const sisResult = await pool.query('SELECT * FROM grupo_estudiante WHERE CODIGO_SIS = $1 AND COD_GRUPOEMPRESA = $2', [codigoSis, codigoGrupo]);
+          
+          if (sisResult.rows.length === 0) {
+              return res.status(400).json({
+              error: 'El estudiante no se encuentra en este grupo',
+              detalle: 'El estudiante no se encuentra en este grupo'
+              });
+          }
         }
+        
     
         next();
     } catch (error) {

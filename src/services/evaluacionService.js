@@ -3,6 +3,7 @@ const planificacionService = require('../services/planificacionService');
 const temaService = require('../services/temaService');
 const entregableService = require('../services/entregableService');
 const grupoEmpresaService = require('../services/grupoEmpresaService');
+const rubricaService = require('../services/rubricaService');
 
 
 exports.getEvaluacionesByClass = async (cod_clase) => {
@@ -205,5 +206,53 @@ exports.obtenerEntregablePorEvaluacionYGrupo = async (codEvaluacion, codigoSis) 
     } catch (error) {
         console.error('Error en obtenerEntregablePorEvaluacionYGrupo:', error);
         throw error;
+    }
+};
+exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis) => {
+    try {
+        // Obtener las rúbricas de la evaluación
+        const rubricasResult = await pool.query(
+            `SELECT r.cod_rubrica, r.nombre_rubrica, r.descripcion_rubrica, r.peso
+             FROM rubrica r
+             WHERE r.cod_evaluacion = $1`,
+            [cod_evaluacion]
+        );
+
+        if (rubricasResult.rows.length === 0) {
+            throw new Error('No se encontraron rúbricas para la evaluación');
+        }
+        const rubricasConCalificaciones = await Promise.all(
+            rubricasResult.rows.map(async (rubrica) => {
+                const calificacionResult = await pool.query(
+                    `SELECT cr.calificacion
+                     FROM calificacion_rubrica cr
+                     WHERE cr.cod_rubrica = $1 AND cr.cod_evaluacion = $2 AND cr.codigo_sis = $3`,
+                    [rubrica.cod_rubrica, cod_evaluacion, codigo_sis]
+                );
+
+                const calificacion = calificacionResult.rows.length > 0
+                    ? calificacionResult.rows[0]
+                    : { calificacion: null, observacion: null };
+
+                return {
+                    ...rubrica,
+                    calificacion: calificacion.calificacion,
+                    observacion: calificacion.observacion
+                };
+            })
+        );
+
+        // Calcular la nota total sumando las calificaciones de cada rúbrica
+        const notaTotal = rubricasConCalificaciones.reduce((acc, rubrica) => {
+            return acc + (rubrica.calificacion || 0);
+        }, 0);
+
+        return {
+            nota_total: notaTotal,
+            rubricas: rubricasConCalificaciones
+        };
+    } catch (error) {
+        console.error('Error al obtener las notas detalladas del estudiante:', error);
+        throw new Error('Error al obtener las notas detalladas del estudiante');
     }
 };

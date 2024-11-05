@@ -45,7 +45,7 @@ const obtenerDetallesPorRubrica = async (cod_rubrica) => {
 };
 const obtenerCalificacionPorEstudianteYRubrica = async (cod_rubrica, cod_evaluacion, codigo_sis) => {
     const result = await pool.query(
-        `SELECT cr.calificacion, cr.observacion
+        `SELECT cr.calificacion
          FROM calificacion_rubrica cr
          WHERE cr.cod_rubrica = $1 AND cr.cod_evaluacion = $2 AND cr.codigo_sis = $3`,
         [cod_rubrica, cod_evaluacion, codigo_sis]

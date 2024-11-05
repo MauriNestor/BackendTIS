@@ -1,4 +1,5 @@
 const { pool } = require('../config/db');
+const planificacionService = require('../services/planificacionService');
 
 const calificarEstudiante = async (codEvaluacion, codigoSis, notas, comentario) => {
     try {
@@ -18,7 +19,7 @@ const calificarEstudiante = async (codEvaluacion, codigoSis, notas, comentario) 
         console.error('Error al crear entregable', err);
         throw err;
     }
-};
+}; 
 
 const comentarIndividual = async (codEvaluacion, codigoSis, comentario) => {
     try {
@@ -35,6 +36,25 @@ const comentarIndividual = async (codEvaluacion, codigoSis, comentario) => {
     }
 };
 
+const retroalimentar = async (codEvaluacion, codClase, codGrupo, comentario) => {
+    try {
+        const codDocente = await planificacionService.getDocente(codClase);
+        const fecha = new Date().toLocaleDateString('en-CA');
+        const result = await pool.query(
+            `INSERT INTO retroalimentacion_grupal (cod_docente, cod_clase, cod_grupoempresa, cod_evaluacion, comentario, fecha_registro) 
+            VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`,
+            [codDocente, codClase, codGrupo, codEvaluacion, comentario, fecha]
+        );
+        console.log(result.rows[0].cod_retroalimentacion);
+        return result.rows[0].cod_retroalimentacion;
+        
+    } catch (err) {
+        console.error('Error al crear entregable', err);
+        throw err;
+    }
+};
+
 module.exports = {
     calificarEstudiante,
+    retroalimentar,
 };

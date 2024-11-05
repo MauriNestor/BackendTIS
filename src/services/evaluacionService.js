@@ -154,19 +154,17 @@ exports.subirEntregable = async (cod_evaluacion, archivo_grupo, codigo_sis) => {
             [cod_evaluacion, cod_grupoempresa]
         );
 
-        if (entregableExistente.rows.length > 0) {
-            return { message: 'Este entregable ya ha sido subido anteriormente' };
+        if (entregableExistente.rows.length === 0) {
+            return { error: 'No se encontró el entregable asignado para este grupo y evaluación' };
         }
-        
-        const query = `
-            INSERT INTO entregable (cod_horario, cod_evaluacion, cod_docente, observaciones_entregable, cod_clase, archivo_grupo, cod_grupoempresa)
-            VALUES ($1, $2, $3, null, $4, $5, $6)
-        `;
-        const values = [cod_horario, cod_evaluacion, cod_docente, cod_clase, archivoBuffer, cod_grupoempresa];
+        await pool.query(
+            `UPDATE entregable
+             SET archivo_grupo = $1
+             WHERE cod_evaluacion = $2 AND cod_grupoempresa = $3`,
+            [archivoBuffer, cod_evaluacion, cod_grupoempresa]
+        );
 
-        await pool.query(query, values);
-
-        return { message: 'Entregable subido exitosamente' };
+        return { message: 'Archivo del entregable actualizado exitosamente' };
     } catch (error) {
         console.error('Error al subir el entregable:', error);
         throw new Error('Error al subir el entregable');

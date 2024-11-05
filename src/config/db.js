@@ -9,10 +9,10 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
-  ssl: {
-       rejectUnauthorized: true,
-       ca: fs.readFileSync(path.join(__dirname, 'ca-certificate.crt')).toString(),
-   },
+  // ssl: {
+  //      rejectUnauthorized: true,
+  //      ca: fs.readFileSync(path.join(__dirname, 'ca-certificate.crt')).toString(),
+  //  },
 });
 
 // Conectar a la base de datos

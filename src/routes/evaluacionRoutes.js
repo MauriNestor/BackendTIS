@@ -13,6 +13,8 @@ router.post('/registrar-evaluacion', verificarToken, evaluacionesController.regi
 
 router.get('/:codEvaluacion/entregas',verificarToken ,evaluacionesController.obtenerEstadoEntregas);
 
+router.get('/:codEvaluacion/tipo', verificarToken, evaluacionesController.getTipoEvaluacion);
+
 //mover desde aqui hasta el final a un nuevo router de entregables
 router.post('/:codEvaluacion/entregables', verificarToken, verificarEstudiante, evaluacionesController.subirEntregable);
 

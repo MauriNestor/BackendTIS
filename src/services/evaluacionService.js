@@ -207,3 +207,23 @@ exports.obtenerEntregablePorEvaluacionYGrupo = async (codEvaluacion, codigoSis) 
         throw error;
     }
 };
+
+exports.getTipoEvaluacion = async (codEvaluacion) => {
+    try {
+        const result = await pool.query(
+            `SELECT tipo_evaluacion FROM evaluacion
+             WHERE cod_evaluacion = $1`,
+            [codEvaluacion]
+        );
+        if (result.rows.length === 0) {
+            console.error(`No se encontró el tipo de evaluación para cod_evaluacion: ${codEvaluacion}`);
+            return null; // O lanza un error personalizado si prefieres
+        }
+        
+        return result.rows[0].tipo_evaluacion; 
+
+    } catch (error) {
+        console.error('Error al obterner el tipo de evaluacion:', error);
+        throw error;
+    }
+};

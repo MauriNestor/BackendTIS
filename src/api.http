@@ -114,3 +114,8 @@ Content-Type: application/json
   "hora_fin": "11:00:00",
   "dia_horario": "Viernes"
 }
+
+### Obtener Estudiantes de un Grupo (Incluye al propio estudiante)
+GET http://localhost:3000/api/grupos/17/estudiantes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzA4NTI1MDIsImV4cCI6MTczMDg1NjEwMn0.upV5xDG3l_EMT6etrvd_M2WYpWh4D529rQ5D-eR4G_0
+Content-Type: application/json

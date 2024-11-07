@@ -68,3 +68,16 @@ exports.getEstudiantes = async (codigoGrupo) => {
       throw new Error("Error al obtener los estudiantes sin grupo.");
   }
 };
+
+exports.getCodGrupo = async (codigoSis, codClase) => {
+    try {
+      const query = `
+      SELECT cod_grupoempresa
+      FROM grupo_estudiante
+      WHERE codigo_sis = $1 AND cod_clase = $2 `;
+      const result = await pool.query(query, [codigoSis, codClase]);
+      return result.rows[0].cod_grupoempresa;
+    } catch (error) {
+        throw new Error("Error al obtener el codigo del grupo del estudiante.");
+    }
+  };

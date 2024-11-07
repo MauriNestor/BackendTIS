@@ -113,6 +113,7 @@ exports.subirEntregable = async (req, res) => {
         });
     }
 };
+
 exports.obtenerEntregablePorEvaluacion = async (req, res) => {
     const { codEvaluacion } = req.params;
     const codigo_sis = req.user.codigoSis;  
@@ -129,6 +130,20 @@ exports.obtenerEntregablePorEvaluacion = async (req, res) => {
     } catch (error) {
         console.error('Error al obtener el entregable:', error);
         res.status(500).json({ error: 'Error al obtener el entregable', detalle: error.message });
+    }
+};
+
+
+exports.getTipoEvaluacion = async (req, res) => {
+    const { codEvaluacion } = req.params;
+
+    try {
+        const result = await evaluacionesService.getTipoEvaluacion(codEvaluacion);
+
+        res.status(201).json(result);
+    } catch (error) {
+        console.error('Error al obtener el tipo de evaluacion:', error);
+        res.status(500).json({ error: 'Error al obtener el tipo de evaluacion', detalle: error.message });
     }
 };
 

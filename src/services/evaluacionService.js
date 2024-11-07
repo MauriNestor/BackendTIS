@@ -3,6 +3,7 @@ const planificacionService = require('../services/planificacionService');
 const temaService = require('../services/temaService');
 const entregableService = require('../services/entregableService');
 const grupoEmpresaService = require('../services/grupoEmpresaService');
+const evaluacionCruzadaService = require('../services/evaluacionCruzadaService');
 
 
 exports.getEvaluacionesByClass = async (cod_clase) => {
@@ -59,6 +60,10 @@ exports.registrarEvaluacion = async (codClase, tema, nombreEvaluacion, tipoEvalu
         );
         codEvaluacion = result.rows[0].cod_evaluacion;
         // Verifica si se enviaron `codigosGrupos`
+        if (tipoEvaluacion === "Evaluación cruzada") {
+            const asignacionGrupos = await evaluacionCruzadaService.registrarEvalCruzada(codEvaluacion, codClase);
+            return codEvaluacion;
+        }
         if (codigosGrupos && codigosGrupos.length > 0) {
             // Realiza la asignación de evaluación
             const asignacionExitosa = await entregableService.asignarEvaluacion(codDocente, codClase, codEvaluacion, codigosGrupos);

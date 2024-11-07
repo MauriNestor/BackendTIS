@@ -10,8 +10,5 @@ router.get("/:codigoClase", verificarToken, registroGrupoController.getAllGrupos
 router.get("/:codigoClase/estudiantes-sin-grupo", verificarToken, registroGrupoController.getEstudiantesSinGruposEmpresa);
 router.get("/grupo/:codigoGrupo",verificarToken, verificarGrupoEstudiante, registroGrupoController.getGrupoEmpresa);
 
-// Ruta para obtener los estudiantes de un grupo
-router.get('/:codGrupo/estudiantes', verificarToken, registroGrupoController.getEstudiantesDeGrupo);
-
 
 module.exports = router;

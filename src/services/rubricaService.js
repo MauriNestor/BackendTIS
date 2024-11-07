@@ -71,15 +71,50 @@ const obtenerRubricasConCalificaciones = async (cod_evaluacion, cod_grupoempresa
         await verificarGrupoAsociadoAEvaluacion(cod_evaluacion, cod_grupoempresa);
 
         const rubricas = await obtenerRubricasPorEvaluacion(cod_evaluacion);
+
         const estudiantes = await grupoEstudianteService.getEstudiantes(cod_grupoempresa);
+
+        const retroalimentacionGrupalResult = await pool.query(
+            `SELECT comentario 
+             FROM retroalimentacion_grupal 
+             WHERE cod_evaluacion = $1 AND cod_grupoempresa = $2`,
+            [cod_evaluacion, cod_grupoempresa]
+        );
+        const retroalimentacionGrupal = retroalimentacionGrupalResult.rows[0]?.comentario || null;
 
         const rubricasConCalificaciones = await Promise.all(
             rubricas.map(async (rubrica) => {
                 const detalles = await obtenerDetallesPorRubrica(rubrica.cod_rubrica);
-                const estudiantesConCalificacion = await obtenerEstudiantesConCalificaciones(
-                    estudiantes,
-                    rubrica,
-                    cod_evaluacion
+
+                const estudiantesConCalificacion = await Promise.all(
+                    estudiantes.map(async (estudiante) => {
+                        const calificacionResult = await pool.query(
+                            `SELECT cr.calificacion
+                             FROM calificacion_rubrica cr
+                             WHERE cr.cod_rubrica = $1 AND cr.cod_evaluacion = $2 AND cr.codigo_sis = $3`,
+                            [rubrica.cod_rubrica, cod_evaluacion, estudiante.codigo_sis]
+                        );
+
+                        const calificacion = calificacionResult.rows.length > 0
+                            ? calificacionResult.rows[0]
+                            : { calificacion: null, observacion: null };
+
+                        const retroalimentacionResult = await pool.query(
+                            `SELECT comentario_individual
+                             FROM retroalimentacion_individual
+                             WHERE cod_evaluacion = $1 AND codigo_sis = $2`,
+                            [cod_evaluacion, estudiante.codigo_sis]
+                        );
+
+                        const retroalimentacionIndividual = retroalimentacionResult.rows[0]?.comentario_individual || null;
+
+                        return {
+                            ...estudiante,
+                            calificacion: calificacion.calificacion,
+                            observacion: calificacion.observacion,
+                            retroalimentacion_individual: retroalimentacionIndividual
+                        };
+                    })
                 );
 
                 return {
@@ -90,12 +125,16 @@ const obtenerRubricasConCalificaciones = async (cod_evaluacion, cod_grupoempresa
             })
         );
 
-        return rubricasConCalificaciones;
+        return {
+            rubricas: rubricasConCalificaciones,
+            retroalimentacion_grupal: retroalimentacionGrupal
+        };
     } catch (error) {
-        console.error('Error al obtener rúbricas con calificaciones', error);
-        throw new Error('Error al obtener rúbricas con calificaciones');
+        console.error('Error al obtener rúbricas con calificaciones y retroalimentación:', error);
+        throw new Error('Error al obtener rúbricas con calificaciones y retroalimentación');
     }
 };
+
 
 const registrarRubrica = async (codEvaluacion, rubricas) => {
     const client = await pool.connect(); 

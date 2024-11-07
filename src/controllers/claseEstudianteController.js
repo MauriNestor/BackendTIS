@@ -1,5 +1,5 @@
 const claseEstudianteService = require('../services/claseEstudianteService');
-
+const grupoEstudianteService = require('../services/grupoEstudianteService');
 const unirseClase = async (req, res) => {
     const { token, codigoClase } = req.body; // Obtener datos del cuerpo de la solicitud
 

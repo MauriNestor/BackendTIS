@@ -4,6 +4,8 @@ const temaService = require('../services/temaService');
 const entregableService = require('../services/entregableService');
 const grupoEmpresaService = require('../services/grupoEmpresaService');
 const evaluacionCruzadaService = require('../services/evaluacionCruzadaService');
+const rubricaService = require('../services/rubricaService');
+
 
 
 exports.getEvaluacionesByClass = async (cod_clase) => {
@@ -213,6 +215,7 @@ exports.obtenerEntregablePorEvaluacionYGrupo = async (codEvaluacion, codigoSis) 
     }
 };
 
+
 exports.getTipoEvaluacion = async (codEvaluacion) => {
     try {
         const result = await pool.query(
@@ -232,3 +235,49 @@ exports.getTipoEvaluacion = async (codEvaluacion) => {
         throw error;
     }
 };
+
+exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis) => {
+    try {
+        const rubricas = await rubricaService.obtenerRubricasPorEvaluacion(cod_evaluacion);
+
+        const rubricasConCalificacionesYDetalles = await Promise.all(
+            rubricas.map(async (rubrica) => {
+
+                const calificacionResult = await pool.query(
+                    `SELECT cr.calificacion, cr.observacion
+                     FROM calificacion_rubrica cr
+                     WHERE cr.cod_rubrica = $1 AND cr.cod_evaluacion = $2 AND cr.codigo_sis = $3`,
+                    [rubrica.cod_rubrica, cod_evaluacion, codigo_sis]
+                );
+
+                const calificacion = calificacionResult.rows.length > 0
+                    ? calificacionResult.rows[0]
+                    : { calificacion: null, observacion: null };
+
+                // Obtener los detalles de la rúbrica usando el método reutilizable
+                const detalles = await rubricaService.obtenerDetallesPorRubrica(rubrica.cod_rubrica);
+
+                return {
+                    ...rubrica,
+                    calificacion: calificacion.calificacion,
+                    observacion: calificacion.observacion,
+                    detalles: detalles
+                };
+            })
+        );
+
+        // Calcular la nota total sumando las calificaciones de cada rúbrica
+        const notaTotal = rubricasConCalificacionesYDetalles.reduce((acc, rubrica) => {
+            return acc + (rubrica.calificacion || 0);
+        }, 0);
+
+        return {
+            nota_total: notaTotal,
+            rubricas: rubricasConCalificacionesYDetalles
+        };
+    } catch (error) {
+        console.error('Error al obtener las notas detalladas del estudiante:', error);
+        throw new Error('Error al obtener las notas detalladas del estudiante');
+    }
+};
+

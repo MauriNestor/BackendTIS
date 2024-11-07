@@ -133,6 +133,7 @@ exports.obtenerEntregablePorEvaluacion = async (req, res) => {
     }
 };
 
+
 exports.getTipoEvaluacion = async (req, res) => {
     const { codEvaluacion } = req.params;
 
@@ -143,5 +144,21 @@ exports.getTipoEvaluacion = async (req, res) => {
     } catch (error) {
         console.error('Error al obtener el tipo de evaluacion:', error);
         res.status(500).json({ error: 'Error al obtener el tipo de evaluacion', detalle: error.message });
+    }
+};
+
+exports.obtenerNotasDetalladasEstudiante = async (req, res) => {
+    const { codEvaluacion } = req.params;
+    const codigo_sis = req.user.codigoSis; 
+    try {
+        const notasDetalladas = await evaluacionesService.obtenerNotasDetalladasEstudiante(codEvaluacion, codigo_sis);
+
+        res.status(200).json(notasDetalladas);
+    } catch (error) {
+        console.error('Error al obtener la nota total del estudiante:', error);
+        res.status(500).json({
+            message: 'Error al obtener la nota total del estudiante',
+            detalle: error.message,
+        });
     }
 };

@@ -19,4 +19,7 @@ router.get('/:codEvaluacion/tipo', verificarToken, evaluacionesController.getTip
 router.post('/:codEvaluacion/entregables', verificarToken, verificarEstudiante, evaluacionesController.subirEntregable);
 
 router.get('/:codEvaluacion/entregado', verificarToken, evaluacionesController.obtenerEntregablePorEvaluacion);
+
+router.get('/:codEvaluacion/nota-total', verificarToken, evaluacionesController.obtenerNotasDetalladasEstudiante);
+
 module.exports = router;

@@ -1,6 +1,5 @@
 const rubricaService = require('../services/rubricaService');
 
-
   const obtenerRubricasConDetalles = async (req, res) => {
     const { codEvaluacion, codGrupo } = req.params;
     try {
@@ -21,6 +20,27 @@ const rubricaService = require('../services/rubricaService');
       });
     }
   }
+
+  const obtenerCalificacionesPorEvaluacionYGrupo = async (req, res) => {
+    const { codEvaluacion, codGrupo } = req.params;
+
+    try {
+        if (!codEvaluacion || !codGrupo) {
+            return res.status(400).json({
+                message: 'Datos incompletos. Asegúrate de proporcionar codEvaluacion y codGrupo.'
+            });
+        }
+        const estudiantesConCalificaciones = await rubricaService.obtenerRubricasConCalificaciones(codEvaluacion, codGrupo);
+
+        res.status(200).json(estudiantesConCalificaciones);
+    } catch (error) {
+        console.error('Error al obtener las calificaciones por evaluación y grupo:', error);
+        res.status(500).json({
+            message: 'Error al obtener las calificaciones por evaluación y grupo',
+            detalle: error.message,
+        });
+    }
+  };
 
   const registrarRubrica = async (req, res) => {
     const { codEvaluacion, rubricas } = req.body;
@@ -65,5 +85,6 @@ const rubricaService = require('../services/rubricaService');
 
 module.exports = {
     registrarRubrica,
-    obtenerRubricasConDetalles
+    obtenerRubricasConDetalles,
+    obtenerCalificacionesPorEvaluacionYGrupo
 };

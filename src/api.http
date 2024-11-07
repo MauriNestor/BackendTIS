@@ -59,14 +59,13 @@ GET http://localhost:3000/evaluaciones/4/entregas
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkxMTk2MjgsImV4cCI6MTcyOTEyMzIyOH0.w7eUZNuQ3kOw9MUf98SIIz4PqReQF1LErhpsi-NOEX4
 
 ### Obtener Estudiantes de un Grupo
-GET http://localhost:3000/api/grupos/5/estudiantes
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkyODIxNjEsImV4cCI6MTcyOTI4NTc2MX0.BgvkXfFOFd9upiIR64ZUZnsSvKwm8HaMaU5kgRh6th0
+GET http://localhost:3000/api/grupos/14/estudiantes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzA0NzU4NjcsImV4cCI6MTczMDQ3OTQ2N30.04HkVkEp4NS2vjUdeHVgM9ykQGslKWrp0hgOT8hTvgo
 
-### Obtener Rúbricas y Detalles de una Evaluación para un Grupo
-GET http://localhost:3000/rubricas/9/grupos/3/rubricas
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3Mjk2MjcwNTYsImV4cCI6MTcyOTYzMDY1Nn0.XB9hZddEUBJljfW3qSb4SozZgSgLX0oTAziQ2VmGXxU
+### Obtener Rúbricas y Detalles y notas de una rubrica para un Grupo y estudiante
+GET http://localhost:3000/rubricas/3/grupos/14/calificaciones
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzA0NzU4NjcsImV4cCI6MTczMDQ3OTQ2N30.04HkVkEp4NS2vjUdeHVgM9ykQGslKWrp0hgOT8hTvgo
 Content-Type: application/json
-
 
 ### Subir Entregable
 POST http://localhost:3000/evaluaciones/4/entregables
@@ -103,4 +102,15 @@ Content-Type: application/json
   "apellido": "Rodeores",
   "correo": "fisgon@umss.edu.bo",
   "contraseña": "Contraseña1"
+}
+
+### Prueba de Registrar Horario
+POST http://localhost:3000/clases/ABCDE/horarios
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzAyNTM0NTksImV4cCI6MTczMDI1NzA1OX0.vePd49e3jC7QbfFEtNPTFqKZoBNdBaR3bOaRVrXLyKM
+Content-Type: application/json
+
+{
+  "hora_inicio": "09:00:00",
+  "hora_fin": "11:00:00",
+  "dia_horario": "Viernes"
 }

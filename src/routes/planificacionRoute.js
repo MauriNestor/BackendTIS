@@ -8,10 +8,11 @@ const verificarGrupoEstudiante = require('../middlewares/verificarGrupoEstudiant
 router.post('/productbacklog', verificarToken, planificacionController.registrarPlanificacion);
 
 // Ruta para registrar los requerimientos
-router.post('/requerimientos',verificarToken, planificacionController.registrarRequerimientos);
+router.post('/requerimientos',verificarToken, verificarGrupoEstudiante, planificacionController.registrarRequerimientos);
 
 // Ruta para registrar el sprint
-router.post('/registrar-sprint', verificarToken, planificacionController.registrarSprint);
+router.post('/registrar-sprint', verificarToken, verificarGrupoEstudiante, planificacionController.registrarSprint);
+
 // Ruta para registrar una liusta de requerimientos a un sprint
 router.put('/requerimientos/registrar-sprint', verificarToken, planificacionController.registrarRequerimientoASprint);
 

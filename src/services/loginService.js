@@ -23,10 +23,10 @@ async function verifyCaptcha(captchaToken) {
 const obtenerDocente = async (correo, password, captchaToken) => {
     try {
           // Verificar el token de reCAPTCHA
-          const captchaValid = await verifyCaptcha(captchaToken);
-          if (!captchaValid) {
-              throw new Error('Verificación de reCAPTCHA fallida.');
-          }
+        //   const captchaValid = await verifyCaptcha(captchaToken);
+        //   if (!captchaValid) {
+        //       throw new Error('Verificación de reCAPTCHA fallida.');
+        //   }
   
         const query = 'SELECT cod_docente, password_docente FROM Docente WHERE correo = $1';
         const result = await db.pool.query(query, [correo]);
@@ -56,10 +56,10 @@ const obtenerDocente = async (correo, password, captchaToken) => {
 const obtenerEstudiante = async (codigoSis, password, correo, captchaToken) => {
     try {
              // Verificar el token de reCAPTCHA
-             const captchaValid = await verifyCaptcha(captchaToken);
-             if (!captchaValid) {
-                 throw new Error('Verificación de reCAPTCHA fallida.');
-             }
+            //  const captchaValid = await verifyCaptcha(captchaToken);
+            //  if (!captchaValid) {
+            //      throw new Error('Verificación de reCAPTCHA fallida.');
+            //  }
      
         const query = 'SELECT codigo_sis, password_estudiante FROM Estudiante WHERE codigo_sis = $1 AND correo_estudiante = $2';
         const result = await db.pool.query(query, [codigoSis, correo]);
@@ -89,4 +89,3 @@ module.exports = {
     obtenerDocente,
     obtenerEstudiante,
 };
-

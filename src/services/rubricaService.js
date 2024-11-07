@@ -132,5 +132,7 @@ const registrarRubrica = async (codEvaluacion, rubricas) => {
 
 module.exports = {
   registrarRubrica,
-  obtenerRubricasConCalificaciones
+  obtenerRubricasConCalificaciones,
+  obtenerRubricasPorEvaluacion,
+  obtenerDetallesPorRubrica
 };

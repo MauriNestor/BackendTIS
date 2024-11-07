@@ -64,7 +64,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6M
 
 ### Obtener Rúbricas y Detalles y notas de una rubrica para un Grupo y estudiante
 GET http://localhost:3000/rubricas/41/grupos/17/calificaciones
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzA4NDAyODMsImV4cCI6MTczMDg0Mzg4M30.gpoUBr6QX0apiXZtIM_OQSy3OAN9m7qteeJYpfkyeKQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzA5MzQ1ODQsImV4cCI6MTczMDkzODE4NH0.rKwY2NQIQkwaEEErDeccJd7PEBR4Y4F3nq-M7GGaagE
 Content-Type: application/json
 
 ### Subir Entregable
@@ -115,5 +115,5 @@ Content-Type: application/json
   "dia_horario": "Viernes"
 }
 ### obtner nota estudiante
-GET http://localhost:3000/evaluaciones/41/nota-total
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzA4NDIzODUsImV4cCI6MTczMDg0NTk4NX0.f68pErt2-Qm64GFbMoKC4jkfcywQFU5VAnIHFrcDapQ
+GET http://localhost:3000/evaluaciones/3/nota-total
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzA5MzgyNDUsImV4cCI6MTczMDk0MTg0NX0.9d7RjAMClYixiibV8TB-tDUemlOaziSznItLVt2inkA

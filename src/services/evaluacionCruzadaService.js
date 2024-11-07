@@ -1,5 +1,6 @@
 const { pool } = require('../config/db');
 const grupoEmpresaService = require('../services/grupoEmpresaService');
+const grupoEstudianteService = require('../services/grupoEstudianteService');
 
 const registrarEvalCruzada = async (codEvaluacion, codclase) => {
     try {
@@ -47,6 +48,24 @@ const crearListaEvaluador = async (codClase) => {
     }
 };
 
+const getGrupoAEvaluar = async (codigoSis, codClase) => {
+    try {
+        const codGrupo = await grupoEstudianteService.getCodGrupo(codigoSis, codClase);
+        console.log(codGrupo);
+        const result = await pool.query(
+            `SELECT grupo_evaluado FROM evaluacion_cruzada WHERE grupo_evaluador = $1`,
+                [codGrupo]
+            );
+        const codGrupoAEvaluar = result.rows[0].grupo_evaluado;
+        const grupoAEvaluar = await grupoEmpresaService.getGrupoEmpresa(codGrupoAEvaluar);
+        return grupoAEvaluar; 
+    }  catch (err) {
+        console.error('Error al obtener el grupo a evaluar', err);
+        throw err;
+    }
+};
+
 module.exports = {
     registrarEvalCruzada,
+    getGrupoAEvaluar,
 };

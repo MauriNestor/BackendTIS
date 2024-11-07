@@ -15,6 +15,9 @@ const registroGrupoRoutes = require("./routes/registroGrupoRoutes");
 const evaluacionRoutes = require('./routes/evaluacionRoutes');
 const temaRoutes = require('./routes/temaRoute');
 const rubricaRoutes = require('./routes/rubricaRoutes');
+
+const evaluacionCruzadaRoutes = require('./routes/evaluacionCruzadaRoute');
+
 const db = require("./config/db");
 
 // Cargar las variables de entorno
@@ -50,6 +53,7 @@ app.use("/gestiones", gestionRoutes);
 app.use('/evaluaciones', evaluacionRoutes);
 app.use('/temas', temaRoutes);
 app.use('/rubricas', rubricaRoutes);
+app.use('/eval-cruzada', evaluacionCruzadaRoutes);
 // Manejo de rutas no encontradas
 app.use((req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });

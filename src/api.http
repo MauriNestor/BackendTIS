@@ -121,5 +121,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwM
 
 ### Obtener Rúbricas y Detalles y notas de una rubrica para un Grupo y estudiante
 GET http://localhost:3000/rubricas/9/grupos/12/calificaciones
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzA5NDcxNjksImV4cCI6MTczMDk1MDc2OX0.LWw3zHKRsiUJnJ2A4bEMKAio0FdOVYxXrpG4Wj1dal0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzEwODkzNDIsImV4cCI6MTczMTA5Mjk0Mn0.bzN60FvmwvHJXGCXFWkih11hb8mhsIybvW1BRyedtdM
 Content-Type: application/json

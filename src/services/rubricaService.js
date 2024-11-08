@@ -75,12 +75,12 @@ const obtenerRubricasConCalificaciones = async (cod_evaluacion, cod_grupoempresa
         const estudiantes = await grupoEstudianteService.getEstudiantes(cod_grupoempresa);
 
         const retroalimentacionGrupalResult = await pool.query(
-            `SELECT comentario 
+            `SELECT comentario, fecha_registro 
              FROM retroalimentacion_grupal 
              WHERE cod_evaluacion = $1 AND cod_grupoempresa = $2`,
             [cod_evaluacion, cod_grupoempresa]
         );
-        const retroalimentacionGrupal = retroalimentacionGrupalResult.rows[0]?.comentario || null;
+        const retroalimentacionGrupal = retroalimentacionGrupalResult.rows[0] || null;
 
         const rubricasConCalificaciones = await Promise.all(
             rubricas.map(async (rubrica) => {

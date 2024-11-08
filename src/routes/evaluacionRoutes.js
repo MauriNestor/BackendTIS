@@ -13,8 +13,13 @@ router.post('/registrar-evaluacion', verificarToken, evaluacionesController.regi
 
 router.get('/:codEvaluacion/entregas',verificarToken ,evaluacionesController.obtenerEstadoEntregas);
 
+router.get('/:codEvaluacion/tipo', verificarToken, evaluacionesController.getTipoEvaluacion);
+
 //mover desde aqui hasta el final a un nuevo router de entregables
 router.post('/:codEvaluacion/entregables', verificarToken, verificarEstudiante, evaluacionesController.subirEntregable);
 
 router.get('/:codEvaluacion/entregado', verificarToken, evaluacionesController.obtenerEntregablePorEvaluacion);
+
+router.get('/:codEvaluacion/nota-total', verificarToken, evaluacionesController.obtenerNotasDetalladasEstudiante);
+
 module.exports = router;

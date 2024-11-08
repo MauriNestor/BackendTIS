@@ -81,3 +81,23 @@ exports.getCodGrupo = async (codigoSis, codClase) => {
         throw new Error("Error al obtener el codigo del grupo del estudiante.");
     }
   };
+
+  exports.obtenerGrupoEmpresaDelEstudiante = async (codigoSis, codClase) => {
+    try {
+        const query = `
+        SELECT ge.cod_grupoempresa, ge.nombre_corto, ge.nombre_largo
+        FROM grupo_empresa ge
+        INNER JOIN grupo_estudiante gest ON ge.cod_grupoempresa = gest.cod_grupoempresa
+        WHERE gest.codigo_sis = $1 AND ge.cod_clase = $2
+        `;
+        const result = await pool.query(query, [codigoSis, codClase]);
+        
+        if (result.rows.length === 0) {
+            throw new Error("No se encontró el grupo del estudiante en la clase especificada.");
+        }
+        return result.rows[0];
+    } catch (error) {
+        console.error("Error al obtener el grupo del estudiante:", error);
+        throw error;
+    }
+};

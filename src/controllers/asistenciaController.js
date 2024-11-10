@@ -9,12 +9,13 @@ exports.registrarAsistencia = async (req, res) => {
     }
 
     try {
-        const result = await asistenciaService.registrarAsistencia(codClase, listaAsistencia);
-        if (result) {
-            res.status(200).json({ message: 'Asistencia registrada correctamente' });
-        } else {
-            res.status(500).json({ error: 'Error al registrar la asistencia' });
-        }
+        const asistenciaRegistrada = await asistenciaService.registrarAsistencia(codClase, listaAsistencia);
+        
+        res.status(200).json({
+            message: 'Asistencia registrada correctamente',
+            asistenciaRegistrada
+        });
+        
     } catch (error) {
         res.status(500).json({
             error: 'Error interno al registrar la asistencia',

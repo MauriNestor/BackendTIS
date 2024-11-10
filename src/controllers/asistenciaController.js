@@ -23,3 +23,25 @@ exports.registrarAsistencia = async (req, res) => {
         });
     }
 };
+
+exports.generarReporte = async (req, res) => {
+    const { codClase } = req.params;
+
+    if (!codClase ) {
+        return res.status(400).json({ error: 'Código de clase es requerido' });
+    }
+
+    try {
+        const reporteAsistencia = await asistenciaService.generarReporte(codClase);
+        
+        res.status(200).json({
+            reporteAsistencia
+        });
+        
+    } catch (error) {
+        res.status(500).json({
+            error: 'Error interno al registrar la asistencia',
+            detalle: error.message
+        });
+    }
+};

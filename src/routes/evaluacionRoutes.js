@@ -15,6 +15,8 @@ router.get('/:codEvaluacion/entregas',verificarToken ,evaluacionesController.obt
 
 router.get('/:codEvaluacion/tipo', verificarToken, evaluacionesController.getTipoEvaluacion);
 
+router.delete('/:codEvaluacion', verificarToken, evaluacionesController.eliminarEvaluacion);
+
 //mover desde aqui hasta el final a un nuevo router de entregables
 router.post('/:codEvaluacion/entregables', verificarToken, verificarEstudiante, evaluacionesController.subirEntregable);
 

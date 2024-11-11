@@ -127,3 +127,7 @@ Content-Type: application/json
 ### Correccion obtener integranes de grupo
 GET http://localhost:3000/eval-pares/ABCDE
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOCwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzEwMTA3MDksImV4cCI6MTczMTAxNDMwOX0.a2o0vLn3gBrQDAiqZKZ830hw8aaFmVNLrKQQzbJ-oDY
+
+### eliminar evaluacion 
+DELETE http://localhost:3000/evaluaciones/15
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzEzNjMwNTMsImV4cCI6MTczMTM2NjY1M30.oS0OfjK7x1-tAyqqviP41ml8TdyqJ-XWNgI7h7LXzj8

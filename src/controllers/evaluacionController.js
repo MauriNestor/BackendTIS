@@ -132,13 +132,13 @@ exports.obtenerEntregablePorEvaluacion = async (req, res) => {
     const codigo_sis = req.user.codigoSis;  
 
     try {
-        const archivoBuffer = await evaluacionesService.obtenerEntregablePorEvaluacionYGrupo(codEvaluacion, codigo_sis);
+        const archivoBuffer = await evaluacionesService.getListaGruposEntregaronEvaluacion(codEvaluacion, codigo_sis);
 
         if (archivoBuffer) {
             const archivoBase64 = archivoBuffer.toString('base64');
             res.status(200).json({ archivo: archivoBase64 });
         } else {
-            res.status(404).json({ message: 'No se ha subido ningún entregable para esta evaluación' });
+            res.status(204).json({ message: 'No se ha subido ningún entregable para esta evaluación' });
         }
     } catch (error) {
         console.error('Error al obtener el entregable:', error);

@@ -221,7 +221,7 @@ exports.eliminarEvaluacion = async (codEvaluacion) => {
     }
 };
 
-exports.obtenerEntregablePorEvaluacionYGrupo = async (codEvaluacion, codigoSis) => {
+exports.getListaGruposEntregaronEvaluacion = async (codEvaluacion, codigoSis) => {
     try {
         const { cod_clase } = await obtenerDocenteYClasePorEvaluacion(codEvaluacion);
 
@@ -232,11 +232,8 @@ exports.obtenerEntregablePorEvaluacionYGrupo = async (codEvaluacion, codigoSis) 
             [codEvaluacion, cod_grupoempresa]
         );
 
-        if (entregableResult.rows.length > 0) {
-            return entregableResult.rows[0].archivo_grupo; 
-        } else {
-            return null;
-        }
+        return entregableResult.rows.length > 0 ? entregableResult.rows[0].archivo_grupo : null;
+
     } catch (error) {
         console.error('Error en obtenerEntregablePorEvaluacionYGrupo:', error);
         throw error;

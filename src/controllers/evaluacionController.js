@@ -161,10 +161,10 @@ exports.getTipoEvaluacion = async (req, res) => {
 };
 
 exports.obtenerNotasDetalladasEstudiante = async (req, res) => {
-    const { codEvaluacion } = req.params;
+    const { codEvaluacion, codClase } = req.params;
     const codigo_sis = req.user.codigoSis; 
     try {
-        const notasDetalladas = await evaluacionesService.obtenerNotasDetalladasEstudiante(codEvaluacion, codigo_sis);
+        const notasDetalladas = await evaluacionesService.obtenerNotasDetalladasEstudiante(codEvaluacion, codigo_sis, codClase);
 
         res.status(200).json(notasDetalladas);
     } catch (error) {

@@ -5,8 +5,7 @@ const entregableService = require('../services/entregableService');
 const grupoEmpresaService = require('../services/grupoEmpresaService');
 const evaluacionCruzadaService = require('../services/evaluacionCruzadaService');
 const rubricaService = require('../services/rubricaService');
-
-
+const grupoEstudianteService = require('../services/grupoEstudianteService');
 
 exports.getEvaluacionesByClass = async (cod_clase) => {
     const result = await pool.query(`
@@ -261,15 +260,27 @@ exports.getTipoEvaluacion = async (codEvaluacion) => {
     }
 };
 
-exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis) => {
+exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis, codClase) => {
     try {
         const rubricas = await rubricaService.obtenerRubricasPorEvaluacion(cod_evaluacion);
+
+        const cod_grupoempresa = await grupoEstudianteService.getCodGrupo(codigo_sis, codClase);
+
+        const retroalimentacionResult = await pool.query(
+            `SELECT comentario, fecha_registro
+             FROM retroalimentacion_grupal
+             WHERE cod_grupoempresa = $1 AND cod_evaluacion = $2`,
+            [cod_grupoempresa, cod_evaluacion]
+        );
+        const retroalimentacion = retroalimentacionResult.rows.length > 0
+        ? retroalimentacionResult.rows[0]
+        : { comentario: null, fecha_registro: null };
 
         const rubricasConCalificacionesYDetalles = await Promise.all(
             rubricas.map(async (rubrica) => {
 
                 const calificacionResult = await pool.query(
-                    `SELECT cr.calificacion, cr.observacion
+                    `SELECT cr.calificacion
                      FROM calificacion_rubrica cr
                      WHERE cr.cod_rubrica = $1 AND cr.cod_evaluacion = $2 AND cr.codigo_sis = $3`,
                     [rubrica.cod_rubrica, cod_evaluacion, codigo_sis]
@@ -279,7 +290,6 @@ exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis) =>
                     ? calificacionResult.rows[0]
                     : { calificacion: null, observacion: null };
 
-                // Obtener los detalles de la rúbrica usando el método reutilizable
                 const detalles = await rubricaService.obtenerDetallesPorRubrica(rubrica.cod_rubrica);
 
                 return {
@@ -291,14 +301,14 @@ exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis) =>
             })
         );
 
-        // Calcular la nota total sumando las calificaciones de cada rúbrica
         const notaTotal = rubricasConCalificacionesYDetalles.reduce((acc, rubrica) => {
             return acc + (rubrica.calificacion || 0);
         }, 0);
 
         return {
             nota_total: notaTotal,
-            rubricas: rubricasConCalificacionesYDetalles
+            rubricas: rubricasConCalificacionesYDetalles,
+            retroalimentacion: retroalimentacion
         };
     } catch (error) {
         console.error('Error al obtener las notas detalladas del estudiante:', error);

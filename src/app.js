@@ -17,7 +17,7 @@ const temaRoutes = require('./routes/temaRoute');
 const rubricaRoutes = require('./routes/rubricaRoutes');
 const evaluacionCruzadaRoutes = require('./routes/evaluacionCruzadaRoute');
 const calificacionRoutes = require('./routes/calificacionRoute');
-
+const evaluacionParesRoute = require('./routes/evaluacionParesRoute');
 
 const db = require("./config/db");
 
@@ -56,6 +56,7 @@ app.use('/temas', temaRoutes);
 app.use('/rubricas', rubricaRoutes);
 app.use('/eval-cruzada', evaluacionCruzadaRoutes);
 app.use('/evaluacion', calificacionRoutes);
+app.use('/eval-pares', evaluacionParesRoute);
 
 
 // Manejo de rutas no encontradas

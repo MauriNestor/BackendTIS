@@ -113,7 +113,7 @@ Content-Type: application/json
 
 ### Obtener Estudiantes de un Grupo (Incluye al propio estudiante)
 GET http://localhost:3000/api/grupos/17/estudiantes
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzA4NTI1MDIsImV4cCI6MTczMDg1NjEwMn0.upV5xDG3l_EMT6etrvd_M2WYpWh4D529rQ5D-eR4G_0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzEwMDc4NDcsImV4cCI6MTczMTAxMTQ0N30.52p5NooKAIzXQDmFIC5OFoyQfjZqUnINi-7PzJNhphE
 
 ### obtner nota estudiante
 GET http://localhost:3000/evaluaciones/3/nota-total
@@ -121,5 +121,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwM
 
 ### Obtener Rúbricas y Detalles y notas de una rubrica para un Grupo y estudiante
 GET http://localhost:3000/rubricas/9/grupos/12/calificaciones
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzA5NDcxNjksImV4cCI6MTczMDk1MDc2OX0.LWw3zHKRsiUJnJ2A4bEMKAio0FdOVYxXrpG4Wj1dal0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzEwODkzNDIsImV4cCI6MTczMTA5Mjk0Mn0.bzN60FvmwvHJXGCXFWkih11hb8mhsIybvW1BRyedtdM
 Content-Type: application/json
+
+### Correccion obtener integranes de grupo
+GET http://localhost:3000/eval-pares/ABCDE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOCwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzEwMTA3MDksImV4cCI6MTczMTAxNDMwOX0.a2o0vLn3gBrQDAiqZKZ830hw8aaFmVNLrKQQzbJ-oDY

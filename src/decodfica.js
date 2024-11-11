@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzAyNTA5MDYsImV4cCI6MTczMDI1NDUwNn0.W5OTpTEzqPj6Q77pzqIjutOrNf-tKjjn5x3vjnGYEnI';
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzEyOTQ4NzUsImV4cCI6MTczMTI5ODQ3NX0.AHW4oNbYHr5SyPR5BGX6jGJl8aPfzbTHxWkbPOkRzaQ';
 const decoded = jwt.decode(token);
 console.log(decoded);
 

@@ -46,8 +46,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6M
 GET http://localhost:3000/gestiones
 
 ### Obtener evaluaciones por tema
-GET http://localhost:3000/evaluaciones/PRUEBA
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkxMTk2MjgsImV4cCI6MTcyOTEyMzIyOH0.w7eUZNuQ3kOw9MUf98SIIz4PqReQF1LErhpsi-NOEX4
+GET http://localhost:3000/evaluaciones/ABCDE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMTEwMzgyMCwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzEyOTQ5NTQsImV4cCI6MTczMTI5ODU1NH0.IhrB_5eji7c0-C1PsPW17hKLV1V6lh98WI448iUC8TU
 
 ### Obtener evaluaciones por id de evaluacion
 GET http://localhost:3000/evaluaciones/detalles/4

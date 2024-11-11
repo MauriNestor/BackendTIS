@@ -28,6 +28,34 @@ exports.getEvaluacionesByClass = async (cod_clase) => {
     return result.rows;
 };
 
+exports.getEvaluacionesByClassForStudent = async (cod_clase, codigoSis) => {
+    const query = `
+        SELECT t.cod_tema, t.nombre_tema, json_agg(
+            json_build_object(
+                'cod_evaluacion', e.cod_evaluacion,
+                'evaluacion', e.evaluacion,
+                'fecha_fin', e.fecha_fin,
+                'fecha_inicio', e.fecha_inicio,
+                'tipo_evaluacion', e.tipo_evaluacion,
+                'descripcion_evaluacion', e.descripcion_evaluacion
+            )
+        ) AS evaluaciones
+        FROM tema t
+        LEFT JOIN evaluacion e ON t.cod_tema = e.cod_tema
+        LEFT JOIN entregable en ON en.cod_evaluacion = e.cod_evaluacion
+        LEFT JOIN grupo_estudiante gs ON gs.cod_grupoempresa = en.cod_grupoempresa AND gs.codigo_sis = $2
+        WHERE t.cod_clase = $1
+          AND gs.codigo_sis = $2  -- Estudiante está en el grupo con un entregable asociado
+        GROUP BY t.cod_tema, t.nombre_tema
+    `;
+
+    const queryParams = [cod_clase, codigoSis];
+    const result = await pool.query(query, queryParams);
+
+    return result.rows;
+};
+
+
 exports.getEvaluacionById = async (cod_evaluacion) => {
     const result = await pool.query(
         'SELECT cod_evaluacion, cod_tema, evaluacion, fecha_fin, fecha_inicio, tipo_evaluacion, descripcion_evaluacion, archivo_evaluacion FROM EVALUACION WHERE cod_evaluacion = $1',

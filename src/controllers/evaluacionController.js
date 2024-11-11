@@ -5,13 +5,24 @@ const { pool } = require('../config/db');
 
 exports.getEvaluacionesByClass = async (req, res) => {
     const { cod_clase } = req.params;
-    if (!cod_clase) {
-        return res.status(400).json({ error: 'El código de clase es requerido' });
-      }
+    const { role, codigoSis } = req.user;
+
     try {
-        const evaluacionesPorTema = await evaluacionesService.getEvaluacionesByClass(cod_clase);
-        // console.log('Evaluaciones:', evaluaciones); // Agrega este log para depurar
-        res.status(200).json(evaluacionesPorTema);
+        let evaluaciones;
+        
+        if (role === 'docente') {
+            evaluaciones = await evaluacionesService.getEvaluacionesByClass(cod_clase);
+        } else if (role === 'estudiante') {
+            evaluaciones = await evaluacionesService.getEvaluacionesByClassForStudent(cod_clase, codigoSis);
+        }
+
+        if (!evaluaciones || evaluaciones.length === 0) {
+            return res.status(404).json({
+                error: 'No se encontraron evaluaciones o no está autorizado'
+            });
+        }
+
+        res.status(200).json(evaluaciones);
     } catch (error) {
         res.status(500).json({
             error: 'Error al obtener las evaluaciones',
@@ -19,6 +30,8 @@ exports.getEvaluacionesByClass = async (req, res) => {
         });
     }
 };
+
+
 exports.getEvaluacionById = async (req, res) => {
     const { cod_evaluacion } = req.params;
     try {

@@ -20,6 +20,6 @@ router.post('/:codEvaluacion/entregables', verificarToken, verificarEstudiante, 
 
 router.get('/:codEvaluacion/entregado', verificarToken, evaluacionesController.obtenerEntregablePorEvaluacion);
 
-router.get('/:codEvaluacion/nota-total', verificarToken, evaluacionesController.obtenerNotasDetalladasEstudiante);
+router.get('/:codEvaluacion/:codClase/nota-total', verificarToken, evaluacionesController.obtenerNotasDetalladasEstudiante);
 
 module.exports = router;

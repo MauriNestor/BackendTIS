@@ -5,8 +5,7 @@ const entregableService = require('../services/entregableService');
 const grupoEmpresaService = require('../services/grupoEmpresaService');
 const evaluacionCruzadaService = require('../services/evaluacionCruzadaService');
 const rubricaService = require('../services/rubricaService');
-
-
+const grupoEstudianteService = require('../services/grupoEstudianteService');
 
 exports.getEvaluacionesByClass = async (cod_clase) => {
     const result = await pool.query(`
@@ -27,6 +26,34 @@ exports.getEvaluacionesByClass = async (cod_clase) => {
     `, [cod_clase]);
     return result.rows;
 };
+
+exports.getEvaluacionesByClassForStudent = async (cod_clase, codigoSis) => {
+    const query = `
+        SELECT t.cod_tema, t.nombre_tema, json_agg(
+            json_build_object(
+                'cod_evaluacion', e.cod_evaluacion,
+                'evaluacion', e.evaluacion,
+                'fecha_fin', e.fecha_fin,
+                'fecha_inicio', e.fecha_inicio,
+                'tipo_evaluacion', e.tipo_evaluacion,
+                'descripcion_evaluacion', e.descripcion_evaluacion
+            )
+        ) AS evaluaciones
+        FROM tema t
+        LEFT JOIN evaluacion e ON t.cod_tema = e.cod_tema
+        LEFT JOIN entregable en ON en.cod_evaluacion = e.cod_evaluacion
+        LEFT JOIN grupo_estudiante gs ON gs.cod_grupoempresa = en.cod_grupoempresa AND gs.codigo_sis = $2
+        WHERE t.cod_clase = $1
+          AND gs.codigo_sis = $2  -- Estudiante está en el grupo con un entregable asociado
+        GROUP BY t.cod_tema, t.nombre_tema
+    `;
+
+    const queryParams = [cod_clase, codigoSis];
+    const result = await pool.query(query, queryParams);
+
+    return result.rows;
+};
+
 
 exports.getEvaluacionById = async (cod_evaluacion) => {
     const result = await pool.query(
@@ -193,7 +220,7 @@ exports.eliminarEvaluacion = async (codEvaluacion) => {
     }
 };
 
-exports.obtenerEntregablePorEvaluacionYGrupo = async (codEvaluacion, codigoSis) => {
+exports.getListaGruposEntregaronEvaluacion = async (codEvaluacion, codigoSis) => {
     try {
         const { cod_clase } = await obtenerDocenteYClasePorEvaluacion(codEvaluacion);
 
@@ -204,11 +231,8 @@ exports.obtenerEntregablePorEvaluacionYGrupo = async (codEvaluacion, codigoSis) 
             [codEvaluacion, cod_grupoempresa]
         );
 
-        if (entregableResult.rows.length > 0) {
-            return entregableResult.rows[0].archivo_grupo; 
-        } else {
-            return null;
-        }
+        return entregableResult.rows.length > 0 ? entregableResult.rows[0].archivo_grupo : null;
+
     } catch (error) {
         console.error('Error en obtenerEntregablePorEvaluacionYGrupo:', error);
         throw error;
@@ -236,15 +260,27 @@ exports.getTipoEvaluacion = async (codEvaluacion) => {
     }
 };
 
-exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis) => {
+exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis, codClase) => {
     try {
         const rubricas = await rubricaService.obtenerRubricasPorEvaluacion(cod_evaluacion);
+
+        const cod_grupoempresa = await grupoEstudianteService.getCodGrupo(codigo_sis, codClase);
+
+        const retroalimentacionResult = await pool.query(
+            `SELECT comentario, fecha_registro
+             FROM retroalimentacion_grupal
+             WHERE cod_grupoempresa = $1 AND cod_evaluacion = $2`,
+            [cod_grupoempresa, cod_evaluacion]
+        );
+        const retroalimentacion = retroalimentacionResult.rows.length > 0
+        ? retroalimentacionResult.rows[0]
+        : { comentario: null, fecha_registro: null };
 
         const rubricasConCalificacionesYDetalles = await Promise.all(
             rubricas.map(async (rubrica) => {
 
                 const calificacionResult = await pool.query(
-                    `SELECT cr.calificacion, cr.observacion
+                    `SELECT cr.calificacion
                      FROM calificacion_rubrica cr
                      WHERE cr.cod_rubrica = $1 AND cr.cod_evaluacion = $2 AND cr.codigo_sis = $3`,
                     [rubrica.cod_rubrica, cod_evaluacion, codigo_sis]
@@ -254,7 +290,6 @@ exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis) =>
                     ? calificacionResult.rows[0]
                     : { calificacion: null, observacion: null };
 
-                // Obtener los detalles de la rúbrica usando el método reutilizable
                 const detalles = await rubricaService.obtenerDetallesPorRubrica(rubrica.cod_rubrica);
 
                 return {
@@ -266,14 +301,14 @@ exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis) =>
             })
         );
 
-        // Calcular la nota total sumando las calificaciones de cada rúbrica
         const notaTotal = rubricasConCalificacionesYDetalles.reduce((acc, rubrica) => {
             return acc + (rubrica.calificacion || 0);
         }, 0);
 
         return {
             nota_total: notaTotal,
-            rubricas: rubricasConCalificacionesYDetalles
+            rubricas: rubricasConCalificacionesYDetalles,
+            retroalimentacion: retroalimentacion
         };
     } catch (error) {
         console.error('Error al obtener las notas detalladas del estudiante:', error);
@@ -281,3 +316,25 @@ exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis) =>
     }
 };
 
+exports.obtenerRubricasYDetallesDocente = async (cod_evaluacion) => {
+    try {
+        const rubricas = await rubricaService.obtenerRubricasPorEvaluacion(cod_evaluacion);
+
+        const rubricasConDetalles = await Promise.all(
+            rubricas.map(async (rubrica) => {
+                const detalles = await rubricaService.obtenerDetallesPorRubrica(rubrica.cod_rubrica);
+
+                return {
+                    ...rubrica,
+                    detalles: detalles
+                };
+            })
+        );
+        return {
+            rubricas: rubricasConDetalles
+        };
+    } catch (error) {
+        console.error('Error al obtener las rúbricas y detalles para el docente:', error);
+        throw new Error('Error al obtener las rúbricas y detalles para el docente');
+    }
+};

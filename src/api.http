@@ -111,9 +111,9 @@ Content-Type: application/json
   "dia_horario": "Viernes"
 }
 
-### obtner nota estudiante y rubrica y retroalimentacionGrupal
+### obtner nota si es estudiante, rubrica y retroalimentacionGrupal
 GET http://localhost:3000/evaluaciones/9/ABCDE/nota-total
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzEzNTk0ODksImV4cCI6MTczMTM2MzA4OX0.VGIagF90rv03O5pD-QvdOq_w-I3y1qDHlu20c0ULQ9s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzEzNzA0MzAsImV4cCI6MTczMTM3NDAzMH0.9_tYJFAnGG2q0uTwoeJ8GYSYxI-MELJkVvXwpKHFODU
 
 ### Obtener Rúbricas y Detalles y notas de una rubrica para un Grupo y estudiante
 GET http://localhost:3000/rubricas/9/grupos/12/calificaciones

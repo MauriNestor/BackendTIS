@@ -162,9 +162,19 @@ exports.getTipoEvaluacion = async (req, res) => {
 
 exports.obtenerNotasDetalladasEstudiante = async (req, res) => {
     const { codEvaluacion, codClase } = req.params;
-    const codigo_sis = req.user.codigoSis; 
+    const codigo_sis = req.user.codigoSis;
+    const role = req.user.role;
+
     try {
-        const notasDetalladas = await evaluacionesService.obtenerNotasDetalladasEstudiante(codEvaluacion, codigo_sis, codClase);
+        let notasDetalladas;
+
+        if (role === 'estudiante') {
+            notasDetalladas = await evaluacionesService.obtenerNotasDetalladasEstudiante(codEvaluacion, codigo_sis, codClase);
+        } else if (role === 'docente') {
+            notasDetalladas = await evaluacionesService.obtenerRubricasYDetallesDocente(codEvaluacion);
+        } else {
+            return res.status(403).json({ message: 'No tiene permiso para ver estas notas.' });
+        }
 
         res.status(200).json(notasDetalladas);
     } catch (error) {

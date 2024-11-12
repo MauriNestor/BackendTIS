@@ -316,3 +316,25 @@ exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis, co
     }
 };
 
+exports.obtenerRubricasYDetallesDocente = async (cod_evaluacion) => {
+    try {
+        const rubricas = await rubricaService.obtenerRubricasPorEvaluacion(cod_evaluacion);
+
+        const rubricasConDetalles = await Promise.all(
+            rubricas.map(async (rubrica) => {
+                const detalles = await rubricaService.obtenerDetallesPorRubrica(rubrica.cod_rubrica);
+
+                return {
+                    ...rubrica,
+                    detalles: detalles
+                };
+            })
+        );
+        return {
+            rubricas: rubricasConDetalles
+        };
+    } catch (error) {
+        console.error('Error al obtener las rúbricas y detalles para el docente:', error);
+        throw new Error('Error al obtener las rúbricas y detalles para el docente');
+    }
+};

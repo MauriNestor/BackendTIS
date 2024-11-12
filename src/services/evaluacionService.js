@@ -208,15 +208,37 @@ exports.subirEntregable = async (cod_evaluacion, archivo_grupo, codigo_sis) => {
 
 exports.eliminarEvaluacion = async (codEvaluacion) => {
     try {
-        const result = await pool.query(
-            `DELETE FROM evaluacion WHERE cod_evaluacion = $1`,
+        const evalResult = await pool.query(
+            `SELECT * FROM evaluacion WHERE cod_evaluacion = $1`,
             [codEvaluacion]
         );
 
-        return { message: 'Evaluacion eliminada exitosamente' };
+        if (evalResult.rows.length === 0) {
+            return { error: 'La evaluación no existe o ya a sido elimnada', status: 404 };
+        }
+        const evaluacionEliminada = evalResult.rows[0];
+        
+        await pool.query('BEGIN');
+
+        await pool.query(`DELETE FROM calificacion_rubrica WHERE cod_evaluacion = $1`, [codEvaluacion]);
+        await pool.query(`DELETE FROM detalle_rubrica WHERE cod_evaluacion = $1`, [codEvaluacion]);
+        await pool.query(`DELETE FROM retroalimentacion_grupal WHERE cod_evaluacion = $1`, [codEvaluacion]);
+        await pool.query(`DELETE FROM retroalimentacion_individual WHERE cod_evaluacion = $1`, [codEvaluacion]);
+        await pool.query(`DELETE FROM rubrica WHERE cod_evaluacion = $1`, [codEvaluacion]);
+        await pool.query(`DELETE FROM entregable WHERE cod_evaluacion = $1`, [codEvaluacion]);
+        // await pool.query(`DELETE FROM tema WHERE cod_tema = $1`, [evaluacionEliminada.cod_tema]); 
+
+        await pool.query(`DELETE FROM evaluacion WHERE cod_evaluacion = $1`, [codEvaluacion]);
+
+        await pool.query('COMMIT');
+
+        return { 
+            message: 'Evaluación eliminada exitosamente', 
+            evaluacion: evaluacionEliminada 
+        };
     } catch (error) {
-        console.error('Error al subir el entregable:', error);
-        throw new Error('Error al subir el entregable');
+        console.error('Error al eliminar la evaluación:', error);
+        throw new Error('Error al eliminar la evaluación');
     }
 };
 

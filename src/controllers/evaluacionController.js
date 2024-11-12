@@ -185,3 +185,18 @@ exports.obtenerNotasDetalladasEstudiante = async (req, res) => {
         });
     }
 };
+
+exports.eliminarEvaluacion = async (req, res) => {
+    const { codEvaluacion } = req.params;
+    try {
+        const result = await evaluacionesService.eliminarEvaluacion(codEvaluacion);
+        
+        if (result.error) {
+            return res.status(result.status).json({ error: result.error });
+        }
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error al eliminar la evaluación:', error);
+        res.status(500).json({ error: 'Error al eliminar la evaluación', detalle: error.message });
+    }
+}

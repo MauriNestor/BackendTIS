@@ -46,8 +46,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6M
 GET http://localhost:3000/gestiones
 
 ### Obtener evaluaciones por tema
-GET http://localhost:3000/evaluaciones/PRUEBA
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6Miwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MjkxMTk2MjgsImV4cCI6MTcyOTEyMzIyOH0.w7eUZNuQ3kOw9MUf98SIIz4PqReQF1LErhpsi-NOEX4
+GET http://localhost:3000/evaluaciones/ABCDE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMTEwMzgyMCwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzEyOTQ5NTQsImV4cCI6MTczMTI5ODU1NH0.IhrB_5eji7c0-C1PsPW17hKLV1V6lh98WI448iUC8TU
 
 ### Obtener evaluaciones por id de evaluacion
 GET http://localhost:3000/evaluaciones/detalles/4
@@ -73,8 +73,8 @@ Content-Type: application/json
 }
 
 ### Obtener Entregable de una Evaluación
-GET http://localhost:3000/evaluaciones/4/entregado
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MjkzNzYwOTIsImV4cCI6MTcyOTM3OTY5Mn0.hFDvjyhqhPV-d6mNdOg0j-Iczv17_y3PkkjwnI7O1kk
+GET http://localhost:3000/evaluaciones/10/entregado
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzEzNTczNTksImV4cCI6MTczMTM2MDk1OX0.euUec5l6UMia1_0IUPHAOY-85HffubaSyOu2vtNzPyM
 
 
 ### crear estudiante deploy
@@ -111,13 +111,9 @@ Content-Type: application/json
   "dia_horario": "Viernes"
 }
 
-### Obtener Estudiantes de un Grupo (Incluye al propio estudiante)
-GET http://localhost:3000/api/grupos/17/estudiantes
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzEwMDc4NDcsImV4cCI6MTczMTAxMTQ0N30.52p5NooKAIzXQDmFIC5OFoyQfjZqUnINi-7PzJNhphE
-
-### obtner nota estudiante
-GET http://localhost:3000/evaluaciones/3/nota-total
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzA5MzgyNDUsImV4cCI6MTczMDk0MTg0NX0.9d7RjAMClYixiibV8TB-tDUemlOaziSznItLVt2inkA
+### obtner nota si es estudiante, rubrica y retroalimentacionGrupal
+GET http://localhost:3000/evaluaciones/9/ABCDE/nota-total
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzEzNzA0MzAsImV4cCI6MTczMTM3NDAzMH0.9_tYJFAnGG2q0uTwoeJ8GYSYxI-MELJkVvXwpKHFODU
 
 ### Obtener Rúbricas y Detalles y notas de una rubrica para un Grupo y estudiante
 GET http://localhost:3000/rubricas/9/grupos/12/calificaciones
@@ -127,3 +123,7 @@ Content-Type: application/json
 ### Correccion obtener integranes de grupo
 GET http://localhost:3000/eval-pares/ABCDE
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOCwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzEwMTA3MDksImV4cCI6MTczMTAxNDMwOX0.a2o0vLn3gBrQDAiqZKZ830hw8aaFmVNLrKQQzbJ-oDY
+
+### eliminar evaluacion 
+DELETE http://localhost:3000/evaluaciones/15
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzEzNjMwNTMsImV4cCI6MTczMTM2NjY1M30.oS0OfjK7x1-tAyqqviP41ml8TdyqJ-XWNgI7h7LXzj8

@@ -5,13 +5,24 @@ const { pool } = require('../config/db');
 
 exports.getEvaluacionesByClass = async (req, res) => {
     const { cod_clase } = req.params;
-    if (!cod_clase) {
-        return res.status(400).json({ error: 'El código de clase es requerido' });
-      }
+    const { role, codigoSis } = req.user;
+
     try {
-        const evaluacionesPorTema = await evaluacionesService.getEvaluacionesByClass(cod_clase);
-        // console.log('Evaluaciones:', evaluaciones); // Agrega este log para depurar
-        res.status(200).json(evaluacionesPorTema);
+        let evaluaciones;
+        
+        if (role === 'docente') {
+            evaluaciones = await evaluacionesService.getEvaluacionesByClass(cod_clase);
+        } else if (role === 'estudiante') {
+            evaluaciones = await evaluacionesService.getEvaluacionesByClassForStudent(cod_clase, codigoSis);
+        }
+
+        if (!evaluaciones || evaluaciones.length === 0) {
+            return res.status(404).json({
+                error: 'No se encontraron evaluaciones o no está autorizado'
+            });
+        }
+
+        res.status(200).json(evaluaciones);
     } catch (error) {
         res.status(500).json({
             error: 'Error al obtener las evaluaciones',
@@ -19,6 +30,8 @@ exports.getEvaluacionesByClass = async (req, res) => {
         });
     }
 };
+
+
 exports.getEvaluacionById = async (req, res) => {
     const { cod_evaluacion } = req.params;
     try {
@@ -119,13 +132,13 @@ exports.obtenerEntregablePorEvaluacion = async (req, res) => {
     const codigo_sis = req.user.codigoSis;  
 
     try {
-        const archivoBuffer = await evaluacionesService.obtenerEntregablePorEvaluacionYGrupo(codEvaluacion, codigo_sis);
+        const archivoBuffer = await evaluacionesService.getListaGruposEntregaronEvaluacion(codEvaluacion, codigo_sis);
 
         if (archivoBuffer) {
             const archivoBase64 = archivoBuffer.toString('base64');
             res.status(200).json({ archivo: archivoBase64 });
         } else {
-            res.status(404).json({ message: 'No se ha subido ningún entregable para esta evaluación' });
+            res.status(204).json({ message: 'No se ha subido ningún entregable para esta evaluación' });
         }
     } catch (error) {
         console.error('Error al obtener el entregable:', error);
@@ -148,10 +161,20 @@ exports.getTipoEvaluacion = async (req, res) => {
 };
 
 exports.obtenerNotasDetalladasEstudiante = async (req, res) => {
-    const { codEvaluacion } = req.params;
-    const codigo_sis = req.user.codigoSis; 
+    const { codEvaluacion, codClase } = req.params;
+    const codigo_sis = req.user.codigoSis;
+    const role = req.user.role;
+
     try {
-        const notasDetalladas = await evaluacionesService.obtenerNotasDetalladasEstudiante(codEvaluacion, codigo_sis);
+        let notasDetalladas;
+
+        if (role === 'estudiante') {
+            notasDetalladas = await evaluacionesService.obtenerNotasDetalladasEstudiante(codEvaluacion, codigo_sis, codClase);
+        } else if (role === 'docente') {
+            notasDetalladas = await evaluacionesService.obtenerRubricasYDetallesDocente(codEvaluacion);
+        } else {
+            return res.status(403).json({ message: 'No tiene permiso para ver estas notas.' });
+        }
 
         res.status(200).json(notasDetalladas);
     } catch (error) {
@@ -162,3 +185,18 @@ exports.obtenerNotasDetalladasEstudiante = async (req, res) => {
         });
     }
 };
+
+exports.eliminarEvaluacion = async (req, res) => {
+    const { codEvaluacion } = req.params;
+    try {
+        const result = await evaluacionesService.eliminarEvaluacion(codEvaluacion);
+        
+        if (result.error) {
+            return res.status(result.status).json({ error: result.error });
+        }
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error al eliminar la evaluación:', error);
+        res.status(500).json({ error: 'Error al eliminar la evaluación', detalle: error.message });
+    }
+}

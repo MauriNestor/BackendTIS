@@ -27,11 +27,9 @@ const obtenerRubricasPorEvaluacion = async (cod_evaluacion) => {
         [cod_evaluacion]
     );
 
-    if (result.rows.length === 0) {
-        throw new Error('No se encontraron rúbricas para la evaluación');
-    }
     return result.rows;
 };
+
 
 const obtenerDetallesPorRubrica = async (cod_rubrica) => {
     const result = await pool.query(

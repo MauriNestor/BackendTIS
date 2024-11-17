@@ -1,5 +1,6 @@
 const { pool } = require('../config/db');
 const claseEtudianteService = require('../services/claseEstudianteService');
+const claseService = require('../services/claseService');
 
 const registrarAsistencia = async (codClase, listaAsistencia) => {
     try {
@@ -24,6 +25,7 @@ const registrarAsistencia = async (codClase, listaAsistencia) => {
 const generarReporte = async (codClase) => {
     try {
         const estudiantes = await claseEtudianteService.getEstudiantesXClase(codClase);
+        const nombreClase = await claseService.getNombreClase(codClase); 
         let estudiantesConAsistencia = [];
 
         for (const estudiante of estudiantes) {
@@ -33,26 +35,43 @@ const generarReporte = async (codClase) => {
                 [estudiante.codigo_sis]
             );
 
-            // Formatear cada fecha de asistencia en el formato "YYYY-MM-DD"
-            const asistencia = asistenciaResult.rows.map(registro => ({
-                fecha: new Date(registro.fecha_asistencia).toLocaleDateString('en-CA'),  // formato "YYYY-MM-DD"
-                estadoAsistencia: registro.tipo_asistencia
-            }));
+            // Contador para los tipos de asistencia
+            const contadorAsistencia = {
+                Presente: 0,
+                Retraso: 0,
+                "Ausente sin Justificación": 0,
+                "Ausente con Justificación": 0,
+            };
+
+            // Procesar cada registro de asistencia
+            const asistencia = asistenciaResult.rows.map(registro => {
+                const estado = registro.tipo_asistencia;
+
+                // Incrementar el contador correspondiente
+                if (contadorAsistencia[estado] !== undefined) {
+                    contadorAsistencia[estado]++;
+                }
+
+                return {
+                    fecha: new Date(registro.fecha_asistencia).toLocaleDateString('en-CA'),  // Formato "YYYY-MM-DD"
+                    estadoAsistencia: estado
+                };
+            });
 
             estudiantesConAsistencia.push({
                 ...estudiante,
-                asistencia: asistencia
+                asistencia: asistencia,
+                resumenAsistencia: contadorAsistencia
             });
         }
 
-        return estudiantesConAsistencia;
+        return {nombreClase, estudiantesConAsistencia};
         
     } catch (err) {
         console.error('Error al generar el reporte de asistencia', err);
         throw err;
     }
 };
-
 
 
 module.exports = {

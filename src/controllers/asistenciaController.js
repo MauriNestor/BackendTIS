@@ -27,20 +27,20 @@ exports.registrarAsistencia = async (req, res) => {
 exports.generarReporte = async (req, res) => {
     const { codClase } = req.params;
 
-    if (!codClase ) {
+    if (!codClase) {
         return res.status(400).json({ error: 'Código de clase es requerido' });
     }
 
     try {
-        const reporteAsistencia = await asistenciaService.generarReporte(codClase);
-        
+        const { nombreClase, estudiantesConAsistencia } = await asistenciaService.generarReporte(codClase);
+
         res.status(200).json({
-            reporteAsistencia
+            nombreClase, 
+            reporteAsistencia: estudiantesConAsistencia 
         });
-        
     } catch (error) {
         res.status(500).json({
-            error: 'Error interno al registrar la asistencia',
+            error: 'Error interno al generar el reporte de asistencia',
             detalle: error.message
         });
     }

@@ -58,14 +58,24 @@ const generarReporte = async (codClase) => {
                 };
             });
 
+            // Incrementar Ausente sin Justificación por cada 3 Retrasos
+            if (contadorAsistencia.Retraso >= 3) {
+                contadorAsistencia["Ausente sin Justificación"] += Math.floor(contadorAsistencia.Retraso / 3);
+                contadorAsistencia.Retraso %= 3; // Ajustar el contador de Retrasos
+            }
+
+            // Determinar si el estudiante ha abandonado
+            const abandono = contadorAsistencia["Ausente sin Justificación"] >= 3 ? "Abandono" : null;
+
             estudiantesConAsistencia.push({
                 ...estudiante,
                 asistencia: asistencia,
-                resumenAsistencia: contadorAsistencia
+                resumenAsistencia: contadorAsistencia,
+                estado: abandono // Agregar el estado de abandono si corresponde
             });
         }
 
-        return {nombreClase, estudiantesConAsistencia};
+        return { nombreClase, estudiantesConAsistencia };
         
     } catch (err) {
         console.error('Error al generar el reporte de asistencia', err);

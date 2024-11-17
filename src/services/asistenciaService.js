@@ -1,6 +1,8 @@
 const { pool } = require('../config/db');
 const claseEtudianteService = require('../services/claseEstudianteService');
 const claseService = require('../services/claseService');
+const grupoEmpresaService = require('../services/grupoEmpresaService');
+
 
 const registrarAsistencia = async (codClase, listaAsistencia) => {
     try {
@@ -22,9 +24,16 @@ const registrarAsistencia = async (codClase, listaAsistencia) => {
     }
 }; 
 
-const generarReporte = async (codClase) => {
+const generarReporte = async (codClase, codGrupo) => {
     try {
-        const estudiantes = await claseEtudianteService.getEstudiantesXClase(codClase);
+        
+        const grupoEmpresa = await grupoEmpresaService.getGrupoEmpresa(codGrupo);
+        if (!grupoEmpresa) {
+            throw new Error(`No se pudo obtener información del grupo empresa para el código: ${codGrupo}`);
+        }
+        const grupo = grupoEmpresa.nombre_corto;
+        const horario = grupoEmpresa.horario;
+        const estudiantes = grupoEmpresa.integrantes;
         const nombreClase = await claseService.getNombreClase(codClase); 
         let estudiantesConAsistencia = [];
 
@@ -75,7 +84,7 @@ const generarReporte = async (codClase) => {
             });
         }
 
-        return { nombreClase, estudiantesConAsistencia };
+        return { nombreClase, grupo, horario, estudiantesConAsistencia };
         
     } catch (err) {
         console.error('Error al generar el reporte de asistencia', err);

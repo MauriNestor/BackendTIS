@@ -5,6 +5,6 @@ const verificarToken = require('../middlewares/verificarToken');
 
 router.post('/registrar/:codClase', verificarToken, asistenciaController.registrarAsistencia);
 
-router.get('/reporte/:codClase', verificarToken, asistenciaController.generarReporte);
+router.get('/reporte/:codClase/:codGrupo', verificarToken, asistenciaController.generarReporte);
 
 module.exports = router;

@@ -25,17 +25,20 @@ exports.registrarAsistencia = async (req, res) => {
 };
 
 exports.generarReporte = async (req, res) => {
-    const { codClase } = req.params;
+    const { codClase, codGrupo } = req.params;
 
-    if (!codClase) {
-        return res.status(400).json({ error: 'Código de clase es requerido' });
+    if (!codClase || !codGrupo) {
+        return res.status(400).json({ error: 'Código de clase y codGrupo es requerido' });
     }
 
     try {
-        const { nombreClase, estudiantesConAsistencia } = await asistenciaService.generarReporte(codClase);
+        
+        const { nombreClase, grupo, horario, estudiantesConAsistencia } = await asistenciaService.generarReporte(codClase, codGrupo);
 
         res.status(200).json({
             nombreClase, 
+            grupo,
+            horario,
             reporteAsistencia: estudiantesConAsistencia 
         });
     } catch (error) {

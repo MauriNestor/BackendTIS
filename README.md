@@ -1,5 +1,7 @@
 # Proyecto: Manejo y Evaluación de Grupos de Empresas
+
 # MTIS
+
 ## Descripción
 
 Este proyecto tiene como objetivo principal proporcionar una solución integral para la **gestión** y **evaluación** de grupos empresariales. A través de una plataforma centralizada, se busca facilitar el análisis de datos financieros, operativos y de rendimiento de múltiples empresas dentro de un mismo grupo, con el fin de optimizar la toma de decisiones estratégicas.
@@ -19,36 +21,36 @@ Este proyecto tiene como objetivo principal proporcionar una solución integral 
 - **Frontend:** React.js
 - **Base de Datos:** postegres
 - **Autenticación:** JWT (JSON Web Tokens)
-- **Despliegue:** Docker y Kubernetes
-- **Pruebas:** Jest y Mocha
+- **Pruebas:** Jest y Selenium
 
 ## Instalación
 
 1. Clona el repositorio:
 
-    ```bash
-    git clone https://github.com/MichelleBarriga/BackendTIS.git
-    ```
+   ```bash
+   git clone https://github.com/MauriNestor/BackendTIS.git
+   ```
 
 2. Instala las dependencias:
 
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
+
 3. Configura las variables de entorno:
 
-    Crea un archivo `.env` en el directorio raíz del proyecto y define las siguientes variables:
+   Crea un archivo `.env` en el directorio raíz del proyecto y define las siguientes variables:
 
-    ```
-    DB_CONNECTION=mongodb://localhost:27017/nombre-db
-    JWT_SECRET=tu_clave_secreta
-    ```
+   ```
+   DB_CONNECTION=mongodb://localhost:27017/nombre-db
+   JWT_SECRET=tu_clave_secreta
+   ```
 
 4. Inicia el servidor:
 
-    ```bash
-    npm start
-    ```
+   ```bash
+   npm start
+   ```
 
 ## Uso
 

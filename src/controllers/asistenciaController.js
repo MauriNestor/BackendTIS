@@ -47,3 +47,26 @@ exports.generarReporte = async (req, res) => {
         });
     }
 };
+
+exports.obtenerAsistencia = async (req, res) => {
+    try {
+        const { codGrupo, fecha } = req.query;
+
+        if (!codGrupo || !fecha) {
+            return res.status(400).json({ message: "codGrupo y fecha son obligatorios" });
+        }
+
+        const asistencia = await asistenciaService.obtenerAsistencia(codGrupo, fecha);
+
+        return res.status(200).json({
+            message: "Asistencia obtenida exitosamente",
+            asistencia: asistencia
+        });
+    } catch (err) {
+        console.error("Error en el controlador obtenerAsistencia:", err);
+        return res.status(500).json({
+            message: "Error al obtener la asistencia",
+            error: err.message
+        });
+    }
+};

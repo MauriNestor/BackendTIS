@@ -7,4 +7,6 @@ router.post('/registrar/:codClase', verificarToken, asistenciaController.registr
 
 router.get('/reporte/:codClase/:codGrupo', verificarToken, asistenciaController.generarReporte);
 
+router.get('/', verificarToken, asistenciaController.obtenerAsistencia);
+
 module.exports = router;

@@ -90,8 +90,34 @@ const generarReporte = async (codClase, codGrupo) => {
     }
 };
 
+const obtenerAsistencia = async (codGrupo, fecha) => {
+    try {
+        const query = `
+            SELECT fecha_asistencia, tipo_asistencia, codigo_sis 
+            FROM asistencia 
+            WHERE fecha_asistencia = $1 
+            AND codigo_sis IN (
+                SELECT codigo_sis
+                FROM grupo_estudiante
+                WHERE cod_grupoempresa = $2
+            );
+        `;
+
+        const asistencia = await pool.query(query, [fecha, codGrupo]);
+
+        if (asistencia.rows.length > 0) {
+            return asistencia.rows; 
+        } else {
+            return []; 
+        }
+    } catch (err) {
+        console.error('Error al obtener la asistencia', err);
+        throw err;
+    }
+}; 
 
 module.exports = {
     registrarAsistencia,
     generarReporte,
+    obtenerAsistencia,
 };

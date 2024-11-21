@@ -52,15 +52,24 @@ exports.obtenerAsistencia = async (req, res) => {
     try {
         const { codGrupo, fecha } = req.query;
 
+        // Validar que ambos parámetros están presentes
         if (!codGrupo || !fecha) {
             return res.status(400).json({ message: "codGrupo y fecha son obligatorios" });
         }
 
+        // Llamar al servicio para obtener la asistencia
         const asistencia = await asistenciaService.obtenerAsistencia(codGrupo, fecha);
 
+        // Formatear las fechas de la asistencia
+        const asistenciaFormateada = asistencia.map(item => ({
+            ...item,
+            fecha_asistencia: new Date(item.fecha_asistencia).toISOString().split('T')[0] // Formato "YYYY-MM-DD"
+        }));
+
+        // Retornar la asistencia obtenida
         return res.status(200).json({
             message: "Asistencia obtenida exitosamente",
-            asistencia: asistencia
+            data: asistenciaFormateada
         });
     } catch (err) {
         console.error("Error en el controlador obtenerAsistencia:", err);

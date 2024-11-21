@@ -16,8 +16,6 @@ const registrarAsistencia = async (codClase, listaAsistencia) => {
             );
         }
         
-        return listaAsistencia;
-        
     } catch (err) {
         console.error('Error al registrar la asistencia', err);
         throw err;

@@ -12,8 +12,7 @@ exports.registrarAsistencia = async (req, res) => {
         const asistenciaRegistrada = await asistenciaService.registrarAsistencia(codClase, listaAsistencia);
         
         res.status(200).json({
-            message: 'Asistencia registrada correctamente',
-            asistenciaRegistrada
+            message: 'Asistencia registrada correctamente'
         });
         
     } catch (error) {

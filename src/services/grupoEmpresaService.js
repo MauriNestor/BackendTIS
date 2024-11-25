@@ -96,6 +96,7 @@ exports.getGrupoEmpresa = async (codigoGrupo) => {
       return { message: "No se encontró la grupo-empresa." };
     }
   } catch (error) {
+    console.error("Detalles del error en getGrupoEmpresa:", error.message);
     throw new Error("Error al obtener los datos de grupo empresa.");
   }
 };

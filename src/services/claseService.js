@@ -64,9 +64,23 @@ obtenerHorarioDisponible: async (codClase) => {
     console.error('Error en la consulta de obtención de horarios de clase:', error);
     throw new Error('Error al obtener horarios de clase en la base de datos');
   }
+},
+
+getNombreClase: async (codClase) => {
+  try {
+    const result = await pool.query(
+      `SELECT nombre_clase 
+        FROM Clase
+        WHERE cod_clase = $1 `,
+      [codClase]
+    );
+    return result.rows[0].nombre_clase;
+  } catch (error) {
+    console.error('Error en la consulta de getNombreClase:', error);
+    throw new Error('Error getNombreClase');
+  }
 }
 
 };
-
 
 module.exports = ClaseService;

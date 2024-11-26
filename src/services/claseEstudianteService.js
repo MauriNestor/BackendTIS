@@ -171,7 +171,8 @@ const getEstudiantesXClase = async (codigoClase) => {
             ` SELECT 
             e.codigo_sis, 
             e.nombre_estudiante, 
-            e.apellido_estudiante
+            e.apellido_estudiante,
+            e.correo_estudiante
         FROM 
             ESTUDIANTE e
         WHERE 

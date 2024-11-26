@@ -46,7 +46,11 @@ exports.getEstudiantes = async (codigoGrupo) => {
     e.codigo_sis, 
     e.nombre_estudiante, 
     e.apellido_estudiante,
+    r.rol, 
+    correo_estudiante
+    e.correo_estudiante,
     r.rol
+
     FROM 
         ESTUDIANTE e
     JOIN 
@@ -65,7 +69,7 @@ exports.getEstudiantes = async (codigoGrupo) => {
     const result = await pool.query(query, [codigoGrupo]);
     return result.rows;
   } catch (error) {
-      throw new Error("Error al obtener los estudiantes sin grupo.");
+      throw new Error("Error al obtener los estudiantes del grupo.");
   }
 };
 

@@ -47,10 +47,7 @@ exports.getEstudiantes = async (codigoGrupo) => {
     e.nombre_estudiante, 
     e.apellido_estudiante,
     r.rol, 
-    correo_estudiante
-    e.correo_estudiante,
-    r.rol
-
+    e.correo_estudiante
     FROM 
         ESTUDIANTE e
     JOIN 

@@ -91,7 +91,7 @@ exports.registrarEvaluacion = async (codClase, tema, nombreEvaluacion, tipoEvalu
         // Verifica si se enviaron `codigosGrupos`
         if (tipoEvaluacion === "Evaluación cruzada") {
             const asignacionGrupos = await evaluacionCruzadaService.registrarEvalCruzada(codEvaluacion, codClase);
-            return codEvaluacion;
+            //return codEvaluacion;
         }
         if (codigosGrupos && codigosGrupos.length > 0) {
             // Realiza la asignación de evaluación

@@ -113,7 +113,7 @@ Content-Type: application/json
 
 ### obtner nota si es estudiante, rubrica y retroalimentacionGrupal
 GET http://localhost:3000/evaluaciones/9/ABCDE/nota-total
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzEzNzA0MzAsImV4cCI6MTczMTM3NDAzMH0.9_tYJFAnGG2q0uTwoeJ8GYSYxI-MELJkVvXwpKHFODU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzE3ODAwMTQsImV4cCI6MTczMTc4MzYxNH0.oLY8AvJZCLw3LzsjrseiU-_pWfsEHfi4ZOFnsCkqAzU
 
 ### Obtener Rúbricas y Detalles y notas de una rubrica para un Grupo y estudiante
 GET http://localhost:3000/rubricas/9/grupos/12/calificaciones
@@ -127,3 +127,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwM
 ### eliminar evaluacion 
 DELETE http://localhost:3000/evaluaciones/15
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzEzNjMwNTMsImV4cCI6MTczMTM2NjY1M30.oS0OfjK7x1-tAyqqviP41ml8TdyqJ-XWNgI7h7LXzj8
+
+
+### Generar reporte de notas por grupo
+GET http://localhost:3000/reportes/grupos/12/reporte-notas
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzE3NzgzMzMsImV4cCI6MTczMTc4MTkzM30.Rb1Fi9raAbLzjRMJtq5uBr5LiXkJNOAg6_WQnGUpOJE

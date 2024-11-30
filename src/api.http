@@ -132,3 +132,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6M
 ### Generar reporte de notas por grupo
 GET http://localhost:3000/reportes/grupos/12/reporte-notas
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzE3NzgzMzMsImV4cCI6MTczMTc4MTkzM30.Rb1Fi9raAbLzjRMJtq5uBr5LiXkJNOAg6_WQnGUpOJE
+
+
+
+### aniandir mas integrantes
+PUT http://localhost:3000/api/grupos/ABCDE/grupo/12/agregarIntegrantes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzI5ODI1MjMsImV4cCI6MTczMjk4NjEyM30.bQzLt0MdSsejfGWzI0xHZhD0yMVn8oJ8JH-IjeNV4OE
+Content-Type: application/json
+
+{
+  "codigoSis": [202103819],
+  "roles": ["Diseño"]
+}

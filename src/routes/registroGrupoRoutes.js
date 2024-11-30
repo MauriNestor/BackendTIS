@@ -10,5 +10,6 @@ router.get("/:codigoClase", verificarToken, registroGrupoController.getAllGrupos
 router.get("/:codigoClase/estudiantes-sin-grupo", verificarToken, registroGrupoController.getEstudiantesSinGruposEmpresa);
 router.get("/grupo/:codigoGrupo",verificarToken, verificarGrupoEstudiante, registroGrupoController.getGrupoEmpresa);
 
+router.put("/:codigoClase/grupo/:codigoGrupo/agregarIntegrantes", verificarToken, registroGrupoController.agregarIntegrantes);
 
 module.exports = router;

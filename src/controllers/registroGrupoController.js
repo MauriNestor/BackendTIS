@@ -190,3 +190,24 @@ exports.getEstudiantesDeGrupo = async (req, res) => {
     });
   }
 };
+
+exports.agregarIntegrantes = async (req, res) => {
+  const { codigoClase, codigoGrupo } = req.params;
+  const { codigoSis, roles } = req.body;  
+  const estudianteQueAgrega = req.user.codigoSis; 
+
+  try {
+    await grupoEstudianteService.agregarIntegrantesAlGrupo({
+      codigoSis: estudianteQueAgrega,
+      codigoClase,
+      codigoGrupo,
+      estudiantes: codigoSis,
+      roles: roles, // Roles a agregar para cada estudiante
+    });
+
+    res.status(200).json({ message: "Estudiantes agregados correctamente." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al agregar estudiantes.", error: error.message });
+  }
+};

@@ -199,4 +199,43 @@ exports.eliminarEvaluacion = async (req, res) => {
         console.error('Error al eliminar la evaluación:', error);
         res.status(500).json({ error: 'Error al eliminar la evaluación', detalle: error.message });
     }
-}
+};
+
+exports.editarEvaluacion = async (req, res) => {
+    try {
+        const { codEvaluacion } = req.params;
+        const { nombreEvaluacion, descripcion, fechaEntrega } = req.body;
+
+        // Validar los datos de entrada
+        if (!nombreEvaluacion || !descripcion || !fechaEntrega) {
+            return res.status(400).json({
+                message: "Todos los campos (nombreEvaluacion, descripcion, fechaEntrega) son obligatorios."
+            });
+        }
+
+        // Llamar al servicio para editar la evaluación
+        await evaluacionesService.editarEvaluacion(codEvaluacion, {
+            nombreEvaluacion,
+            descripcion,
+            fechaEntrega
+        });
+
+        return res.status(200).json({
+            message: "Evaluación editada exitosamente."
+        });
+    } catch (error) {
+        console.error("Error en el controlador editarEvaluacion:", error);
+
+        // Verificar si el error es porque no existe el `codEvaluacion`
+        if (error.message === "La evaluación especificada no existe.") {
+            return res.status(404).json({
+                message: error.message
+            });
+        }
+
+        return res.status(500).json({
+            message: "Error al editar la evaluación.",
+            error: error.message
+        });
+    }
+};

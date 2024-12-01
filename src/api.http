@@ -123,11 +123,11 @@ Content-Type: application/json
 
 ### obtner nota si es estudiante, rubrica y retroalimentacionGrupal
 GET http://localhost:3000/evaluaciones/9/ABCDE/nota-total
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzE3ODAwMTQsImV4cCI6MTczMTc4MzYxNH0.oLY8AvJZCLw3LzsjrseiU-_pWfsEHfi4ZOFnsCkqAzU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzMwODkyOTAsImV4cCI6MTczMzA5Mjg5MH0.mtWEiX9YD-Y_w_LDVWpzqWwErV0dP2Tez2v_r4Doln0
 
 ### Obtener Rúbricas y Detalles y notas de una rubrica para un Grupo y estudiante
 GET http://localhost:3000/rubricas/9/grupos/12/calificaciones
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzI5OTg0MzYsImV4cCI6MTczMzAwMjAzNn0.6xyf2zjNrFLvDhfbavE0JIhpTduJFQ_T4nEhLg-7NA8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzMwODkyOTAsImV4cCI6MTczMzA5Mjg5MH0.mtWEiX9YD-Y_w_LDVWpzqWwErV0dP2Tez2v_r4Doln0
 Content-Type: application/json
 
 ### Correccion obtener integranes de grupo

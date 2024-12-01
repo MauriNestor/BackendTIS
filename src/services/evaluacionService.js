@@ -305,6 +305,16 @@ exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis, co
         ? retroalimentacionResult.rows[0]
         : { comentario: null, fecha_registro: null };
 
+        const retroalimentacionIndividualResult = await pool.query(
+            `SELECT comentario_individual
+             FROM retroalimentacion_individual
+             WHERE cod_evaluacion = $1 AND codigo_sis = $2`,
+            [cod_evaluacion, codigo_sis]
+        );
+        const comentario_individual = retroalimentacionIndividualResult.rows.length > 0
+            ? retroalimentacionIndividualResult.rows[0].comentario_individual
+            : null;
+            
         const rubricasConCalificacionesYDetalles = await Promise.all(
             rubricas.map(async (rubrica) => {
 
@@ -337,7 +347,8 @@ exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis, co
         return {
             nota_total: notaTotal,
             rubricas: rubricasConCalificacionesYDetalles,
-            retroalimentacion: retroalimentacion
+            retroalimentacion: retroalimentacion,
+            comentario_individual: comentario_individual  
         };
     } catch (error) {
         console.error('Error al obtener las notas detalladas del estudiante:', error);

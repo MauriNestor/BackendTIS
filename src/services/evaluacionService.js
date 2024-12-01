@@ -245,15 +245,22 @@ exports.eliminarEvaluacion = async (codEvaluacion) => {
 exports.getListaGruposEntregaronEvaluacion = async (codEvaluacion, codigoSis) => {
     try {
         const { cod_clase } = await obtenerDocenteYClasePorEvaluacion(codEvaluacion);
-
         const { cod_grupoempresa } = await grupoEmpresaService.obtenerGrupoYHorarioDelEstudiante(codigoSis, cod_clase);
+
         const entregableResult = await pool.query(
-            `SELECT archivo_grupo FROM entregable
+            `SELECT archivo_grupo, link_entregable FROM entregable
              WHERE cod_evaluacion = $1 AND cod_grupoempresa = $2`,
             [codEvaluacion, cod_grupoempresa]
         );
 
-        return entregableResult.rows.length > 0 ? entregableResult.rows[0].archivo_grupo : null;
+        if (entregableResult.rows.length > 0) {
+            return {
+                archivoBuffer: entregableResult.rows[0].archivo_grupo,  
+                linkEntregable: entregableResult.rows[0].link_entregable 
+            };
+        }
+
+        return { archivoBuffer: null, linkEntregable: null };
 
     } catch (error) {
         console.error('Error en obtenerEntregablePorEvaluacionYGrupo:', error);

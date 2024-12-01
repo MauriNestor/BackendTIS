@@ -83,8 +83,8 @@ Content-Type: application/json
 }
 
 ### Obtener Entregable de una Evaluación
-GET http://localhost:3000/evaluaciones/15/entregado
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzMwMDE1NjksImV4cCI6MTczMzAwNTE2OX0.nkbaDLA0o8IrnPwDn7GQlNPRr9SCaVyDAwLm2x2U6k8
+GET http://localhost:3000/evaluaciones/16/entregado
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzMwMjEzNjIsImV4cCI6MTczMzAyNDk2Mn0.Lu0wLhaDPjy4ufZ77fEa4PBHYqpzDIbyOSs4ud1AyR4
 
 
 ### crear estudiante deploy

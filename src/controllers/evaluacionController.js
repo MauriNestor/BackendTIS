@@ -17,8 +17,8 @@ exports.getEvaluacionesByClass = async (req, res) => {
         }
 
         if (!evaluaciones || evaluaciones.length === 0) {
-            return res.status(404).json({
-                error: 'No se encontraron evaluaciones o no está autorizado'
+            return res.status(200).json({
+                message: 'Aún no existen evaluaciones para esta clase.'
             });
         }
 

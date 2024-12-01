@@ -170,7 +170,7 @@ const obtenerDocenteYClasePorEvaluacion = async (cod_evaluacion) => {
     }
 };
 
-exports.subirEntregable = async (cod_evaluacion, archivo_grupo, codigo_sis) => {
+exports.subirEntregable = async (cod_evaluacion, archivo_grupo, link_entregable , codigo_sis) => {
     try {
         const limiteTamanioArchivo = 10 * 1024 * 1024; 
         const archivoBuffer = archivo_grupo ? Buffer.from(archivo_grupo, 'base64') : null;
@@ -193,10 +193,10 @@ exports.subirEntregable = async (cod_evaluacion, archivo_grupo, codigo_sis) => {
         }
         await pool.query(
             `UPDATE entregable
-             SET archivo_grupo = $1
-             WHERE cod_evaluacion = $2 AND cod_grupoempresa = $3`,
-            [archivoBuffer, cod_evaluacion, cod_grupoempresa]
-        );
+             SET archivo_grupo = $1, link_entregable = $2
+             WHERE cod_evaluacion = $3 AND cod_grupoempresa = $4`,
+            [archivoBuffer, link_entregable || null, cod_evaluacion, cod_grupoempresa]
+        ); 
 
         return { message: 'Archivo del entregable actualizado exitosamente' };
     } catch (error) {

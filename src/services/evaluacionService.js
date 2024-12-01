@@ -378,3 +378,24 @@ exports.obtenerRubricasYDetallesDocente = async (cod_evaluacion) => {
         throw new Error('Error al obtener las rúbricas y detalles para el docente');
     }
 };
+
+exports.obtenerArchivosEntregadosDocente = async (codEvaluacion, codGrupo) => {
+    try {
+        const entregableResult = await pool.query(
+            `SELECT archivo_grupo, link_entregable FROM entregable
+             WHERE cod_evaluacion = $1 AND cod_grupoempresa = $2`,
+            [codEvaluacion, codGrupo]
+        );
+
+        if (entregableResult.rows.length > 0) {
+            return {
+                archivoBuffer: entregableResult.rows[0].archivo_grupo,  
+                linkEntregable: entregableResult.rows[0].link_entregable 
+            };
+        }
+        return { archivoBuffer: null, linkEntregable: null };
+    } catch (error) {
+        console.error('Error al obtener los archivos entregados por el docente:', error);
+        throw new Error('Error al obtener los archivos entregados por el docente');
+    }
+}

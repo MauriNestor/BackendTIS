@@ -211,3 +211,31 @@ exports.eliminarEvaluacion = async (req, res) => {
         res.status(500).json({ error: 'Error al eliminar la evaluación', detalle: error.message });
     }
 }
+
+exports.obtenerArchivosEntregadosDocente = async (req, res) => {
+    const { codEvaluacion, codGrupo } = req.params;
+    const role = req.user.role;
+
+    try {
+        const { archivoBuffer, linkEntregable }= await evaluacionesService.obtenerArchivosEntregadosDocente(codEvaluacion, codGrupo, role);
+
+        if (archivoBuffer || linkEntregable) {
+            const respuesta = {};
+            
+            if (archivoBuffer) {
+                respuesta.archivo = archivoBuffer.toString('base64');
+            }
+
+            if (linkEntregable) {
+                respuesta.link_entregable = linkEntregable;
+            }
+
+            return res.status(200).json(respuesta);
+        } else {
+            return res.status(204).json({ message: 'No se ha subido ningún entregable para esta evaluación' });
+        }    
+    } catch (error) {
+        console.error('Error al obtener los archivos entregados:', error);
+        res.status(500).json({ error: 'Error al obtener los archivos entregados', detalle: error.message });
+    }
+}

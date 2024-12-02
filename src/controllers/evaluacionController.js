@@ -17,8 +17,8 @@ exports.getEvaluacionesByClass = async (req, res) => {
         }
 
         if (!evaluaciones || evaluaciones.length === 0) {
-            return res.status(200).json({
-                message: 'Aún no existen evaluaciones para esta clase.'
+            return res.status(404).json({
+                error: 'No se encontraron evaluaciones'
             });
         }
 
@@ -103,9 +103,10 @@ exports.obtenerEstadoEntregas = async (req, res) => {
 //mover desde aqui hasta el final a un nuevo controlador de entregables
 exports.subirEntregable = async (req, res) => {
     const { codEvaluacion } = req.params;
-    const archivo_grupo = req.body.archivo_grupo;
+    const { archivo_grupo, link_entregable } = req.body;
     const codigo_sis = req.user.codigoSis;  
     console.log('codigo_sis del estudiante:', codigo_sis);
+    console.log('codEvaluacion:', codEvaluacion);
 
     if (!archivo_grupo) {
         return res.status(400).json({ error: 'El archivo del grupo no está presente' });
@@ -115,6 +116,7 @@ exports.subirEntregable = async (req, res) => {
         const result = await evaluacionesService.subirEntregable(
             codEvaluacion,
             archivo_grupo,
+            link_entregable,
             codigo_sis
         );
         
@@ -132,15 +134,24 @@ exports.obtenerEntregablePorEvaluacion = async (req, res) => {
     const codigo_sis = req.user.codigoSis;  
 
     try {
-        const archivoBuffer = await evaluacionesService.getListaGruposEntregaronEvaluacion(codEvaluacion, codigo_sis);
+        const { archivoBuffer, linkEntregable } = await evaluacionesService.getListaGruposEntregaronEvaluacion(codEvaluacion, codigo_sis);
 
-        if (archivoBuffer) {
-            const archivoBase64 = archivoBuffer.toString('base64');
-            res.status(200).json({ archivo: archivoBase64 });
+        if (archivoBuffer || linkEntregable) {
+            const respuesta = {};
+            
+            if (archivoBuffer) {
+                respuesta.archivo = archivoBuffer.toString('base64');
+            }
+
+            if (linkEntregable) {
+                respuesta.link_entregable = linkEntregable;
+            }
+
+            return res.status(200).json(respuesta);
         } else {
-            res.status(204).json({ message: 'No se ha subido ningún entregable para esta evaluación' });
+            return res.status(204).json({ message: 'No se ha subido ningún entregable para esta evaluación' });
         }
-    } catch (error) {
+    }catch (error) {
         console.error('Error al obtener el entregable:', error);
         res.status(500).json({ error: 'Error al obtener el entregable', detalle: error.message });
     }
@@ -198,5 +209,33 @@ exports.eliminarEvaluacion = async (req, res) => {
     } catch (error) {
         console.error('Error al eliminar la evaluación:', error);
         res.status(500).json({ error: 'Error al eliminar la evaluación', detalle: error.message });
+    }
+}
+
+exports.obtenerArchivosEntregadosDocente = async (req, res) => {
+    const { codEvaluacion, codGrupo } = req.params;
+    const role = req.user.role;
+
+    try {
+        const { archivoBuffer, linkEntregable }= await evaluacionesService.obtenerArchivosEntregadosDocente(codEvaluacion, codGrupo, role);
+
+        if (archivoBuffer || linkEntregable) {
+            const respuesta = {};
+            
+            if (archivoBuffer) {
+                respuesta.archivo = archivoBuffer.toString('base64');
+            }
+
+            if (linkEntregable) {
+                respuesta.link_entregable = linkEntregable;
+            }
+
+            return res.status(200).json(respuesta);
+        } else {
+            return res.status(204).json({ message: 'No se ha subido ningún entregable para esta evaluación' });
+        }    
+    } catch (error) {
+        console.error('Error al obtener los archivos entregados:', error);
+        res.status(500).json({ error: 'Error al obtener los archivos entregados', detalle: error.message });
     }
 }

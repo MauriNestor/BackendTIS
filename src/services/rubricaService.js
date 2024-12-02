@@ -51,18 +51,6 @@ const obtenerCalificacionPorEstudianteYRubrica = async (cod_rubrica, cod_evaluac
 
     return result.rows.length > 0 ? result.rows[0] : { calificacion: null, observacion: null };
 };
-const obtenerEstudiantesConCalificaciones = async (estudiantes, rubrica, cod_evaluacion) => {
-    return Promise.all(
-        estudiantes.map(async (estudiante) => {
-            const calificacion = await obtenerCalificacionPorEstudianteYRubrica(
-                rubrica.cod_rubrica,
-                cod_evaluacion,
-                estudiante.codigo_sis
-            );
-            return { ...estudiante, calificacion };
-        })
-    );
-};
 
 const obtenerRubricasConCalificaciones = async (cod_evaluacion, cod_grupoempresa) => {
     try {

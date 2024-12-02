@@ -33,9 +33,9 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://mtis.netlify.app",
-    origin: "http://localhost:5174",
-    origin: "http://localhost:5173",
+    origin: ["https://mtis.netlify.app", "http://localhost:5174", "http://localhost:5173"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
   })
 );
 app.use(express.json({ limit: "10mb" })); // Para parsear JSON con límite

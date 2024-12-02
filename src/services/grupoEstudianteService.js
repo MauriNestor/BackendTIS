@@ -102,3 +102,65 @@ exports.getCodGrupo = async (codigoSis, codClase) => {
         throw error;
     }
 };
+
+exports.agregarIntegrantesAlGrupo = async ({ codigoSis, codigoClase, codigoGrupo, estudiantes, roles }) => {
+  const client = await pool.connect();
+  
+  try {
+    await client.query("BEGIN");
+
+    const resEstudiante = await client.query(
+      `SELECT cod_docente, cod_horario FROM grupo_estudiante 
+      WHERE codigo_sis = $1 AND cod_clase = $2 AND cod_grupoempresa = $3`,
+      [codigoSis, codigoClase, codigoGrupo]
+    );
+
+    if (resEstudiante.rows.length === 0) {
+      throw new Error(`No se encontró el grupo o el estudiante en la base de datos.`);
+    }
+
+    const { cod_docente, cod_horario } = resEstudiante.rows[0];
+
+    const resGestion = await client.query(
+      "SELECT cod_gestion FROM clase WHERE cod_clase = $1",
+      [codigoClase]
+    );
+    const cod_gestion = resGestion.rows[0].cod_gestion;
+
+    for (let i = 0; i < estudiantes.length; i++) {
+      const codigo_sis = estudiantes[i];
+      const rol = roles[i];
+
+      const resRol = await client.query(
+        "SELECT cod_rol FROM rol WHERE rol = $1",
+        [rol]
+      );
+
+      if (resRol.rows.length === 0) {
+        throw new Error(`El rol "${rol}" no existe en la base de datos.`);
+      }
+
+      const cod_rol = resRol.rows[0].cod_rol;
+
+      await client.query(
+        `INSERT INTO grupo_estudiante (cod_docente, cod_clase, cod_grupoempresa, codigo_sis, cod_horario)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [cod_docente, codigoClase, codigoGrupo, codigo_sis, cod_horario]
+      );
+
+      await client.query(
+        `INSERT INTO rol_estudiante (codigo_sis, cod_rol, cod_gestion)
+         VALUES ($1, $2, $3)`,
+        [codigo_sis, cod_rol, cod_gestion]
+      );
+    }
+
+    await client.query("COMMIT");
+  } catch (error) {
+    await client.query("ROLLBACK");
+    console.error("Error al agregar estudiantes:", error.message);
+    throw new Error("Error al agregar estudiantes.");
+  } finally {
+    client.release();
+  }
+};

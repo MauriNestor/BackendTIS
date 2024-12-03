@@ -177,17 +177,16 @@ const editarRubrica = async (rubricas) => {
             WHERE cod_rubrica = $4;`,
             [rubrica.nombreRubrica, rubrica.descripcionRubrica, rubrica.pesoRubrica, rubrica.codRubrica]
         );
-        codRubrica = result.rows[0].cod_rubrica;
+        //codRubrica = result.rows[0].cod_rubrica;
 
         // Verifica si se enviaron `detallesRubrica`
-        let codigosDetalle;
+        //let codigosDetalle;
         if (rubrica.detallesRubrica && rubrica.detallesRubrica.length > 0) {
-            codigosDetalle = await detalleRubricaService.registrarDetallesRubrica(client, codEvaluacion, codRubrica, rubrica.detallesRubrica);
+            await detalleRubricaService.editarDetallesRubrica(client, rubrica.detallesRubrica);
         }
       }
         
       await client.query('COMMIT');
-      //return {codRubrica, codigosDetalle};
 
     } catch (err) {
         await client.query('ROLLBACK'); // Revertir la transacción en caso de error

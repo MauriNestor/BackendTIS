@@ -8,4 +8,7 @@ router.post('/registrar-rubrica', verificarToken, rubricaController.registrarRub
 
 router.get('/:codEvaluacion/grupos/:codGrupo/calificaciones', verificarToken, rubricaController.obtenerCalificacionesPorEvaluacionYGrupo);
 
+// Ruta para editar múltiples rúbricas
+router.put('/editar', verificarToken, rubricaController.editarRubrica);
+
 module.exports = router;

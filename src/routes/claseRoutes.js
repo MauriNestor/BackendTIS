@@ -14,5 +14,8 @@ router.post('/:codClase/horarios', verificarToken, horarioController.registrarHo
 
 // Ruta para editar el número de integrantes
 router.put('/:codClase/integrantes',verificarToken, claseController.editarNroIntegrantes);
+
+// Ruta para obtener una clase por su código
+router.get('/:codClase', verificarToken, claseController.obtenerClase);
   
 module.exports = router;

@@ -74,3 +74,34 @@ exports.editarNroIntegrantes = async (req, res) => {
   }
 };
 
+exports.obtenerClase = async (req, res) => {
+  try {
+      const { codClase } = req.params;
+
+      if (!codClase) {
+          return res.status(400).json({
+              message: 'El código de clase es requerido.',
+          });
+      }
+
+      const clase = await ClaseService.obtenerClase(codClase);
+
+      // Verificar si la clase existe
+      if (!clase) {
+          return res.status(404).json({
+              message: 'Clase no encontrada.',
+          });
+      }
+
+      return res.status(200).json({
+          message: 'Clase obtenida exitosamente.',
+          clase,
+      });
+  } catch (err) {
+      console.error('Error en el controlador obtenerClase:', err);
+      return res.status(500).json({
+          message: 'Error al obtener la clase.',
+          error: err.message,
+      });
+  }
+};

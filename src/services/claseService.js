@@ -94,6 +94,20 @@ editarNroIntegrantes: async (codClase, nroIntegrantes) => {
     console.error('Error en la consulta de editarNroIntegrantes:', error);
     throw new Error('Error editarNroIntegrantes');
   }
+},
+
+obtenerClase: async (codClase) => {
+  try {
+    const result = await pool.query( 
+           'SELECT * FROM clase WHERE cod_clase = $1',
+      [codClase]
+    );
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error en la consulta de obtención de obtenerClase:', error);
+    throw new Error('Error al obtener la clase');
+  }
 }
 
 };

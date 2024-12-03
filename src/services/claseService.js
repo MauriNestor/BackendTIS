@@ -79,6 +79,21 @@ getNombreClase: async (codClase) => {
     console.error('Error en la consulta de getNombreClase:', error);
     throw new Error('Error getNombreClase');
   }
+},
+
+editarNroIntegrantes: async (codClase, nroIntegrantes) => {
+  try {
+    const result = await pool.query(
+      `UPDATE clase
+      SET nro_integrantes = $1
+      WHERE cod_clase = $2 ;`,
+      [nroIntegrantes, codClase]
+    );
+    
+  } catch (error) {
+    console.error('Error en la consulta de editarNroIntegrantes:', error);
+    throw new Error('Error editarNroIntegrantes');
+  }
 }
 
 };

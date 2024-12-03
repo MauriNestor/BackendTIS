@@ -11,5 +11,8 @@ router.get('/obtener',verificarToken, claseController.obtenerClasesPorDocente);
 router.get('/:codClase/obtener-horarios', verificarToken, claseController.obtenerHorarioDisponible);
 
 router.post('/:codClase/horarios', verificarToken, horarioController.registrarHorario);
+
+// Ruta para editar el número de integrantes
+router.put('/:codClase/integrantes',verificarToken, claseController.editarNroIntegrantes);
   
 module.exports = router;

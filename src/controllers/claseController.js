@@ -47,4 +47,30 @@ exports.obtenerHorarioDisponible = async (req, res) => {
   }
 };
 
+exports.editarNroIntegrantes = async (req, res) => {
+  try {
+      const { codClase } = req.params;
+      const { nroIntegrantes } = req.body;
+
+      // Validación de parámetros
+      if (!codClase || nroIntegrantes === undefined) {
+          return res.status(400).json({
+              message: 'El código de clase y el número de integrantes son requeridos.',
+          });
+      }
+
+      // Llamar al servicio para editar el número de integrantes
+      await ClaseService.editarNroIntegrantes(codClase, nroIntegrantes);
+
+      return res.status(200).json({
+          message: 'Número de integrantes actualizado correctamente.',
+      });
+  } catch (err) {
+      console.error('Error en el controlador editarNroIntegrantes:', err);
+      return res.status(500).json({
+          message: 'Error al editar el número de integrantes.',
+          error: err.message,
+      });
+  }
+};
 

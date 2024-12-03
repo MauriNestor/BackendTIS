@@ -17,6 +17,9 @@ router.get('/:codEvaluacion/tipo', verificarToken, evaluacionesController.getTip
 
 router.delete('/:codEvaluacion', verificarToken, evaluacionesController.eliminarEvaluacion);
 
+// Ruta para editar una evaluación
+router.put('/editar/:codEvaluacion', verificarToken, evaluacionesController.editarEvaluacion);
+
 //mover desde aqui hasta el final a un nuevo router de entregables
 router.post('/:codEvaluacion/entregables', verificarToken, verificarEstudiante, evaluacionesController.subirEntregable);
 

@@ -121,7 +121,6 @@ const obtenerRubricasConCalificaciones = async (cod_evaluacion, cod_grupoempresa
     }
 };
 
-
 const registrarRubrica = async (codEvaluacion, rubricas) => {
     const client = await pool.connect(); 
     try {
@@ -154,10 +153,65 @@ const registrarRubrica = async (codEvaluacion, rubricas) => {
     }
 };
 
+const editarRubrica = async (rubricas) => {
+    const client = await pool.connect(); 
+    try {
+        await client.query('BEGIN'); 
+        let codRubrica;
+        for (const rubrica of rubricas) { 
+          const result = await client.query(
+            `UPDATE rubrica
+            SET nombre_rubrica = $1, descripcion_rubrica = $2, peso = $3
+            WHERE cod_rubrica = $4;`,
+            [rubrica.nombreRubrica, rubrica.descripcionRubrica, rubrica.pesoRubrica, rubrica.codRubrica]
+        );
+
+        if (rubrica.detallesRubrica && rubrica.detallesRubrica.length > 0) {
+            await detalleRubricaService.editarDetallesRubrica(client, rubrica.detallesRubrica);
+        }
+      }
+        
+      await client.query('COMMIT');
+
+    } catch (err) {
+        await client.query('ROLLBACK'); // Revertir la transacción en caso de error
+        console.error('Error al editar rúbrica', err);
+        throw err; 
+    } finally {
+        client.release(); 
+    }
+};
+
+const obtenerRubrica = async (codEvaluacion) => {
+    try {
+        // Obtener criterios de rúbrica
+        const result = await pool.query(
+            `SELECT cod_rubrica, nombre_rubrica, descripcion_rubrica, peso
+             FROM rubrica
+             WHERE cod_evaluacion = $1;`,
+            [codEvaluacion]
+        );
+
+        const criterios = result.rows;
+
+        // Añadir detalles de cada rúbrica
+        for (const criterio of criterios) {
+            const detalles = await obtenerDetallesPorRubrica(criterio.cod_rubrica);
+            criterio.detalles = detalles;
+        }
+
+        return criterios; // Devolver criterios con sus detalles
+    } catch (err) {
+        console.error('Error al obtener la rúbrica', err);
+        throw err;
+    }
+};
 
 module.exports = {
   registrarRubrica,
   obtenerRubricasConCalificaciones,
   obtenerRubricasPorEvaluacion,
-  obtenerDetallesPorRubrica
+  obtenerDetallesPorRubrica,
+  editarRubrica,
+  obtenerRubrica,
 };

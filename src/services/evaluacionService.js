@@ -379,6 +379,29 @@ exports.obtenerRubricasYDetallesDocente = async (cod_evaluacion) => {
     }
 };
 
+exports.editarEvaluacion = async (codEvaluacion, evaluacion) => {
+    try {
+        // Verificar la existencia de la evaluación
+        const checkQuery = `SELECT cod_evaluacion FROM evaluacion WHERE cod_evaluacion = $1`;
+        const checkResult = await pool.query(checkQuery, [codEvaluacion]);
+
+        if (checkResult.rowCount === 0) {
+            throw new Error("La evaluación especificada no existe.");
+        }
+
+        // Actualizar los datos de la evaluación
+        await pool.query(
+            `UPDATE evaluacion
+             SET evaluacion = $1, descripcion_evaluacion = $2, fecha_fin = $3
+             WHERE cod_evaluacion = $4`,
+            [evaluacion.nombreEvaluacion, evaluacion.descripcion, evaluacion.fechaEntrega, codEvaluacion]
+        );
+    } catch (error) {
+        console.error('Error al editar la evaluación:', error);
+        throw new Error(error.message || 'Error al editar la evaluación.');
+    }
+};
+
 exports.obtenerArchivosEntregadosDocente = async (codEvaluacion, codGrupo) => {
     try {
         const entregableResult = await pool.query(
@@ -399,3 +422,4 @@ exports.obtenerArchivosEntregadosDocente = async (codEvaluacion, codGrupo) => {
         throw new Error('Error al obtener los archivos entregados por el docente');
     }
 }
+

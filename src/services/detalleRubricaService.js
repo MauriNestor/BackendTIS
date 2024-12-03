@@ -7,9 +7,6 @@ const registrarDetallesRubrica = async (client, codEvaluacion, codigoRubrica, de
         for (const detalle of detalles) {
             const { clasificacion, peso, descripcion } = detalle;
 
-            // Log de los detalles recibidos
-            console.log('Detalles recibidos:', detalle);
-
             // Validar que todos los campos estén completos
             if (typeof clasificacion === 'undefined' || 
                 (typeof peso !== 'number' && isNaN(peso)) || 
@@ -35,6 +32,34 @@ const registrarDetallesRubrica = async (client, codEvaluacion, codigoRubrica, de
     }
 };
 
+const editarDetallesRubrica = async (client, detalles) => {
+    try {
+
+        for (const detalle of detalles) {
+            const {codDetalle,  clasificacion, peso, descripcion } = detalle;
+
+            // Validar que todos los campos estén completos
+            if (typeof clasificacion === 'undefined' || 
+                (typeof peso !== 'number' && isNaN(peso)) || 
+                typeof descripcion === 'undefined') {
+                throw new Error('Todos los campos de detalle deben estar completos. Clasificacion: ' + clasificacion + ', Peso: ' + peso + ', Descripcion: ' + descripcion);
+            }
+
+            const result = await client.query(
+                `UPDATE detalle_rubrica
+                SET clasificacion_rubrica = $1, descripcion = $2, peso_rubrica = $3
+                WHERE cod_detalle = $4 RETURNING *;`,
+                [clasificacion, descripcion, peso, codDetalle]
+            );
+        }
+
+    } catch (err) {
+        console.error('Error al editar detalles de rubrica', err);
+        throw err; 
+    }
+};
+
 module.exports = {
     registrarDetallesRubrica,
+    editarDetallesRubrica,
 };

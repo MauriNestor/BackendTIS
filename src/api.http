@@ -63,19 +63,33 @@ GET http://localhost:3000/api/grupos/14/estudiantes
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzA0NzU4NjcsImV4cCI6MTczMDQ3OTQ2N30.04HkVkEp4NS2vjUdeHVgM9ykQGslKWrp0hgOT8hTvgo
 
 
+# ### Subir Entregable
+# POST http://localhost:3000/evaluaciones/15/entregables
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzMwMDM3NTMsImV4cCI6MTczMzAwNzM1M30.TMrx1EXa5It-TkOv8rCxqrwLSJDL-80DgfFRcG33TS4
+# Content-Type: application/json
+
+# {
+#   "archivo_grupo": "YXNkYXNkYXNkYXNkYXNkYXNkYXNkYXNk"
+# }
+
 ### Subir Entregable
-POST http://localhost:3000/evaluaciones/4/entregables
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MjkzMDUyNTIsImV4cCI6MTcyOTMwODg1Mn0.DK0hca1APtZZ-5Ri8aB2IHLMOlBEbpplZ8WMfk4B_C0
+POST http://localhost:3000/evaluaciones/16/entregables
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzMwMDM3NTMsImV4cCI6MTczMzAwNzM1M30.TMrx1EXa5It-TkOv8rCxqrwLSJDL-80DgfFRcG33TS4
 Content-Type: application/json
 
 {
-  "archivo_grupo": "VGhpcyBpcyBhIHRlc3QgZmlsZSBjb250ZW50IGZvciB0aGUgZW50cmVnYWJsZS4="
+  "archivo_grupo": "YXNkYXNkYXNkYXNkYXNkYXNkYXNkYXNk",
+  "link_entregable": "http://example.com/link-to-deliverable"
 }
 
-### Obtener Entregable de una Evaluación
-GET http://localhost:3000/evaluaciones/10/entregado
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzEzNTczNTksImV4cCI6MTczMTM2MDk1OX0.euUec5l6UMia1_0IUPHAOY-85HffubaSyOu2vtNzPyM
+### Obtener Entregable de una Evaluación estudiante
+GET http://localhost:3000/evaluaciones/16/entregado
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzMwODkyOTAsImV4cCI6MTczMzA5Mjg5MH0.mtWEiX9YD-Y_w_LDVWpzqWwErV0dP2Tez2v_r4Doln0
 
+
+### obtener archivos de entregables docente
+GET http://localhost:3000/evaluaciones/16/entregas/12
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzMwOTEzODgsImV4cCI6MTczMzA5NDk4OH0.IWbaIccfM_IVMVijQfGP-d6BHVprK7DC9YfgVNnCobY
 
 ### crear estudiante deploy
 POST https://backend-tis-silk.vercel.app/estudiantes/registro
@@ -113,12 +127,12 @@ Content-Type: application/json
 
 ### obtner nota si es estudiante, rubrica y retroalimentacionGrupal
 GET http://localhost:3000/evaluaciones/9/ABCDE/nota-total
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzE3ODAwMTQsImV4cCI6MTczMTc4MzYxNH0.oLY8AvJZCLw3LzsjrseiU-_pWfsEHfi4ZOFnsCkqAzU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzMwODkyOTAsImV4cCI6MTczMzA5Mjg5MH0.mtWEiX9YD-Y_w_LDVWpzqWwErV0dP2Tez2v_r4Doln0
 
-### Obtener Rúbricas y Detalles y notas de una rubrica para un Grupo y estudiante
-GET http://localhost:3000/rubricas/9/grupos/12/calificaciones
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzEwODkzNDIsImV4cCI6MTczMTA5Mjk0Mn0.bzN60FvmwvHJXGCXFWkih11hb8mhsIybvW1BRyedtdM
-Content-Type: application/json
+# ### Obtener Rúbricas y Detalles y notas de una rubrica para un Grupo y estudiante
+# GET http://localhost:3000/rubricas/9/grupos/12/calificaciones
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzMwODkyOTAsImV4cCI6MTczMzA5Mjg5MH0.mtWEiX9YD-Y_w_LDVWpzqWwErV0dP2Tez2v_r4Doln0
+# Content-Type: application/json
 
 ### Correccion obtener integranes de grupo
 GET http://localhost:3000/eval-pares/ABCDE
@@ -132,3 +146,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6M
 ### Generar reporte de notas por grupo
 GET http://localhost:3000/reportes/grupos/12/reporte-notas
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzE3NzgzMzMsImV4cCI6MTczMTc4MTkzM30.Rb1Fi9raAbLzjRMJtq5uBr5LiXkJNOAg6_WQnGUpOJE
+
+
+
+### aniandir mas integrantes
+PUT http://localhost:3000/api/grupos/ABCDE/grupo/12/agregarIntegrantes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzI5ODI1MjMsImV4cCI6MTczMjk4NjEyM30.bQzLt0MdSsejfGWzI0xHZhD0yMVn8oJ8JH-IjeNV4OE
+Content-Type: application/json
+
+{
+  "codigoSis": [202103819],
+  "roles": ["Diseño"]
+}

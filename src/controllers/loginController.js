@@ -2,10 +2,10 @@ const { obtenerDocente } = require('../services/loginService');
 const { obtenerEstudiante } = require('../services/loginService'); 
 
 const autenticarDocente = async (req, res) => {
-    const { correo, password } = req.body;
+    const { correo, password,captchaToken  } = req.body;
 
     try {
-        const docente = await obtenerDocente(correo, password);
+        const docente = await obtenerDocente(correo, password, captchaToken);
         console.log("Autenticación exitosa.", docente)
         return res.status(200).json({
             message: 'Autenticación exitosa.',
@@ -20,10 +20,10 @@ const autenticarDocente = async (req, res) => {
 };
 
 const autenticarEstudiante = async (req, res) => {
-    const { codigoSis, password, correo } = req.body;
+    const { codigoSis, password, correo, captchaToken } = req.body;
 
     try {
-        const estudiante = await obtenerEstudiante(codigoSis, password, correo);
+        const estudiante = await obtenerEstudiante(codigoSis, password, correo, captchaToken);
         console.log("Autenticación exitosa.", estudiante)
         return res.status(200).json({
             message: 'Autenticación exitosa.',

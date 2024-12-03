@@ -177,10 +177,7 @@ const editarRubrica = async (rubricas) => {
             WHERE cod_rubrica = $4;`,
             [rubrica.nombreRubrica, rubrica.descripcionRubrica, rubrica.pesoRubrica, rubrica.codRubrica]
         );
-        //codRubrica = result.rows[0].cod_rubrica;
 
-        // Verifica si se enviaron `detallesRubrica`
-        //let codigosDetalle;
         if (rubrica.detallesRubrica && rubrica.detallesRubrica.length > 0) {
             await detalleRubricaService.editarDetallesRubrica(client, rubrica.detallesRubrica);
         }
@@ -197,10 +194,36 @@ const editarRubrica = async (rubricas) => {
     }
 };
 
+const obtenerRubrica = async (codEvaluacion) => {
+    try {
+        // Obtener criterios de rúbrica
+        const result = await pool.query(
+            `SELECT cod_rubrica, nombre_rubrica, descripcion_rubrica, peso
+             FROM rubrica
+             WHERE cod_evaluacion = $1;`,
+            [codEvaluacion]
+        );
+
+        const criterios = result.rows;
+
+        // Añadir detalles de cada rúbrica
+        for (const criterio of criterios) {
+            const detalles = await obtenerDetallesPorRubrica(criterio.cod_rubrica);
+            criterio.detalles = detalles;
+        }
+
+        return criterios; // Devolver criterios con sus detalles
+    } catch (err) {
+        console.error('Error al obtener la rúbrica', err);
+        throw err;
+    }
+};
+
 module.exports = {
   registrarRubrica,
   obtenerRubricasConCalificaciones,
   obtenerRubricasPorEvaluacion,
   obtenerDetallesPorRubrica,
   editarRubrica,
+  obtenerRubrica,
 };

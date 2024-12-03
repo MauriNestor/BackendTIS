@@ -11,4 +11,6 @@ router.get('/:codEvaluacion/grupos/:codGrupo/calificaciones', verificarToken, ru
 // Ruta para editar múltiples rúbricas
 router.put('/editar', verificarToken, rubricaController.editarRubrica);
 
+router.get('/:codEvaluacion', verificarToken, rubricaController.obtenerRubrica);
+
 module.exports = router;

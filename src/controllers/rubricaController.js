@@ -107,11 +107,34 @@ const rubricaService = require('../services/rubricaService');
         });
     }
 };
-  
+
+const obtenerRubrica = async (req, res) => {
+  try {
+      const { codEvaluacion } = req.params;
+
+      if (!codEvaluacion) {
+          return res.status(400).json({ message: 'El código de evaluación es requerido.' });
+      }
+
+      const rubrica = await rubricaService.obtenerRubrica(codEvaluacion);
+
+      return res.status(200).json({
+          message: 'Rúbrica obtenida exitosamente.',
+          rubrica,
+      });
+  } catch (err) {
+      console.error('Error en el controlador obtenerRubrica:', err);
+      return res.status(500).json({
+          message: 'Error al obtener la rúbrica.',
+          error: err.message,
+      });
+  }
+};  
 
 module.exports = {
     registrarRubrica,
     obtenerRubricasConDetalles,
     obtenerCalificacionesPorEvaluacionYGrupo,
     editarRubrica,
+    obtenerRubrica,
 };

@@ -17,8 +17,8 @@ const ClaseService = {
 crearClase: async (codDocente, codClase, codGestion, nombreClase) => {
   try {
     const result = await pool.query(
-      'INSERT INTO CLASE (cod_docente, cod_clase, cod_gestion, nombre_clase) VALUES ($1, $2, $3, $4) RETURNING *',
-      [codDocente, codClase, codGestion, nombreClase]
+      'INSERT INTO CLASE (cod_docente, cod_clase, cod_gestion, nombre_clase, nro_integrantes) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [codDocente, codClase, codGestion, nombreClase, 6]
     );
     return result.rows[0];
   } catch (error) {

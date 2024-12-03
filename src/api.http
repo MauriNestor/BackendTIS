@@ -129,10 +129,10 @@ Content-Type: application/json
 GET http://localhost:3000/evaluaciones/9/ABCDE/nota-total
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzMwODkyOTAsImV4cCI6MTczMzA5Mjg5MH0.mtWEiX9YD-Y_w_LDVWpzqWwErV0dP2Tez2v_r4Doln0
 
-# ### Obtener Rúbricas y Detalles y notas de una rubrica para un Grupo y estudiante
-# GET http://localhost:3000/rubricas/9/grupos/12/calificaciones
-# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzg2MSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzMwODkyOTAsImV4cCI6MTczMzA5Mjg5MH0.mtWEiX9YD-Y_w_LDVWpzqWwErV0dP2Tez2v_r4Doln0
-# Content-Type: application/json
+### Obtener detalles para planilla de evaluacion
+GET http://localhost:3000/rubricas/22/grupos/13/calificaciones
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOCwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzMyNDU3ODYsImV4cCI6MTczMzI0OTM4Nn0.lMsHEV5ecaNsP6OXClzTw0RvQxM2LUPr7fB23oCZYNw
+Content-Type: application/json
 
 ### Correccion obtener integranes de grupo
 GET http://localhost:3000/eval-pares/ABCDE

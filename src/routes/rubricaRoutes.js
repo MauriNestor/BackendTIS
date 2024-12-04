@@ -13,4 +13,6 @@ router.put('/editar', verificarToken, rubricaController.editarRubrica);
 
 router.get('/:codEvaluacion', verificarToken, rubricaController.obtenerRubrica);
 
+router.get('/nota-total/:codClase', verificarToken, rubricaController.obtenerNotaTotal);
+
 module.exports = router;

@@ -17,8 +17,8 @@ const ClaseService = {
 crearClase: async (codDocente, codClase, codGestion, nombreClase) => {
   try {
     const result = await pool.query(
-      'INSERT INTO CLASE (cod_docente, cod_clase, cod_gestion, nombre_clase) VALUES ($1, $2, $3, $4) RETURNING *',
-      [codDocente, codClase, codGestion, nombreClase]
+      'INSERT INTO CLASE (cod_docente, cod_clase, cod_gestion, nombre_clase, nro_integrantes) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [codDocente, codClase, codGestion, nombreClase, 6]
     );
     return result.rows[0];
   } catch (error) {
@@ -78,6 +78,35 @@ getNombreClase: async (codClase) => {
   } catch (error) {
     console.error('Error en la consulta de getNombreClase:', error);
     throw new Error('Error getNombreClase');
+  }
+},
+
+editarNroIntegrantes: async (codClase, nroIntegrantes) => {
+  try {
+    const result = await pool.query(
+      `UPDATE clase
+      SET nro_integrantes = $1
+      WHERE cod_clase = $2 ;`,
+      [nroIntegrantes, codClase]
+    );
+    
+  } catch (error) {
+    console.error('Error en la consulta de editarNroIntegrantes:', error);
+    throw new Error('Error editarNroIntegrantes');
+  }
+},
+
+obtenerClase: async (codClase) => {
+  try {
+    const result = await pool.query( 
+           'SELECT * FROM clase WHERE cod_clase = $1',
+      [codClase]
+    );
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error en la consulta de obtención de obtenerClase:', error);
+    throw new Error('Error al obtener la clase');
   }
 }
 

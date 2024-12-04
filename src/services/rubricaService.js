@@ -121,24 +121,30 @@ const obtenerRubricasConCalificaciones = async (cod_evaluacion, cod_grupoempresa
     }
 };
 
-const registrarRubrica = async (codEvaluacion, rubricas) => {
+const registrarRubrica = async (codEvaluacion, rubricas, codClase) => {
     const client = await pool.connect(); 
     try {
         await client.query('BEGIN'); 
         let codRubrica;
-        for (const rubrica of rubricas) { 
-          const result = await client.query(
-            `INSERT INTO Rubrica (cod_evaluacion, nombre_rubrica, descripcion_rubrica, peso) 
-            VALUES ($1, $2, $3, $4) RETURNING *;`,
-            [codEvaluacion, rubrica.nombreRubrica, rubrica.descripcionRubrica, rubrica.pesoRubrica]
-        );
-        codRubrica = result.rows[0].cod_rubrica;
-
-        // Verifica si se enviaron `detallesRubrica`
-        let codigosDetalle;
-        if (rubrica.detallesRubrica && rubrica.detallesRubrica.length > 0) {
-            codigosDetalle = await detalleRubricaService.registrarDetallesRubrica(client, codEvaluacion, codRubrica, rubrica.detallesRubrica);
-        }
+        for (const rubrica of rubricas) {
+            const notaActual = await getNotaTotal(codClase);
+            if ((100 -notaActual) >= rubrica.pesoRubrica) {
+                const result = await client.query(
+                    `INSERT INTO Rubrica (cod_evaluacion, nombre_rubrica, descripcion_rubrica, peso) 
+                    VALUES ($1, $2, $3, $4) RETURNING *;`,
+                    [codEvaluacion, rubrica.nombreRubrica, rubrica.descripcionRubrica, rubrica.pesoRubrica]
+                );
+                codRubrica = result.rows[0].cod_rubrica;
+        
+                // Verifica si se enviaron `detallesRubrica`
+                let codigosDetalle;
+                if (rubrica.detallesRubrica && rubrica.detallesRubrica.length > 0) {
+                    codigosDetalle = await detalleRubricaService.registrarDetallesRubrica(client, codEvaluacion, codRubrica, rubrica.detallesRubrica);
+                }
+            } else {
+                console.error('Error en la nota: el peso excede el límite permitido.');
+                throw new Error('Error, la suma de las evaluaciones debe ser <= 100');
+            }
       }
         
       await client.query('COMMIT');
@@ -153,25 +159,33 @@ const registrarRubrica = async (codEvaluacion, rubricas) => {
     }
 };
 
-const editarRubrica = async (rubricas) => {
+const editarRubrica = async (codEvaluacion, rubricas, codClase) => {
     const client = await pool.connect(); 
     try {
         await client.query('BEGIN'); 
-        let codRubrica;
-        for (const rubrica of rubricas) { 
-          const result = await client.query(
-            `UPDATE rubrica
-            SET nombre_rubrica = $1, descripcion_rubrica = $2, peso = $3
-            WHERE cod_rubrica = $4;`,
-            [rubrica.nombreRubrica, rubrica.descripcionRubrica, rubrica.pesoRubrica, rubrica.codRubrica]
-        );
-
-        if (rubrica.detallesRubrica && rubrica.detallesRubrica.length > 0) {
-            await detalleRubricaService.editarDetallesRubrica(client, rubrica.detallesRubrica);
-        }
-      }
         
-      await client.query('COMMIT');
+        for (const rubrica of rubricas) { 
+            if (!rubrica.codRubrica) {
+                // Registrar solo la rúbrica actual
+                await registrarRubrica(codEvaluacion, [rubrica], codClase);
+            } else {
+                const notaActual = await getNotaTotal(codClase);
+                if ((100 - notaActual) >= rubrica.pesoRubrica) {
+                    await client.query(
+                        `UPDATE rubrica
+                        SET nombre_rubrica = $1, descripcion_rubrica = $2, peso = $3
+                        WHERE cod_rubrica = $4;`,
+                        [rubrica.nombreRubrica, rubrica.descripcionRubrica, rubrica.pesoRubrica, rubrica.codRubrica]
+                    );
+            
+                    if (rubrica.detallesRubrica && rubrica.detallesRubrica.length > 0) {
+                        await detalleRubricaService.editarDetallesRubrica(client, rubrica.detallesRubrica);
+                    }
+                }               
+            }      
+        }
+        
+        await client.query('COMMIT');
 
     } catch (err) {
         await client.query('ROLLBACK'); // Revertir la transacción en caso de error
@@ -181,6 +195,7 @@ const editarRubrica = async (rubricas) => {
         client.release(); 
     }
 };
+
 
 const obtenerRubrica = async (codEvaluacion) => {
     try {
@@ -206,6 +221,33 @@ const obtenerRubrica = async (codEvaluacion) => {
         throw err;
     }
 };
+
+const getNotaTotal = async (codClase) => { 
+    try {
+        const result = await pool.query(
+            `SELECT COALESCE(SUM(r.peso), 0) AS suma_pesos
+             FROM rubrica r
+             WHERE r.cod_evaluacion IN (
+                 SELECT e.cod_evaluacion
+                 FROM evaluacion e
+                 WHERE cod_clase = $1
+             )`,
+            [codClase]
+        );
+
+        // Validar si existe un resultado
+        if (result.rows.length === 0) {
+            console.warn('No se encontraron rúbricas para la clase:', codClase);
+            return 0; // Retornar 0 si no hay rúbricas
+        }
+
+        return result.rows[0].suma_pesos || 0; // Retornar la suma o 0
+    } catch (err) {
+        console.error('Error al obtener la nota total', err);
+        throw err;
+    }
+};
+
 
 module.exports = {
   registrarRubrica,

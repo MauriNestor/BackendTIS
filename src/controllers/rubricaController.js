@@ -43,7 +43,7 @@ const rubricaService = require('../services/rubricaService');
   };
 
   const registrarRubrica = async (req, res) => {
-    const { codEvaluacion, rubricas } = req.body;
+    const { codEvaluacion, rubricas, codClase } = req.body;
   
     // Verificación del rol del usuario
     if (req.user.role !== 'docente') {
@@ -52,7 +52,7 @@ const rubricaService = require('../services/rubricaService');
   
     try {
       // Verificación básica de los datos requeridos
-      if (!codEvaluacion || !rubricas || rubricas.length === 0) {
+      if (!codEvaluacion || !rubricas || rubricas.length === 0 || !codClase) {
         return res.status(400).json({
           message: 'Datos incompletos. Asegúrate de proporcionar codEvaluacion y al menos una rúbrica.'
         });
@@ -68,7 +68,7 @@ const rubricaService = require('../services/rubricaService');
       }
   
       // Llamar al servicio para registrar las rúbricas
-      await rubricaService.registrarRubrica(codEvaluacion, rubricas);
+      await rubricaService.registrarRubrica(codEvaluacion, rubricas, codClase);
   
       res.status(201).json({
         message: 'Rúbricas registradas exitosamente',
@@ -83,28 +83,18 @@ const rubricaService = require('../services/rubricaService');
   };
 
   const editarRubrica = async (req, res) => {
+    const { codEvaluacion, rubricas, codClase } = req.body;
+
+    if (!codEvaluacion || !rubricas || !codClase) {
+        return res.status(400).json({ message: 'Faltan parámetros obligatorios.' });
+    }
+
     try {
-        const rubricas = req.body;
-
-        // Validar entrada
-        if (!Array.isArray(rubricas) || rubricas.length === 0) {
-            return res.status(400).json({
-                message: "Debe enviar un array de rúbricas para editar."
-            });
-        }
-
-        // Llamar al servicio para editar rúbricas
-        await rubricaService.editarRubrica(rubricas);
-
-        return res.status(200).json({
-            message: "Rúbricas editadas exitosamente."
-        });
+        await rubricaService.editarRubrica(codEvaluacion, rubricas, codClase);
+        res.status(200).json({ message: 'Rúbricas actualizadas correctamente.' });
     } catch (err) {
-        console.error("Error en el controlador editarRubrica:", err);
-        return res.status(500).json({
-            message: "Error al editar las rúbricas.",
-            error: err.message
-        });
+        console.error('Error en el controlador editarRubrica:', err);
+        res.status(500).json({ message: 'Error al actualizar las rúbricas.', error: err.message });
     }
 };
 

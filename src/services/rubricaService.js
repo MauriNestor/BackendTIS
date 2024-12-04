@@ -121,11 +121,21 @@ const obtenerRubricasConCalificaciones = async (cod_evaluacion, cod_grupoempresa
     }
 };
 
-const registrarRubrica = async (codEvaluacion, rubricas, codClase) => {
+const registrarRubrica = async (codEvaluacion, rubricas) => {
     const client = await pool.connect(); 
     try {
         await client.query('BEGIN'); 
         let codRubrica;
+        const codClaseResult = await client.query(
+            `SELECT cod_clase FROM evaluacion WHERE cod_evaluacion = $1`,
+            [codEvaluacion]
+        );
+
+        if (codClaseResult.rows.length === 0) {
+            throw new Error(`No se encontró una clase para la evaluación con código ${codEvaluacion}`);
+        }
+
+        const codClase = codClaseResult.rows[0].cod_clase;
         for (const rubrica of rubricas) {
             const notaActual = await getNotaTotal(codClase);
             if ((100 -notaActual) >= rubrica.pesoRubrica) {
@@ -167,7 +177,7 @@ const editarRubrica = async (codEvaluacion, rubricas, codClase) => {
         for (const rubrica of rubricas) { 
             if (!rubrica.codRubrica) {
                 // Registrar solo la rúbrica actual
-                await registrarRubrica(codEvaluacion, [rubrica], codClase);
+                await registrarRubrica(codEvaluacion, [rubrica]);
             } else {
                 const notaActual = await getNotaTotal(codClase);
                 if ((100 - notaActual) >= rubrica.pesoRubrica) {
@@ -247,7 +257,6 @@ const getNotaTotal = async (codClase) => {
         throw err;
     }
 };
-
 
 module.exports = {
   registrarRubrica,

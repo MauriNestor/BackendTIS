@@ -43,7 +43,7 @@ const rubricaService = require('../services/rubricaService');
   };
 
   const registrarRubrica = async (req, res) => {
-    const { codEvaluacion, rubricas, codClase } = req.body;
+    const { codEvaluacion, rubricas } = req.body;
   
     // Verificación del rol del usuario
     if (req.user.role !== 'docente') {
@@ -52,7 +52,7 @@ const rubricaService = require('../services/rubricaService');
   
     try {
       // Verificación básica de los datos requeridos
-      if (!codEvaluacion || !rubricas || rubricas.length === 0 || !codClase) {
+      if (!codEvaluacion || !rubricas || rubricas.length === 0 ) {
         return res.status(400).json({
           message: 'Datos incompletos. Asegúrate de proporcionar codEvaluacion y al menos una rúbrica.'
         });
@@ -68,7 +68,7 @@ const rubricaService = require('../services/rubricaService');
       }
   
       // Llamar al servicio para registrar las rúbricas
-      await rubricaService.registrarRubrica(codEvaluacion, rubricas, codClase);
+      await rubricaService.registrarRubrica(codEvaluacion, rubricas);
   
       res.status(201).json({
         message: 'Rúbricas registradas exitosamente',

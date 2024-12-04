@@ -159,25 +159,33 @@ const registrarRubrica = async (codEvaluacion, rubricas, codClase) => {
     }
 };
 
-const editarRubrica = async (rubricas) => {
+const editarRubrica = async (codEvaluacion, rubricas, codClase) => {
     const client = await pool.connect(); 
     try {
         await client.query('BEGIN'); 
-        let codRubrica;
-        for (const rubrica of rubricas) { 
-          const result = await client.query(
-            `UPDATE rubrica
-            SET nombre_rubrica = $1, descripcion_rubrica = $2, peso = $3
-            WHERE cod_rubrica = $4;`,
-            [rubrica.nombreRubrica, rubrica.descripcionRubrica, rubrica.pesoRubrica, rubrica.codRubrica]
-        );
-
-        if (rubrica.detallesRubrica && rubrica.detallesRubrica.length > 0) {
-            await detalleRubricaService.editarDetallesRubrica(client, rubrica.detallesRubrica);
-        }
-      }
         
-      await client.query('COMMIT');
+        for (const rubrica of rubricas) { 
+            if (!rubrica.codRubrica) {
+                // Registrar solo la rúbrica actual
+                await registrarRubrica(codEvaluacion, [rubrica], codClase);
+            } else {
+                const notaActual = await getNotaTotal(codClase);
+                if ((100 - notaActual) >= rubrica.pesoRubrica) {
+                    await client.query(
+                        `UPDATE rubrica
+                        SET nombre_rubrica = $1, descripcion_rubrica = $2, peso = $3
+                        WHERE cod_rubrica = $4;`,
+                        [rubrica.nombreRubrica, rubrica.descripcionRubrica, rubrica.pesoRubrica, rubrica.codRubrica]
+                    );
+            
+                    if (rubrica.detallesRubrica && rubrica.detallesRubrica.length > 0) {
+                        await detalleRubricaService.editarDetallesRubrica(client, rubrica.detallesRubrica);
+                    }
+                }               
+            }      
+        }
+        
+        await client.query('COMMIT');
 
     } catch (err) {
         await client.query('ROLLBACK'); // Revertir la transacción en caso de error
@@ -187,6 +195,7 @@ const editarRubrica = async (rubricas) => {
         client.release(); 
     }
 };
+
 
 const obtenerRubrica = async (codEvaluacion) => {
     try {

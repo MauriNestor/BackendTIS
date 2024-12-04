@@ -121,10 +121,30 @@ const obtenerRubrica = async (req, res) => {
   }
 };  
 
+const obtenerNotaTotal = async (req, res) => {
+  const { codClase } = req.params; // Obtener el código de clase desde los parámetros
+
+  try {
+      const notaTotal = await rubricaService.getNotaTotal(codClase);
+      res.status(200).json({
+          success: true,
+          notaTotal
+      });
+  } catch (err) {
+      console.error('Error en el controlador al obtener la nota total:', err);
+      res.status(500).json({
+          success: false,
+          message: 'Hubo un error al obtener la nota total.',
+          error: err.message
+      });
+  }
+};
+
 module.exports = {
     registrarRubrica,
     obtenerRubricasConDetalles,
     obtenerCalificacionesPorEvaluacionYGrupo,
     editarRubrica,
     obtenerRubrica,
+    obtenerNotaTotal,
 };

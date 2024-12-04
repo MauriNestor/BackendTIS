@@ -256,4 +256,5 @@ module.exports = {
   obtenerDetallesPorRubrica,
   editarRubrica,
   obtenerRubrica,
+  getNotaTotal,
 };

@@ -170,7 +170,7 @@ const obtenerDocenteYClasePorEvaluacion = async (cod_evaluacion) => {
     }
 };
 
-exports.subirEntregable = async (cod_evaluacion, archivo_grupo, codigo_sis) => {
+exports.subirEntregable = async (cod_evaluacion, archivo_grupo, link_entregable , codigo_sis) => {
     try {
         const limiteTamanioArchivo = 10 * 1024 * 1024; 
         const archivoBuffer = archivo_grupo ? Buffer.from(archivo_grupo, 'base64') : null;
@@ -193,10 +193,10 @@ exports.subirEntregable = async (cod_evaluacion, archivo_grupo, codigo_sis) => {
         }
         await pool.query(
             `UPDATE entregable
-             SET archivo_grupo = $1
-             WHERE cod_evaluacion = $2 AND cod_grupoempresa = $3`,
-            [archivoBuffer, cod_evaluacion, cod_grupoempresa]
-        );
+             SET archivo_grupo = $1, link_entregable = $2
+             WHERE cod_evaluacion = $3 AND cod_grupoempresa = $4`,
+            [archivoBuffer, link_entregable || null, cod_evaluacion, cod_grupoempresa]
+        ); 
 
         return { message: 'Archivo del entregable actualizado exitosamente' };
     } catch (error) {
@@ -245,15 +245,22 @@ exports.eliminarEvaluacion = async (codEvaluacion) => {
 exports.getListaGruposEntregaronEvaluacion = async (codEvaluacion, codigoSis) => {
     try {
         const { cod_clase } = await obtenerDocenteYClasePorEvaluacion(codEvaluacion);
-
         const { cod_grupoempresa } = await grupoEmpresaService.obtenerGrupoYHorarioDelEstudiante(codigoSis, cod_clase);
+
         const entregableResult = await pool.query(
-            `SELECT archivo_grupo FROM entregable
+            `SELECT archivo_grupo, link_entregable FROM entregable
              WHERE cod_evaluacion = $1 AND cod_grupoempresa = $2`,
             [codEvaluacion, cod_grupoempresa]
         );
 
-        return entregableResult.rows.length > 0 ? entregableResult.rows[0].archivo_grupo : null;
+        if (entregableResult.rows.length > 0) {
+            return {
+                archivoBuffer: entregableResult.rows[0].archivo_grupo,  
+                linkEntregable: entregableResult.rows[0].link_entregable 
+            };
+        }
+
+        return { archivoBuffer: null, linkEntregable: null };
 
     } catch (error) {
         console.error('Error en obtenerEntregablePorEvaluacionYGrupo:', error);
@@ -291,13 +298,25 @@ exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis, co
         const retroalimentacionResult = await pool.query(
             `SELECT comentario, fecha_registro
              FROM retroalimentacion_grupal
-             WHERE cod_grupoempresa = $1 AND cod_evaluacion = $2`,
+             WHERE cod_grupoempresa = $1 AND cod_evaluacion = $2
+             ORDER BY fecha_registro DESC
+             LIMIT 1`,
             [cod_grupoempresa, cod_evaluacion]
         );
         const retroalimentacion = retroalimentacionResult.rows.length > 0
         ? retroalimentacionResult.rows[0]
         : { comentario: null, fecha_registro: null };
 
+        const retroalimentacionIndividualResult = await pool.query(
+            `SELECT comentario_individual
+             FROM retroalimentacion_individual
+             WHERE cod_evaluacion = $1 AND codigo_sis = $2`,
+            [cod_evaluacion, codigo_sis]
+        );
+        const comentario_individual = retroalimentacionIndividualResult.rows.length > 0
+            ? retroalimentacionIndividualResult.rows[0].comentario_individual
+            : null;
+            
         const rubricasConCalificacionesYDetalles = await Promise.all(
             rubricas.map(async (rubrica) => {
 
@@ -330,7 +349,8 @@ exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis, co
         return {
             nota_total: notaTotal,
             rubricas: rubricasConCalificacionesYDetalles,
-            retroalimentacion: retroalimentacion
+            retroalimentacion: retroalimentacion,
+            comentario_individual: comentario_individual  
         };
     } catch (error) {
         console.error('Error al obtener las notas detalladas del estudiante:', error);
@@ -360,3 +380,48 @@ exports.obtenerRubricasYDetallesDocente = async (cod_evaluacion) => {
         throw new Error('Error al obtener las rúbricas y detalles para el docente');
     }
 };
+
+exports.editarEvaluacion = async (codEvaluacion, evaluacion) => {
+    try {
+        // Verificar la existencia de la evaluación
+        const checkQuery = `SELECT cod_evaluacion FROM evaluacion WHERE cod_evaluacion = $1`;
+        const checkResult = await pool.query(checkQuery, [codEvaluacion]);
+
+        if (checkResult.rowCount === 0) {
+            throw new Error("La evaluación especificada no existe.");
+        }
+
+        // Actualizar los datos de la evaluación
+        await pool.query(
+            `UPDATE evaluacion
+             SET evaluacion = $1, descripcion_evaluacion = $2, fecha_fin = $3
+             WHERE cod_evaluacion = $4`,
+            [evaluacion.nombreEvaluacion, evaluacion.descripcion, evaluacion.fechaEntrega, codEvaluacion]
+        );
+    } catch (error) {
+        console.error('Error al editar la evaluación:', error);
+        throw new Error(error.message || 'Error al editar la evaluación.');
+    }
+};
+
+exports.obtenerArchivosEntregadosDocente = async (codEvaluacion, codGrupo) => {
+    try {
+        const entregableResult = await pool.query(
+            `SELECT archivo_grupo, link_entregable FROM entregable
+             WHERE cod_evaluacion = $1 AND cod_grupoempresa = $2`,
+            [codEvaluacion, codGrupo]
+        );
+
+        if (entregableResult.rows.length > 0) {
+            return {
+                archivoBuffer: entregableResult.rows[0].archivo_grupo,  
+                linkEntregable: entregableResult.rows[0].link_entregable 
+            };
+        }
+        return { archivoBuffer: null, linkEntregable: null };
+    } catch (error) {
+        console.error('Error al obtener los archivos entregados por el docente:', error);
+        throw new Error('Error al obtener los archivos entregados por el docente');
+    }
+}
+

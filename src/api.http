@@ -144,8 +144,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6M
 
 
 ### Generar reporte de notas por grupo
-GET http://localhost:3000/reportes/grupos/12/reporte-notas
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RfZG9jZW50ZSI6MSwicm9sZSI6ImRvY2VudGUiLCJpYXQiOjE3MzE3NzgzMzMsImV4cCI6MTczMTc4MTkzM30.Rb1Fi9raAbLzjRMJtq5uBr5LiXkJNOAg6_WQnGUpOJE
+GET http://localhost:3000/reportes/grupos/15/reporte-notas
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ29TaXMiOjIwMjEwMzgxOSwicm9sZSI6ImVzdHVkaWFudGUiLCJpYXQiOjE3MzMzNjI3NzUsImV4cCI6MTczMzM2NjM3NX0.69Kdq1Sf5wfeJ9e7I4FOk9UHH0L3KCwaWHJTQIWVNvU
 
 
 

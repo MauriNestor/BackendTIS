@@ -298,7 +298,9 @@ exports.obtenerNotasDetalladasEstudiante = async (cod_evaluacion, codigo_sis, co
         const retroalimentacionResult = await pool.query(
             `SELECT comentario, fecha_registro
              FROM retroalimentacion_grupal
-             WHERE cod_grupoempresa = $1 AND cod_evaluacion = $2`,
+             WHERE cod_grupoempresa = $1 AND cod_evaluacion = $2
+             ORDER BY fecha_registro DESC
+             LIMIT 1`,
             [cod_grupoempresa, cod_evaluacion]
         );
         const retroalimentacion = retroalimentacionResult.rows.length > 0

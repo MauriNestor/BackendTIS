@@ -4,9 +4,9 @@ const claseService = require('../services/claseService');
 const grupoEmpresaService = require('../services/grupoEmpresaService');
 
 
-const registrarAsistencia = async (codClase, listaAsistencia) => {
+const registrarAsistencia = async (codClase, fecha, listaAsistencia) => {
     try {
-        const fecha = new Date().toLocaleDateString('en-CA');
+        //const fecha = new Date().toLocaleDateString('en-CA');
 
         for (const asistencia of listaAsistencia) {
             const result = await pool.query(

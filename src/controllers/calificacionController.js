@@ -19,10 +19,10 @@ const calificarEstudianteController = async (req, res) => {
 };
 
 const retroalimentarController = async (req, res) => {
-    const { codEvaluacion, codClase, codGrupo, comentario } = req.body;
+    const { codEvaluacion, codClase, codGrupo, fecha, comentario } = req.body;
     
     try {
-        const codRetroalimentacion = await retroalimentar(codEvaluacion, codClase, codGrupo, comentario);
+        const codRetroalimentacion = await retroalimentar(codEvaluacion, codClase, codGrupo, fecha, comentario);
         
         if (codRetroalimentacion) {
             res.status(201).json({ 

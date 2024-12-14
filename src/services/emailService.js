@@ -22,6 +22,7 @@ const enviarCorreoRestablecer = async (correo, rol) => {
 
         if (correoValido) {
             const token = jwt.sign({ usuarioCorreo: correo, usuario: rol }, 'SECRET_KEY', { expiresIn: '1h' });
+
             const resetUrl = `https://mtis.netlify.app/reset-password/${token}`;
 
             const mailOptions = {
